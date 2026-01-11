@@ -9,9 +9,9 @@
 
 ## 🧩 What is this project?
 
-Rahoot is a straightforward and open-source clone of the Kahoot! platform, allowing users to host it on their own server for smaller events.
+EduArena is a straightforward and open-source educational platform inspired by Kahoot!, designed for university classes with quizzes, physics simulators, and lesson materials.
 
-> ⚠️ This project is still under development, please report any bugs or suggestions in the [issues](https://github.com/Ralex91/Rahoot/issues)
+> ⚠️ This project is still under development, please report any bugs or suggestions in the [issues](https://github.com/Ralex91/EduArena/issues)
 
 <p align="center">
   <img width="30%" src="https://raw.githubusercontent.com/Ralex91/Rahoot/main/.github/preview1.jpg" alt="Login">

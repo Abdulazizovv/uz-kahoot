@@ -1,5 +1,5 @@
-import Toaster from "@rahoot/web/components/Toaster"
-import { SocketProvider } from "@rahoot/web/contexts/socketProvider"
+import Toaster from "@eduarena/web/components/Toaster"
+import { SocketProvider } from "@eduarena/web/contexts/socketProvider"
 import type { Metadata } from "next"
 import { Montserrat } from "next/font/google"
 import { PropsWithChildren } from "react"
@@ -11,7 +11,11 @@ const montserrat = Montserrat({
 })
 
 export const metadata: Metadata = {
-  title: "Rahoot !",
+  title: "EduArena - Universitet Ta'lim Platformasi",
+  description:
+    "Interaktiv testlar, fizik simulyatorlar va dars materiallari bilan zamonaviy ta'lim. O'quvchilar va o'qituvchilar uchun.",
+  keywords: "ta'lim, universitet, testlar, simulyatorlar, o'yinlar",
+  authors: [{ name: "EduArena Team" }],
   icons: "/icon.svg",
 }
 

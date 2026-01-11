@@ -1,10 +1,10 @@
 "use client"
 
-import { CommonStatusDataMap } from "@rahoot/common/types/game/status"
-import CricleCheck from "@rahoot/web/components/icons/CricleCheck"
-import CricleXmark from "@rahoot/web/components/icons/CricleXmark"
-import { usePlayerStore } from "@rahoot/web/stores/player"
-import { SFX_RESULTS_SOUND } from "@rahoot/web/utils/constants"
+import { CommonStatusDataMap } from "@eduarena/common/types/game/status"
+import CricleCheck from "@eduarena/web/components/icons/CricleCheck"
+import CricleXmark from "@eduarena/web/components/icons/CricleXmark"
+import { usePlayerStore } from "@eduarena/web/stores/player"
+import { SFX_RESULTS_SOUND } from "@eduarena/web/utils/constants"
 import { useEffect } from "react"
 import useSound from "use-sound"
 

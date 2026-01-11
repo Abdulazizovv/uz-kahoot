@@ -1,11 +1,11 @@
 "use client"
 
-import { QuizzWithId } from "@rahoot/common/types/game"
-import { STATUS } from "@rahoot/common/types/game/status"
-import ManagerPassword from "@rahoot/web/components/game/create/ManagerPassword"
-import SelectQuizz from "@rahoot/web/components/game/create/SelectQuizz"
-import { useEvent, useSocket } from "@rahoot/web/contexts/socketProvider"
-import { useManagerStore } from "@rahoot/web/stores/manager"
+import { QuizzWithId } from "@eduarena/common/types/game"
+import { STATUS } from "@eduarena/common/types/game/status"
+import ManagerPassword from "@eduarena/web/components/game/create/ManagerPassword"
+import SelectQuizz from "@eduarena/web/components/game/create/SelectQuizz"
+import { useEvent, useSocket } from "@eduarena/web/contexts/socketProvider"
+import { useManagerStore } from "@eduarena/web/stores/manager"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
@@ -24,7 +24,10 @@ const Manager = () => {
 
   useEvent("manager:gameCreated", ({ gameId, inviteCode }) => {
     setGameId(gameId)
-    setStatus(STATUS.SHOW_ROOM, { text: "Talabalar qo'shilishi kutilmoqda", inviteCode })
+    setStatus(STATUS.SHOW_ROOM, {
+      text: "Talabalar qo'shilishi kutilmoqda",
+      inviteCode,
+    })
     router.push(`/game/manager/${gameId}`)
   })
 

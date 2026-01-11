@@ -1,7 +1,7 @@
-import Button from "@rahoot/web/components/Button"
-import Form from "@rahoot/web/components/Form"
-import Input from "@rahoot/web/components/Input"
-import { useEvent } from "@rahoot/web/contexts/socketProvider"
+import Button from "@eduarena/web/components/Button"
+import Form from "@eduarena/web/components/Form"
+import Input from "@eduarena/web/components/Input"
+import { useEvent } from "@eduarena/web/contexts/socketProvider"
 import { KeyboardEvent, useState } from "react"
 import toast from "react-hot-toast"
 

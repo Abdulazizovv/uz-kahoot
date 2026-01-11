@@ -1,5 +1,5 @@
 {
-  "name": "@rahoot/socket",
+  "name": "@eduarena/socket",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@rahoot/common": "workspace:*",
+    "@eduarena/common": "workspace:*",
     "@t3-oss/env-core": "^0.13.8",
     "dayjs": "^1.11.19",
     "socket.io": "^4.8.1",

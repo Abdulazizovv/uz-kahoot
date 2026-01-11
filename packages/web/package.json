@@ -1,5 +1,5 @@
 {
-  "name": "@rahoot/web",
+  "name": "@eduarena/web",
   "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
@@ -8,8 +8,8 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@rahoot/common": "workspace:*",
-    "@rahoot/socket": "workspace:*",
+    "@eduarena/common": "workspace:*",
+    "@eduarena/socket": "workspace:*",
     "@t3-oss/env-nextjs": "^0.13.8",
     "clsx": "^2.1.1",
     "ky": "^1.14.1",

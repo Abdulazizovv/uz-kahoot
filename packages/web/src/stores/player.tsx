@@ -1,5 +1,5 @@
-import { StatusDataMap } from "@rahoot/common/types/game/status"
-import { createStatus, Status } from "@rahoot/web/utils/createStatus"
+import { StatusDataMap } from "@eduarena/common/types/game/status"
+import { createStatus, Status } from "@eduarena/web/utils/createStatus"
 import { create } from "zustand"
 
 type PlayerState = {

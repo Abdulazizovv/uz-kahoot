@@ -1,9 +1,9 @@
 "use client"
 
-import { Player } from "@rahoot/common/types/game"
-import { ManagerStatusDataMap } from "@rahoot/common/types/game/status"
-import { useEvent, useSocket } from "@rahoot/web/contexts/socketProvider"
-import { useManagerStore } from "@rahoot/web/stores/manager"
+import { Player } from "@eduarena/common/types/game"
+import { ManagerStatusDataMap } from "@eduarena/common/types/game/status"
+import { useEvent, useSocket } from "@eduarena/web/contexts/socketProvider"
+import { useManagerStore } from "@eduarena/web/stores/manager"
 import { useState } from "react"
 
 type Props = {

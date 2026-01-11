@@ -1,9 +1,9 @@
 "use client"
 
-import Room from "@rahoot/web/components/game/join/Room"
-import Username from "@rahoot/web/components/game/join/Username"
-import { useEvent, useSocket } from "@rahoot/web/contexts/socketProvider"
-import { usePlayerStore } from "@rahoot/web/stores/player"
+import Room from "@eduarena/web/components/game/join/Room"
+import Username from "@eduarena/web/components/game/join/Username"
+import { useEvent, useSocket } from "@eduarena/web/contexts/socketProvider"
+import { usePlayerStore } from "@eduarena/web/stores/player"
 import { useEffect } from "react"
 import toast from "react-hot-toast"
 

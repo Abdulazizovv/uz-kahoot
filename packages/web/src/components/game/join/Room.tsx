@@ -1,8 +1,8 @@
-import Button from "@rahoot/web/components/Button"
-import Form from "@rahoot/web/components/Form"
-import Input from "@rahoot/web/components/Input"
-import { useEvent, useSocket } from "@rahoot/web/contexts/socketProvider"
-import { usePlayerStore } from "@rahoot/web/stores/player"
+import Button from "@eduarena/web/components/Button"
+import Form from "@eduarena/web/components/Form"
+import Input from "@eduarena/web/components/Input"
+import { useEvent, useSocket } from "@eduarena/web/contexts/socketProvider"
+import { usePlayerStore } from "@eduarena/web/stores/player"
 import { KeyboardEvent, useState } from "react"
 
 const Room = () => {

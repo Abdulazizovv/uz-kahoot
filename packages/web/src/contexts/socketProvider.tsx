@@ -4,7 +4,7 @@
 import {
   ClientToServerEvents,
   ServerToClientEvents,
-} from "@rahoot/common/types/game/socket"
+} from "@eduarena/common/types/game/socket"
 import ky from "ky"
 import React, {
   createContext,

@@ -1,5 +1,5 @@
-import { QuizzWithId } from "@rahoot/common/types/game"
-import Button from "@rahoot/web/components/Button"
+import { QuizzWithId } from "@eduarena/common/types/game"
+import Button from "@eduarena/web/components/Button"
 import clsx from "clsx"
 import { useState } from "react"
 import toast from "react-hot-toast"
@@ -33,7 +33,9 @@ const SelectQuizz = ({ quizzList, onSelect }: Props) => {
   return (
     <div className="z-10 flex w-full max-w-md flex-col gap-4 rounded-md bg-white p-4 shadow-sm">
       <div className="flex flex-col items-center justify-center">
-        <h1 className="mb-2 text-2xl font-bold">Savollar to&apos;plamini tanlang</h1>
+        <h1 className="mb-2 text-2xl font-bold">
+          Savollar to&apos;plamini tanlang
+        </h1>
         <div className="w-full space-y-2">
           {quizzList.map((quizz) => (
             <button

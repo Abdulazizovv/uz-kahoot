@@ -1,14 +1,14 @@
 "use client"
 
-import { ManagerStatusDataMap } from "@rahoot/common/types/game/status"
-import AnswerButton from "@rahoot/web/components/AnswerButton"
+import { ManagerStatusDataMap } from "@eduarena/common/types/game/status"
+import AnswerButton from "@eduarena/web/components/AnswerButton"
 import {
   ANSWERS_COLORS,
   ANSWERS_ICONS,
   SFX_ANSWERS_MUSIC,
   SFX_RESULTS_SOUND,
-} from "@rahoot/web/utils/constants"
-import { calculatePercentages } from "@rahoot/web/utils/score"
+} from "@eduarena/web/utils/constants"
+import { calculatePercentages } from "@eduarena/web/utils/score"
 import clsx from "clsx"
 import { useEffect, useState } from "react"
 import useSound from "use-sound"
