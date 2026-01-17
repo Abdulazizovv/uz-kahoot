@@ -32,10 +32,26 @@ const ManagerGame = () => {
   })
 
   useEvent("connect", () => {
-    if (gameIdParam) {
+    if (gameIdParam && !gameId) {
       socket?.emit("manager:reconnect", { gameId: gameIdParam })
     }
   })
+
+  useEvent(
+    "manager:gameCreated",
+    ({
+      gameId: newGameId,
+      inviteCode,
+    }: {
+      gameId: string
+      inviteCode: string
+    }) => {
+      setGameId(newGameId)
+      setStatus(STATUS.SHOW_ROOM, { inviteCode })
+      setPlayers([])
+      setQuestionStates({ current: 1, total: 0 })
+    },
+  )
 
   useEvent(
     "manager:successReconnect",
