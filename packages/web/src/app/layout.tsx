@@ -1,3 +1,4 @@
+import { AuthErrorBoundary } from "@/components/AuthErrorBoundary"
 import Toaster from "@/components/Toaster"
 import { SocketProvider } from "@/contexts/socketProvider"
 import { AuthProvider } from "@/stores/auth"
@@ -23,12 +24,14 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: PropsWithChildren) => (
   <html lang="en" suppressHydrationWarning={true} data-lt-installed="true">
     <body className={`${montserrat.variable} bg-secondary antialiased`}>
-      <AuthProvider>
-        <SocketProvider>
-          <main className="text-base-[8px] flex flex-col">{children}</main>
-          <Toaster />
-        </SocketProvider>
-      </AuthProvider>
+      <AuthErrorBoundary>
+        <AuthProvider>
+          <SocketProvider>
+            <main className="text-base-[8px] flex flex-col">{children}</main>
+            <Toaster />
+          </SocketProvider>
+        </AuthProvider>
+      </AuthErrorBoundary>
     </body>
   </html>
 )

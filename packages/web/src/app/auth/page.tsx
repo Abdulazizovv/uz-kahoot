@@ -1,49 +1,59 @@
 "use client"
 
 import AuthForm from "@/components/auth/AuthForm"
+import { LoadingScreen } from "@/components/LoadingScreen"
 import { useAuthStore } from "@/stores/auth"
-import { useEffect, useRef } from "react"
+import { useRouter } from "next/navigation"
+import { useEffect, useRef, useState } from "react"
 
+/**
+ * Authentication Page
+ * Handles login/signup with proper hydration and redirect flow
+ */
 const AuthPage = () => {
   const { isAuthenticated, user, isHydrated } = useAuthStore()
-  const hasRedirected = useRef(false)
+  const router = useRouter()
+  const [isRedirecting, setIsRedirecting] = useState(false)
+  const hasRedirectedRef = useRef(false)
 
   useEffect(() => {
-    // Hydration kutish
+    // Wait for hydration to complete before any auth checks
     if (!isHydrated) return
 
-    // Redirect loop oldini olish
-    if (hasRedirected.current) return
+    // Prevent multiple redirect attempts
+    if (hasRedirectedRef.current) return
 
-    // Autentifikatsiyalangan bo'lsa dashboard'ga yo'naltirish
+    // Redirect authenticated users to their dashboard
     if (isAuthenticated && user) {
-      hasRedirected.current = true
+      hasRedirectedRef.current = true
+      setIsRedirecting(true)
+
       const redirectUrl =
         user.user_type === "student"
           ? "/student/dashboard"
           : "/teacher/dashboard"
-      window.location.href = redirectUrl
+
+      // Use router.replace() to avoid adding to history stack
+      router.replace(redirectUrl)
     }
-  }, [isAuthenticated, user, isHydrated])
 
-  // Hydration kutilmoqda
+    // Cleanup function to reset redirect flag if component unmounts
+    return () => {
+      hasRedirectedRef.current = false
+    }
+  }, [isHydrated, isAuthenticated, user, router])
+
+  // Show loading screen while waiting for hydration
   if (!isHydrated) {
-    return (
-      <div className="flex min-h-screen items-center justify-center px-4">
-        <div className="text-white">Yuklanmoqda...</div>
-      </div>
-    )
+    return <LoadingScreen message="Yuklanmoqda..." />
   }
 
-  // Redirect bo'layotganda
-  if (isAuthenticated && user) {
-    return (
-      <div className="flex min-h-screen items-center justify-center px-4">
-        <div className="text-white">Yo'naltirilmoqda...</div>
-      </div>
-    )
+  // Show redirecting state for authenticated users
+  if (isRedirecting || (isAuthenticated && user)) {
+    return <LoadingScreen message="Yo'naltirilmoqda..." />
   }
 
+  // Show auth form for unauthenticated users
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <AuthForm />

@@ -9,6 +9,10 @@ import {
   useState,
 } from "react"
 
+/**
+ * Auth state interface
+ * @property isHydrated - Tracks if client-side hydration is complete
+ */
 interface AuthState {
   user: User | null
   accessToken: string | null
@@ -38,7 +42,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isHydrated: false,
   })
 
-  // localStorage'dan ma'lumotlarni yuklash (faqat client-side)
+  /**
+   * Hydrate auth state from localStorage on client-side mount
+   * This prevents SSR/CSR mismatch issues
+   */
   useEffect(() => {
     if (typeof window === "undefined") return
 
@@ -58,17 +65,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           error: null,
           isHydrated: true,
         })
+
+        // Also update cookie for middleware
+        document.cookie = `auth-storage=${encodeURIComponent(JSON.stringify({ state: { isAuthenticated: true, user } }))}; path=/; max-age=2592000; SameSite=Lax`
       } else {
         setState((prev) => ({ ...prev, isHydrated: true }))
       }
     } catch (error) {
       console.error("Auth hydration error:", error)
-      setState((prev) => ({ ...prev, isHydrated: true }))
+      setState((prev) => ({
+        ...prev,
+        isHydrated: true,
+        error: "Failed to load authentication state",
+      }))
     }
   }, [])
 
+  /**
+   * Login user and persist to localStorage and cookies
+   */
   const login = (tokens: { access: string; refresh: string }, user: User) => {
-    // State'ni yangilash
+    // Update state
     setState({
       user,
       accessToken: tokens.access,
@@ -79,16 +96,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isHydrated: true,
     })
 
-    // localStorage'ga saqlash
+    // Persist to localStorage
     if (typeof window !== "undefined") {
       localStorage.setItem("user", JSON.stringify(user))
       localStorage.setItem("access_token", tokens.access)
       localStorage.setItem("refresh_token", tokens.refresh)
+
+      // Set cookie for middleware (30 days expiry)
+      document.cookie = `auth-storage=${encodeURIComponent(JSON.stringify({ state: { isAuthenticated: true, user } }))}; path=/; max-age=2592000; SameSite=Lax`
     }
   }
 
+  /**
+   * Logout user and clear all auth data
+   */
   const logout = () => {
-    // State'ni tozalash
+    // Clear state
     setState({
       user: null,
       accessToken: null,
@@ -99,11 +122,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isHydrated: true,
     })
 
-    // localStorage'dan o'chirish
+    // Clear localStorage
     if (typeof window !== "undefined") {
       localStorage.removeItem("user")
       localStorage.removeItem("access_token")
       localStorage.removeItem("refresh_token")
+
+      // Clear cookie
+      document.cookie =
+        "auth-storage=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"
     }
   }
 
@@ -118,6 +145,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 }
 
+/**
+ * Hook to access auth context
+ * @throws Error if used outside AuthProvider
+ */
 export function useAuthStore() {
   const context = useContext(AuthContext)
   if (context === undefined) {

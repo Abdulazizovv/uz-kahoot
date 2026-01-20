@@ -4,31 +4,12 @@ import Header from "@/components/teacher/Header"
 import Sidebar from "@/components/teacher/Sidebar"
 import { useAuthStore } from "@/stores/auth"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
 
 const TeacherDashboard = () => {
-  const { user, isAuthenticated } = useAuthStore()
-  const router = useRouter()
+  const { user } = useAuthStore()
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/auth")
-      return
-    }
-
-    if (user && user.user_type !== "teacher") {
-      router.push("/student/dashboard")
-    }
-  }, [isAuthenticated, user, router])
-
-  if (!user || user.user_type !== "teacher") {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"></div>
-      </div>
-    )
-  }
+  // Layout already handles auth protection via ProtectedRoute
+  // No need for redundant auth checks here
 
   const quizzes = [
     {

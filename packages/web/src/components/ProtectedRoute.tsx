@@ -1,68 +1,80 @@
 "use client"
 
 import { useAuthStore } from "@/stores/auth"
-import { useEffect, useRef } from "react"
+import { useRouter } from "next/navigation"
+import { useEffect, useMemo, useRef } from "react"
+import { LoadingScreen } from "./LoadingScreen"
 
 interface ProtectedRouteProps {
   children: React.ReactNode
   allowedUserTypes?: ("student" | "teacher")[]
 }
 
+/**
+ * ProtectedRoute Component
+ * Provides client-side route protection with proper hydration handling
+ * Server-side protection is handled by middleware.ts
+ */
 export default function ProtectedRoute({
   children,
   allowedUserTypes,
 }: ProtectedRouteProps) {
   const { isAuthenticated, user, isHydrated } = useAuthStore()
-  const hasRedirected = useRef(false)
+  const router = useRouter()
+  const hasRedirectedRef = useRef(false)
+
+  // Memoize user type check to prevent unnecessary re-renders
+  const isAuthorized = useMemo(() => {
+    if (!user || !allowedUserTypes) return true
+    return allowedUserTypes.includes(user.user_type)
+  }, [user, allowedUserTypes])
 
   useEffect(() => {
-    // Hydration kutish
+    // Wait for hydration to complete before any auth checks
     if (!isHydrated) return
 
-    // Redirect loop oldini olish
-    if (hasRedirected.current) return
+    // Prevent multiple redirect attempts
+    if (hasRedirectedRef.current) return
 
-    // Autentifikatsiya tekshiruvi
+    // Check authentication status
     if (!isAuthenticated || !user) {
-      hasRedirected.current = true
-      window.location.href = "/auth"
+      hasRedirectedRef.current = true
+      router.replace("/auth")
       return
     }
 
-    // Rol tekshiruvi
-    if (allowedUserTypes && !allowedUserTypes.includes(user.user_type)) {
-      hasRedirected.current = true
+    // Check authorization (user type matches allowed types)
+    if (!isAuthorized) {
+      hasRedirectedRef.current = true
       const redirectUrl =
         user.user_type === "student"
           ? "/student/dashboard"
           : "/teacher/dashboard"
-      window.location.href = redirectUrl
+      router.replace(redirectUrl)
+      return
     }
-  }, [isAuthenticated, user, allowedUserTypes, isHydrated])
 
-  // Hydration kutilmoqda
+    // Cleanup function to reset redirect flag
+    return () => {
+      hasRedirectedRef.current = false
+    }
+  }, [isHydrated, isAuthenticated, user, isAuthorized, router])
+
+  // Show loading screen while waiting for hydration
   if (!isHydrated) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-        <div className="text-center">
-          <div className="mx-auto h-16 w-16 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600 shadow-lg"></div>
-          <p className="mt-4 text-lg font-semibold text-gray-700">
-            Yuklanmoqda...
-          </p>
-        </div>
-      </div>
-    )
+    return <LoadingScreen message="Yuklanmoqda..." />
   }
 
-  // Autentifikatsiya kutilmoqda
+  // Show loading during authentication check
   if (!isAuthenticated || !user) {
-    return null // Redirect bo'layotganda hech narsa ko'rsatmaslik
+    return null // Middleware should redirect, but show nothing while it happens
   }
 
-  // Rol tekshiruvi
-  if (allowedUserTypes && !allowedUserTypes.includes(user.user_type)) {
-    return null // Redirect bo'layotganda hech narsa ko'rsatmaslik
+  // Show loading during authorization check
+  if (!isAuthorized) {
+    return null // Middleware should redirect, but show nothing while it happens
   }
 
+  // User is authenticated and authorized, render children
   return <>{children}</>
 }
