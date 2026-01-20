@@ -16,7 +16,7 @@ interface MenuItem {
 const Sidebar = () => {
   const pathname = usePathname()
   const router = useRouter()
-  const logout = useAuthStore((state) => state.logout)
+  const { logout } = useAuthStore()
   const [isCollapsed, setIsCollapsed] = useState(false)
 
   const handleLogout = () => {

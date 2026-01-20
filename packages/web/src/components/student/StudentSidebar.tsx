@@ -37,7 +37,7 @@ const MenuItem = ({ href, icon, label, badge }: MenuItemProps) => {
 
 export default function StudentSidebar() {
   const router = useRouter()
-  const logout = useAuthStore((state) => state.logout)
+  const { logout } = useAuthStore()
 
   const handleLogout = () => {
     logout()
