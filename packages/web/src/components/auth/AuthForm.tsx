@@ -72,7 +72,7 @@ const AuthForm = () => {
 
   const handleRequestOTP = () => {
     // Telegram bot ga havola
-    window.open("https://t.me/eduarena_bot", "_blank")
+    window.open("https://t.me/eduarena_robot", "_blank")
     toast.success("Telegram bot orqali OTP kodini oling")
   }
 

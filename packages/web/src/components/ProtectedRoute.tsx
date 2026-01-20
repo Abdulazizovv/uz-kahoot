@@ -1,7 +1,7 @@
 "use client"
 
 import { useAuthStore } from "@/stores/auth"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
 interface ProtectedRouteProps {
   children: React.ReactNode
@@ -12,13 +12,19 @@ export default function ProtectedRoute({
   children,
   allowedUserTypes,
 }: ProtectedRouteProps) {
-  const { isAuthenticated, user, _hasHydrated } = useAuthStore()
+  const { isAuthenticated, user } = useAuthStore()
+  const [hasHydrated, setHasHydrated] = useState(false)
   const hasRedirected = useRef(false)
+
+  // Client-side hydration tracking
+  useEffect(() => {
+    setHasHydrated(true)
+  }, [])
 
   useEffect(() => {
     // Zustand hydration kutish
-    if (!_hasHydrated) return
-    
+    if (!hasHydrated) return
+
     // Redirect loop oldini olish
     if (hasRedirected.current) return
 
@@ -39,10 +45,10 @@ export default function ProtectedRoute({
         window.location.href = "/teacher/dashboard"
       }
     }
-  }, [isAuthenticated, user, allowedUserTypes, _hasHydrated])
+  }, [isAuthenticated, user, allowedUserTypes, hasHydrated])
 
   // Hydration kutilmoqda
-  if (!_hasHydrated) {
+  if (!hasHydrated) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
         <div className="text-center">
