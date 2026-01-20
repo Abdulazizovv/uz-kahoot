@@ -4,7 +4,6 @@ import Button from "@/components/Button"
 import Input from "@/components/Input"
 import { authService } from "@/services/auth"
 import { useAuthStore } from "@/stores/auth"
-import { useRouter } from "next/navigation"
 import { useState } from "react"
 import toast from "react-hot-toast"
 import * as yup from "yup"
@@ -21,8 +20,7 @@ const AuthForm = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState<{ otp?: string }>({})
 
-  const { login, setLoading, setError } = useAuthStore()
-  const router = useRouter()
+  const { login, setError } = useAuthStore()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -40,7 +38,6 @@ const AuthForm = () => {
     }
 
     setIsLoading(true)
-    setLoading(true)
     setError(null)
 
     try {
@@ -66,7 +63,6 @@ const AuthForm = () => {
       toast.error(errorMessage)
     } finally {
       setIsLoading(false)
-      setLoading(false)
     }
   }
 

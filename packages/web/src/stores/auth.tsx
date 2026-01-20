@@ -1,6 +1,13 @@
+"use client"
+
 import { User } from "@/services/auth"
-import { create } from "zustand"
-import { persist } from "zustand/middleware"
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
 
 interface AuthState {
   user: User | null
@@ -9,94 +16,112 @@ interface AuthState {
   isAuthenticated: boolean
   isLoading: boolean
   error: string | null
+  isHydrated: boolean
 }
 
-interface AuthActions {
-  setTokens: (access: string, refresh: string) => void
-  setUser: (user: User) => void
-  setLoading: (loading: boolean) => void
-  setError: (error: string | null) => void
+interface AuthContextType extends AuthState {
   login: (tokens: { access: string; refresh: string }, user: User) => void
   logout: () => void
-  refreshAccessToken: (newAccessToken: string) => void
+  setError: (error: string | null) => void
 }
 
-type AuthStore = AuthState & AuthActions
+const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-export const useAuthStore = create<AuthStore>()(
-  persist(
-    (set, get) => ({
-      // State
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [state, setState] = useState<AuthState>({
+    user: null,
+    accessToken: null,
+    refreshToken: null,
+    isAuthenticated: false,
+    isLoading: false,
+    error: null,
+    isHydrated: false,
+  })
+
+  // localStorage'dan ma'lumotlarni yuklash (faqat client-side)
+  useEffect(() => {
+    if (typeof window === "undefined") return
+
+    try {
+      const userStr = localStorage.getItem("user")
+      const accessToken = localStorage.getItem("access_token")
+      const refreshToken = localStorage.getItem("refresh_token")
+
+      if (userStr && accessToken && refreshToken) {
+        const user = JSON.parse(userStr)
+        setState({
+          user,
+          accessToken,
+          refreshToken,
+          isAuthenticated: true,
+          isLoading: false,
+          error: null,
+          isHydrated: true,
+        })
+      } else {
+        setState((prev) => ({ ...prev, isHydrated: true }))
+      }
+    } catch (error) {
+      console.error("Auth hydration error:", error)
+      setState((prev) => ({ ...prev, isHydrated: true }))
+    }
+  }, [])
+
+  const login = (tokens: { access: string; refresh: string }, user: User) => {
+    // State'ni yangilash
+    setState({
+      user,
+      accessToken: tokens.access,
+      refreshToken: tokens.refresh,
+      isAuthenticated: true,
+      isLoading: false,
+      error: null,
+      isHydrated: true,
+    })
+
+    // localStorage'ga saqlash
+    if (typeof window !== "undefined") {
+      localStorage.setItem("user", JSON.stringify(user))
+      localStorage.setItem("access_token", tokens.access)
+      localStorage.setItem("refresh_token", tokens.refresh)
+    }
+  }
+
+  const logout = () => {
+    // State'ni tozalash
+    setState({
       user: null,
       accessToken: null,
       refreshToken: null,
       isAuthenticated: false,
       isLoading: false,
       error: null,
+      isHydrated: true,
+    })
 
-      // Actions
-      setTokens: (access: string, refresh: string) => {
-        set({ accessToken: access, refreshToken: refresh })
-      },
+    // localStorage'dan o'chirish
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("user")
+      localStorage.removeItem("access_token")
+      localStorage.removeItem("refresh_token")
+    }
+  }
 
-      setUser: (user: User) => {
-        set({ user, isAuthenticated: true })
-      },
+  const setError = (error: string | null) => {
+    setState((prev) => ({ ...prev, error }))
+  }
 
-      setLoading: (loading: boolean) => {
-        set({ isLoading: loading })
-      },
+  return (
+    <AuthContext.Provider value={{ ...state, login, logout, setError }}>
+      {children}
+    </AuthContext.Provider>
+  )
+}
 
-      setError: (error: string | null) => {
-        set({ error })
-      },
-
-      login: (tokens, user) => {
-        // Zustand store'ga saqlash
-        set({
-          user,
-          accessToken: tokens.access,
-          refreshToken: tokens.refresh,
-          isAuthenticated: true,
-          error: null,
-        })
-
-        // localStorage'ga ham saqlash (fallback uchun)
-        if (typeof window !== "undefined") {
-          localStorage.setItem("access_token", tokens.access)
-          localStorage.setItem("refresh_token", tokens.refresh)
-        }
-      },
-
-      logout: () => {
-        set({
-          user: null,
-          accessToken: null,
-          refreshToken: null,
-          isAuthenticated: false,
-          error: null,
-        })
-
-        // localStorage'dan ham o'chirish
-        if (typeof window !== "undefined") {
-          localStorage.removeItem("access_token")
-          localStorage.removeItem("refresh_token")
-        }
-      },
-
-      refreshAccessToken: (newAccessToken: string) => {
-        set({ accessToken: newAccessToken })
-      },
-    }),
-    {
-      name: "auth-storage",
-      partialize: (state) => ({
-        user: state.user,
-        accessToken: state.accessToken,
-        refreshToken: state.refreshToken,
-        isAuthenticated: state.isAuthenticated,
-      }),
-      skipHydration: false,
-    },
-  ),
-)
+export function useAuthStore() {
+  const context = useContext(AuthContext)
+  if (context === undefined) {
+    throw new Error("useAuthStore must be used within AuthProvider")
+  }
+  return context
+}
