@@ -46,11 +46,13 @@ export function middleware(request: NextRequest) {
   // Handle root path redirect
   if (pathname === "/") {
     if (isAuthenticated && userType) {
+      // Authenticated users go to their dashboard
       const dashboardUrl =
         userType === "student" ? "/student/dashboard" : "/teacher/dashboard"
       return NextResponse.redirect(new URL(dashboardUrl, request.url))
     }
-    return NextResponse.redirect(new URL("/auth", request.url))
+    // Unauthenticated users can access landing page
+    return NextResponse.next()
   }
 
   // Handle /auth page
@@ -99,7 +101,5 @@ export const config = {
     "/auth",
     "/student/:path*",
     "/teacher/:path*",
-    // Exclude API routes, static files, etc.
-    "/((?!api|_next/static|_next/image|favicon.ico|sounds).*)",
   ],
 }
