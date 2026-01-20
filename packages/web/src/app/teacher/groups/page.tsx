@@ -1,0 +1,707 @@
+"use client"
+
+import Header from "@/components/teacher/Header"
+import Sidebar from "@/components/teacher/Sidebar"
+import {
+  groupsService,
+  studentsService,
+  type Student,
+  type StudentGroup,
+} from "@/services/api"
+import { useEffect, useState } from "react"
+
+export default function TeacherGroupsPage() {
+  const [groups, setGroups] = useState<StudentGroup[]>([])
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null)
+  const [students, setStudents] = useState<Student[]>([])
+  const [loading, setLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [newGroupName, setNewGroupName] = useState("")
+  const [newGroupGrade, setNewGroupGrade] = useState(10)
+  const [creating, setCreating] = useState(false)
+
+  useEffect(() => {
+    loadGroups()
+  }, [])
+
+  useEffect(() => {
+    if (selectedGroup) {
+      loadStudents(selectedGroup)
+    }
+  }, [selectedGroup])
+
+  const loadGroups = async () => {
+    try {
+      setLoading(true)
+      const data = await groupsService.getAll({ ordering: "grade,name" })
+      setGroups(data)
+      if (data.length > 0 && !selectedGroup) {
+        setSelectedGroup(data[0].id)
+      }
+    } catch (error) {
+      console.error("Guruhlarni yuklashda xatolik:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const loadStudents = async (groupId: string) => {
+    try {
+      const data = await studentsService.getByGroup(groupId)
+      setStudents(data)
+    } catch (error) {
+      console.error("Studentlarni yuklashda xatolik:", error)
+    }
+  }
+
+  const handleCreateGroup = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!newGroupName.trim()) return
+
+    try {
+      setCreating(true)
+      const newGroup = await groupsService.create({
+        name: newGroupName.trim(),
+        grade: newGroupGrade,
+      })
+      setGroups([...groups, newGroup])
+      setSelectedGroup(newGroup.id)
+      setShowCreateModal(false)
+      setNewGroupName("")
+      setNewGroupGrade(10)
+    } catch (error) {
+      console.error("Guruh yaratishda xatolik:", error)
+      alert("Guruh yaratishda xatolik yuz berdi")
+    } finally {
+      setCreating(false)
+    }
+  }
+
+  const filteredStudents = students.filter((student) =>
+    student.full_name.toLowerCase().includes(searchTerm.toLowerCase()),
+  )
+
+  const selectedGroupData = groups.find((g) => g.id === selectedGroup)
+
+  if (loading) {
+    return (
+      <div className="flex h-screen">
+        <Sidebar />
+        <div className="ml-72 flex flex-1 flex-col">
+          <Header />
+          <div className="flex flex-1 items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+            <div className="text-center">
+              <div className="mx-auto h-20 w-20 animate-spin rounded-full border-4 border-blue-200 border-t-blue-600 shadow-lg"></div>
+              <p className="mt-6 text-lg font-semibold text-gray-700">
+                Yuklanmoqda...
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex h-screen overflow-hidden">
+      <Sidebar />
+
+      <div className="ml-72 flex flex-1 flex-col overflow-hidden">
+        <Header />
+
+        <div className="flex-1 overflow-y-auto bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+          <div className="p-8">
+            {/* Header Section */}
+            <div className="mb-8 overflow-hidden rounded-2xl border border-blue-200 bg-gradient-to-br from-white via-blue-50 to-indigo-50 shadow-xl">
+              <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 p-8">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-6">
+                    <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white/20 shadow-xl backdrop-blur-sm">
+                      <svg
+                        className="h-10 w-10 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h1 className="text-4xl font-extrabold text-white drop-shadow-lg">
+                        Guruhlar Boshqaruvi
+                      </h1>
+                      <p className="mt-2 flex items-center gap-3 text-lg text-blue-100">
+                        <span className="flex items-center gap-2">
+                          <svg
+                            className="h-5 w-5"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                          </svg>
+                          {groups.length} ta guruh
+                        </span>
+                        <span className="text-blue-300">•</span>
+                        <span>
+                          {groups.reduce((sum, g) => sum + g.students_count, 0)}{" "}
+                          ta talaba
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowCreateModal(true)}
+                    className="flex items-center gap-3 rounded-xl bg-white px-6 py-4 font-bold text-blue-900 shadow-2xl transition-all hover:scale-105 hover:shadow-xl"
+                  >
+                    <svg
+                      className="h-6 w-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 4v16m8-8H4"
+                      />
+                    </svg>
+                    Yangi Guruh
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {groups.length === 0 ? (
+              <div className="rounded-2xl border-2 border-dashed border-blue-300 bg-white/80 p-16 text-center shadow-lg backdrop-blur-sm">
+                <div className="mx-auto flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-indigo-100">
+                  <svg
+                    className="h-16 w-16 text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="mt-6 text-2xl font-bold text-gray-800">
+                  Hali guruhlar yo'q
+                </h3>
+                <p className="mt-3 text-lg text-gray-600">
+                  Birinchi guruhingizni yaratish uchun yuqoridagi "Yangi Guruh"
+                  tugmasini bosing
+                </p>
+                <button
+                  onClick={() => setShowCreateModal(true)}
+                  className="mt-8 inline-flex items-center gap-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-4 font-bold text-white shadow-xl transition-all hover:scale-105 hover:shadow-2xl"
+                >
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                  Guruh Yaratish
+                </button>
+              </div>
+            ) : (
+              <div className="grid gap-8 lg:grid-cols-12">
+                {/* Guruhlar Sidebar */}
+                <div className="lg:col-span-4">
+                  <div className="sticky top-8 space-y-4">
+                    <div className="rounded-2xl border border-blue-200 bg-white/80 p-6 shadow-xl backdrop-blur-sm">
+                      <div className="mb-6 flex items-center justify-between">
+                        <h2 className="text-xl font-bold text-gray-900">
+                          Guruhlar
+                        </h2>
+                        <span className="rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-1.5 text-sm font-bold text-white shadow-lg">
+                          {groups.length} ta
+                        </span>
+                      </div>
+                      <div className="max-h-[calc(100vh-300px)] space-y-3 overflow-y-auto pr-2">
+                        {groups.map((group) => (
+                          <button
+                            key={group.id}
+                            onClick={() => setSelectedGroup(group.id)}
+                            className={`group w-full overflow-hidden rounded-xl text-left transition-all ${
+                              selectedGroup === group.id
+                                ? "scale-105 shadow-2xl"
+                                : "shadow-md hover:scale-102 hover:shadow-lg"
+                            }`}
+                          >
+                            <div
+                              className={`p-5 ${
+                                selectedGroup === group.id
+                                  ? "bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600"
+                                  : "bg-gradient-to-br from-gray-50 to-gray-100"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <div className="flex-1">
+                                  <div
+                                    className={`text-lg font-bold ${
+                                      selectedGroup === group.id
+                                        ? "text-white"
+                                        : "text-gray-900"
+                                    }`}
+                                  >
+                                    {group.name}
+                                  </div>
+                                  <div
+                                    className={`mt-2 flex items-center gap-3 text-sm ${
+                                      selectedGroup === group.id
+                                        ? "text-blue-100"
+                                        : "text-gray-600"
+                                    }`}
+                                  >
+                                    <span className="flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 font-semibold backdrop-blur-sm">
+                                      <svg
+                                        className="h-4 w-4"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                      >
+                                        <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
+                                      </svg>
+                                      {group.grade}-sinf
+                                    </span>
+                                    <span className="flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 font-semibold backdrop-blur-sm">
+                                      <svg
+                                        className="h-4 w-4"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                      >
+                                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                                      </svg>
+                                      {group.students_count}
+                                    </span>
+                                  </div>
+                                </div>
+                                {selectedGroup === group.id && (
+                                  <svg
+                                    className="h-7 w-7 text-white"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                      clipRule="evenodd"
+                                    />
+                                  </svg>
+                                )}
+                              </div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Talabalar Ma'lumoti */}
+                <div className="lg:col-span-8">
+                  <div className="rounded-2xl border border-blue-200 bg-white/80 shadow-xl backdrop-blur-sm">
+                    {/* Guruh Header */}
+                    <div className="border-b border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 p-6">
+                      <div className="mb-6 flex items-start justify-between">
+                        <div>
+                          <h2 className="text-3xl font-bold text-gray-900">
+                            {selectedGroupData?.name}
+                          </h2>
+                          <div className="mt-3 flex items-center gap-4 text-gray-600">
+                            <span className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 font-semibold shadow-sm">
+                              <svg
+                                className="h-5 w-5 text-blue-600"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z" />
+                              </svg>
+                              {selectedGroupData?.grade}-sinf
+                            </span>
+                            <span className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 font-semibold shadow-sm">
+                              <svg
+                                className="h-5 w-5 text-green-600"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                              </svg>
+                              {students.length} ta talaba
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex gap-3">
+                          <button className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 px-5 py-3 font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl">
+                            <svg
+                              className="h-5 w-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 4v16m8-8H4"
+                              />
+                            </svg>
+                            Talaba
+                          </button>
+                          <button className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-5 py-3 font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl">
+                            <svg
+                              className="h-5 w-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                              />
+                            </svg>
+                            Statistika
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Qidiruv */}
+                      <div className="relative">
+                        <svg
+                          className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                          />
+                        </svg>
+                        <input
+                          type="text"
+                          placeholder="Talaba ismini kiriting..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="w-full rounded-xl border-2 border-blue-200 bg-white py-3 pr-4 pl-12 text-gray-900 shadow-sm transition-all placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-200 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Talabalar Jadvali */}
+                    <div className="p-6">
+                      {filteredStudents.length === 0 ? (
+                        <div className="rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50/50 p-16 text-center">
+                          <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-gray-100 to-gray-200">
+                            <svg
+                              className="h-12 w-12 text-gray-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                              />
+                            </svg>
+                          </div>
+                          <h3 className="mt-6 text-xl font-bold text-gray-700">
+                            {searchTerm
+                              ? "Talaba topilmadi"
+                              : "Bu guruhda hali talabalar yo'q"}
+                          </h3>
+                          <p className="mt-2 text-gray-500">
+                            {searchTerm
+                              ? "Boshqa kalit so'z bilan qidiring"
+                              : "Talabalarni qo'shish uchun 'Talaba qo'shish' tugmasini bosing"}
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="overflow-hidden rounded-xl border-2 border-blue-100 shadow-lg">
+                          <div className="overflow-x-auto">
+                            <table className="w-full">
+                              <thead>
+                                <tr className="bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 text-white">
+                                  <th className="px-6 py-4 text-left text-sm font-bold tracking-wider uppercase">
+                                    №
+                                  </th>
+                                  <th className="px-6 py-4 text-left text-sm font-bold tracking-wider uppercase">
+                                    Ism Familiya
+                                  </th>
+                                  <th className="px-6 py-4 text-left text-sm font-bold tracking-wider uppercase">
+                                    Telefon
+                                  </th>
+                                  <th className="px-6 py-4 text-left text-sm font-bold tracking-wider uppercase">
+                                    Manzil
+                                  </th>
+                                  <th className="px-6 py-4 text-left text-sm font-bold tracking-wider uppercase">
+                                    Holat
+                                  </th>
+                                  <th className="px-6 py-4 text-left text-sm font-bold tracking-wider uppercase">
+                                    Amallar
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-gray-200 bg-white">
+                                {filteredStudents.map((student, index) => (
+                                  <tr
+                                    key={student.id}
+                                    className="transition-all hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50"
+                                  >
+                                    <td className="px-6 py-5">
+                                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 font-bold text-white shadow-md">
+                                        {index + 1}
+                                      </div>
+                                    </td>
+                                    <td className="px-6 py-5">
+                                      <div className="flex items-center gap-4">
+                                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 text-lg font-bold text-white shadow-lg">
+                                          {student.full_name.charAt(0)}
+                                        </div>
+                                        <div>
+                                          <div className="text-base font-bold text-gray-900">
+                                            {student.full_name}
+                                          </div>
+                                          {student.date_of_birth && (
+                                            <div className="mt-1 text-sm text-gray-500">
+                                              {new Date(
+                                                student.date_of_birth,
+                                              ).toLocaleDateString("uz-UZ", {
+                                                day: "2-digit",
+                                                month: "long",
+                                                year: "numeric",
+                                              })}
+                                            </div>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </td>
+                                    <td className="px-6 py-5">
+                                      <div className="flex items-center gap-2 text-gray-700">
+                                        <svg
+                                          className="h-5 w-5 text-blue-600"
+                                          fill="currentColor"
+                                          viewBox="0 0 20 20"
+                                        >
+                                          <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                                        </svg>
+                                        <span className="font-mono font-semibold">
+                                          {student.user.phone_number}
+                                        </span>
+                                      </div>
+                                    </td>
+                                    <td className="px-6 py-5 text-gray-600">
+                                      {student.address ? (
+                                        <div className="flex items-start gap-2">
+                                          <svg
+                                            className="mt-0.5 h-5 w-5 flex-shrink-0 text-gray-400"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth={2}
+                                              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                                            />
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth={2}
+                                              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                                            />
+                                          </svg>
+                                          <span className="max-w-xs truncate">
+                                            {student.address}
+                                          </span>
+                                        </div>
+                                      ) : (
+                                        <span className="text-gray-400">—</span>
+                                      )}
+                                    </td>
+                                    <td className="px-6 py-5">
+                                      {student.user.is_active ? (
+                                        <span className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-green-100 to-emerald-100 px-4 py-2 text-sm font-bold text-green-700 shadow-sm">
+                                          <svg
+                                            className="h-4 w-4"
+                                            fill="currentColor"
+                                            viewBox="0 0 20 20"
+                                          >
+                                            <path
+                                              fillRule="evenodd"
+                                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                              clipRule="evenodd"
+                                            />
+                                          </svg>
+                                          Faol
+                                        </span>
+                                      ) : (
+                                        <span className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-red-100 to-orange-100 px-4 py-2 text-sm font-bold text-red-700 shadow-sm">
+                                          <svg
+                                            className="h-4 w-4"
+                                            fill="currentColor"
+                                            viewBox="0 0 20 20"
+                                          >
+                                            <path
+                                              fillRule="evenodd"
+                                              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                              clipRule="evenodd"
+                                            />
+                                          </svg>
+                                          Nofaol
+                                        </span>
+                                      )}
+                                    </td>
+                                    <td className="px-6 py-5">
+                                      <div className="flex gap-2">
+                                        <button className="rounded-lg bg-blue-100 p-2 text-blue-600 transition-all hover:bg-blue-200 hover:shadow-md">
+                                          <svg
+                                            className="h-5 w-5"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth={2}
+                                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                            />
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth={2}
+                                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                            />
+                                          </svg>
+                                        </button>
+                                        <button className="rounded-lg bg-green-100 p-2 text-green-600 transition-all hover:bg-green-200 hover:shadow-md">
+                                          <svg
+                                            className="h-5 w-5"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth={2}
+                                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                            />
+                                          </svg>
+                                        </button>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Yangi Guruh Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl">
+            <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 p-6">
+              <h3 className="text-2xl font-bold text-white">
+                Yangi Guruh Yaratish
+              </h3>
+              <p className="mt-1 text-blue-100">
+                Guruh ma'lumotlarini kiriting
+              </p>
+            </div>
+            <form onSubmit={handleCreateGroup} className="p-6">
+              <div className="space-y-5">
+                <div>
+                  <label className="mb-2 block text-sm font-bold text-gray-700">
+                    Guruh nomi
+                  </label>
+                  <input
+                    type="text"
+                    value={newGroupName}
+                    onChange={(e) => setNewGroupName(e.target.value)}
+                    placeholder="Masalan: 10-A guruh"
+                    className="w-full rounded-xl border-2 border-gray-300 px-4 py-3 transition-all focus:border-blue-500 focus:ring-4 focus:ring-blue-200 focus:outline-none"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm font-bold text-gray-700">
+                    Sinf
+                  </label>
+                  <select
+                    value={newGroupGrade}
+                    onChange={(e) => setNewGroupGrade(Number(e.target.value))}
+                    className="w-full rounded-xl border-2 border-gray-300 px-4 py-3 transition-all focus:border-blue-500 focus:ring-4 focus:ring-blue-200 focus:outline-none"
+                  >
+                    {[10, 11].map((grade) => (
+                      <option key={grade} value={grade}>
+                        {grade}-sinf
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className="mt-8 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowCreateModal(false)
+                    setNewGroupName("")
+                    setNewGroupGrade(10)
+                  }}
+                  className="flex-1 rounded-xl border-2 border-gray-300 px-6 py-3 font-bold text-gray-700 transition-all hover:bg-gray-50"
+                  disabled={creating}
+                >
+                  Bekor qilish
+                </button>
+                <button
+                  type="submit"
+                  disabled={creating || !newGroupName.trim()}
+                  className="flex-1 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 font-bold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {creating ? "Yaratilmoqda..." : "Yaratish"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}

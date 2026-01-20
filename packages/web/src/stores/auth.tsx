@@ -52,6 +52,7 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       login: (tokens, user) => {
+        // Zustand store'ga saqlash
         set({
           user,
           accessToken: tokens.access,
@@ -59,6 +60,12 @@ export const useAuthStore = create<AuthStore>()(
           isAuthenticated: true,
           error: null,
         })
+
+        // localStorage'ga ham saqlash (fallback uchun)
+        if (typeof window !== "undefined") {
+          localStorage.setItem("access_token", tokens.access)
+          localStorage.setItem("refresh_token", tokens.refresh)
+        }
       },
 
       logout: () => {
@@ -69,6 +76,12 @@ export const useAuthStore = create<AuthStore>()(
           isAuthenticated: false,
           error: null,
         })
+
+        // localStorage'dan ham o'chirish
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("access_token")
+          localStorage.removeItem("refresh_token")
+        }
       },
 
       refreshAccessToken: (newAccessToken: string) => {
