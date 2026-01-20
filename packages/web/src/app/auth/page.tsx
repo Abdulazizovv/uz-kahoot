@@ -13,12 +13,12 @@ const AuthPage = () => {
     if (isAuthenticated && user) {
       // Already authenticated, redirect to dashboard
       if (user.user_type === "student") {
-        router.push("/student/dashboard")
+        window.location.href = "/student/dashboard"
       } else if (user.user_type === "teacher") {
-        router.push("/teacher/dashboard")
+        window.location.href = "/teacher/dashboard"
       }
     }
-  }, [isAuthenticated, user, router])
+  }, [isAuthenticated, user])
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">

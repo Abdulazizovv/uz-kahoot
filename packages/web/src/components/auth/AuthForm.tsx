@@ -52,11 +52,11 @@ const AuthForm = () => {
 
       toast.success("Muvaffaqiyatli kirildi!")
 
-      // Role based redirect
+      // Role based redirect - window.location ishlatish production uchun
       if (response.user.user_type === "student") {
-        router.push("/student/dashboard")
+        window.location.href = "/student/dashboard"
       } else if (response.user.user_type === "teacher") {
-        router.push("/teacher/dashboard")
+        window.location.href = "/teacher/dashboard"
       }
     } catch (error: any) {
       console.error("Auth error:", error)
