@@ -2,23 +2,34 @@
 
 import AuthForm from "@/components/auth/AuthForm"
 import { useAuthStore } from "@/stores/auth"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 
 const AuthPage = () => {
   const { isAuthenticated, user } = useAuthStore()
-  const router = useRouter()
+  const hasRedirected = useRef(false)
 
   useEffect(() => {
-    if (isAuthenticated && user) {
-      // Already authenticated, redirect to dashboard
-      if (user.user_type === "student") {
-        window.location.href = "/student/dashboard"
-      } else if (user.user_type === "teacher") {
-        window.location.href = "/teacher/dashboard"
-      }
+    // Faqat bir marta redirect qilish
+    if (isAuthenticated && user && !hasRedirected.current) {
+      hasRedirected.current = true
+      
+      const redirectUrl =
+        user.user_type === "student"
+          ? "/student/dashboard"
+          : "/teacher/dashboard"
+      
+      window.location.href = redirectUrl
     }
   }, [isAuthenticated, user])
+
+  // Agar redirect bo'layotgan bo'lsa, loading ko'rsatish
+  if (isAuthenticated && user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center px-4">
+        <div className="text-white">Yo'naltirilmoqda...</div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
