@@ -5,12 +5,18 @@ import { useAuthStore } from "@/stores/auth"
 import { useEffect, useRef } from "react"
 
 const AuthPage = () => {
-  const { isAuthenticated, user } = useAuthStore()
+  const { isAuthenticated, user, _hasHydrated } = useAuthStore()
   const hasRedirected = useRef(false)
 
   useEffect(() => {
+    // Zustand hydration kutish
+    if (!_hasHydrated) return
+    
+    // Redirect loop oldini olish
+    if (hasRedirected.current) return
+    
     // Faqat bir marta redirect qilish
-    if (isAuthenticated && user && !hasRedirected.current) {
+    if (isAuthenticated && user) {
       hasRedirected.current = true
       
       const redirectUrl =
@@ -20,7 +26,16 @@ const AuthPage = () => {
       
       window.location.href = redirectUrl
     }
-  }, [isAuthenticated, user])
+  }, [isAuthenticated, user, _hasHydrated])
+
+  // Hydration kutilmoqda
+  if (!_hasHydrated) {
+    return (
+      <div className="flex min-h-screen items-center justify-center px-4">
+        <div className="text-white">Yuklanmoqda...</div>
+      </div>
+    )
+  }
 
   // Agar redirect bo'layotgan bo'lsa, loading ko'rsatish
   if (isAuthenticated && user) {
