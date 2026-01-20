@@ -2,12 +2,12 @@
 
 import { QuizzWithId } from "@eduarena/common/types/game"
 import { STATUS } from "@eduarena/common/types/game/status"
-import ManagerPassword from "@eduarena/web/components/game/create/ManagerPassword"
-import SelectQuizz from "@eduarena/web/components/game/create/SelectQuizz"
-import Loader from "@eduarena/web/components/Loader"
-import { useEvent, useSocket } from "@eduarena/web/contexts/socketProvider"
-import { useManagerStore } from "@eduarena/web/stores/manager"
-import { useQuestionStore } from "@eduarena/web/stores/question"
+import ManagerPassword from "@/components/game/create/ManagerPassword"
+import SelectQuizz from "@/components/game/create/SelectQuizz"
+import Loader from "@/components/Loader"
+import { useEvent, useSocket } from "@/contexts/socketProvider"
+import { useManagerStore } from "@/stores/manager"
+import { useQuestionStore } from "@/stores/question"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -36,7 +36,7 @@ const CreateGame = () => {
     "manager:gameCreated",
     ({ gameId, inviteCode }: { gameId: string; inviteCode: string }) => {
       setGameId(gameId)
-      setStatus(STATUS.SHOW_ROOM, { inviteCode })
+      setStatus(STATUS.SHOW_ROOM, { text: "Kutish xonasi", inviteCode })
       setPlayers([])
       setQuestionStates({
         current: 1,

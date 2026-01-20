@@ -1,5 +1,5 @@
 import { QuizzWithId } from "@eduarena/common/types/game"
-import Button from "@eduarena/web/components/Button"
+import Button from "@/components/Button"
 import clsx from "clsx"
 import { useState } from "react"
 import toast from "react-hot-toast"

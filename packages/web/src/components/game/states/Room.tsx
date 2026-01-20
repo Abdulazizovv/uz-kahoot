@@ -2,8 +2,8 @@
 
 import { Player } from "@eduarena/common/types/game"
 import { ManagerStatusDataMap } from "@eduarena/common/types/game/status"
-import { useEvent, useSocket } from "@eduarena/web/contexts/socketProvider"
-import { useManagerStore } from "@eduarena/web/stores/manager"
+import { useEvent, useSocket } from "@/contexts/socketProvider"
+import { useManagerStore } from "@/stores/manager"
 import { useState } from "react"
 
 type Props = {

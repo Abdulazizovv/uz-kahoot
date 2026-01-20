@@ -1,12 +1,41 @@
 "use client"
 
-import { useAuthStore } from "@eduarena/web/stores/auth"
+import { useAuthStore } from "@/stores/auth"
 import { useState } from "react"
 
 const Header = () => {
   const { user, logout } = useAuthStore()
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const currentTime = new Date()
+
+  // O'zbek oylarining nomlari
+  const months = [
+    "yanvar",
+    "fevral",
+    "mart",
+    "aprel",
+    "may",
+    "iyun",
+    "iyul",
+    "avgust",
+    "sentabr",
+    "oktabr",
+    "noyabr",
+    "dekabr",
+  ]
+
+  const formatDate = (date: Date) => {
+    const day = date.getDate()
+    const month = months[date.getMonth()]
+    const year = date.getFullYear()
+    return `${day}-${month}, ${year}`
+  }
+
+  const formatTime = (date: Date) => {
+    const hours = String(date.getHours()).padStart(2, "0")
+    const minutes = String(date.getMinutes()).padStart(2, "0")
+    return `${hours}:${minutes}`
+  }
 
   return (
     <header className="sticky top-0 z-30 border-b-2 border-gray-300 bg-white shadow-sm">
@@ -15,7 +44,7 @@ const Header = () => {
         <div>
           <div className="mb-1 flex items-center gap-3">
             <h1 className="text-2xl font-bold tracking-tight text-gray-900">
-              Prof. {user?.first_name} {user?.last_name}
+              {user?.first_name} {user?.last_name}
             </h1>
             <span className="rounded-md bg-blue-900 px-3 py-1 text-xs font-bold tracking-wider text-white uppercase">
               O'qituvchi
@@ -36,18 +65,25 @@ const Header = () => {
                   d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                 />
               </svg>
-              <span className="font-medium">
-                {currentTime.toLocaleDateString("uz-UZ", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </span>
+              <span className="font-medium">{formatDate(currentTime)}</span>
             </div>
             <span className="text-gray-400">•</span>
-            <span className="font-medium">
-              {currentTime.toLocaleDateString("uz-UZ", { weekday: "long" })}
-            </span>
+            <div className="flex items-center gap-1.5">
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span className="font-medium">{formatTime(currentTime)}</span>
+            </div>
           </div>
         </div>
 
@@ -111,7 +147,7 @@ const Header = () => {
                 <div className="text-sm font-semibold">
                   {user?.first_name} {user?.last_name}
                 </div>
-                <div className="text-xs text-blue-200">Professor</div>
+                <div className="text-xs text-blue-200">O'qituvchi</div>
               </div>
               <svg
                 className={`h-5 w-5 transition-transform ${

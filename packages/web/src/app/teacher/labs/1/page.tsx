@@ -1,9 +1,9 @@
 "use client"
 
-import ElectrostaticsSimulator from "@eduarena/web/components/labs/ElectrostaticsSimulator"
-import Header from "@eduarena/web/components/teacher/Header"
-import Sidebar from "@eduarena/web/components/teacher/Sidebar"
-import { useAuthStore } from "@eduarena/web/stores/auth"
+import ElectrostaticsSimulator from "@/components/labs/ElectrostaticsSimulator"
+import Header from "@/components/teacher/Header"
+import Sidebar from "@/components/teacher/Sidebar"
+import { useAuthStore } from "@/stores/auth"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"

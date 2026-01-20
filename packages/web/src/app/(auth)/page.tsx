@@ -1,7 +1,7 @@
 "use client"
 
-import AuthForm from "@eduarena/web/components/auth/AuthForm"
-import { useAuthStore } from "@eduarena/web/stores/auth"
+import AuthForm from "@/components/auth/AuthForm"
+import { useAuthStore } from "@/stores/auth"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 

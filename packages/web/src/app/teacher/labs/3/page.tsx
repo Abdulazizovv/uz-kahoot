@@ -1,9 +1,9 @@
 "use client"
 
-import OhmsLawSimulator from "@eduarena/web/components/labs/OhmsLawSimulator"
-import Header from "@eduarena/web/components/teacher/Header"
-import Sidebar from "@eduarena/web/components/teacher/Sidebar"
-import { useAuthStore } from "@eduarena/web/stores/auth"
+import OhmsLawSimulator from "@/components/labs/OhmsLawSimulator"
+import Header from "@/components/teacher/Header"
+import Sidebar from "@/components/teacher/Sidebar"
+import { useAuthStore } from "@/stores/auth"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"

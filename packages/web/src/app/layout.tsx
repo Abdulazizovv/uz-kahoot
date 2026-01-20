@@ -1,5 +1,5 @@
-import Toaster from "@eduarena/web/components/Toaster"
-import { SocketProvider } from "@eduarena/web/contexts/socketProvider"
+import Toaster from "@/components/Toaster"
+import { SocketProvider } from "@/contexts/socketProvider"
 import type { Metadata } from "next"
 import { Montserrat } from "next/font/google"
 import { PropsWithChildren } from "react"

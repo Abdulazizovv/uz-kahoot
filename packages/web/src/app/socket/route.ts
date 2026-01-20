@@ -1,4 +1,4 @@
-import env from "@eduarena/web/env"
+import env from "@/env"
 import { NextResponse } from "next/server"
 
 export function GET() {

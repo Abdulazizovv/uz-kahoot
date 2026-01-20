@@ -1,19 +1,19 @@
 "use client"
 
 import { STATUS } from "@eduarena/common/types/game/status"
-import GameWrapper from "@eduarena/web/components/game/GameWrapper"
-import Answers from "@eduarena/web/components/game/states/Answers"
-import Leaderboard from "@eduarena/web/components/game/states/Leaderboard"
-import Podium from "@eduarena/web/components/game/states/Podium"
-import Prepared from "@eduarena/web/components/game/states/Prepared"
-import Question from "@eduarena/web/components/game/states/Question"
-import Responses from "@eduarena/web/components/game/states/Responses"
-import Room from "@eduarena/web/components/game/states/Room"
-import Start from "@eduarena/web/components/game/states/Start"
-import { useEvent, useSocket } from "@eduarena/web/contexts/socketProvider"
-import { useManagerStore } from "@eduarena/web/stores/manager"
-import { useQuestionStore } from "@eduarena/web/stores/question"
-import { GAME_STATE_COMPONENTS_MANAGER } from "@eduarena/web/utils/constants"
+import GameWrapper from "@/components/game/GameWrapper"
+import Answers from "@/components/game/states/Answers"
+import Leaderboard from "@/components/game/states/Leaderboard"
+import Podium from "@/components/game/states/Podium"
+import Prepared from "@/components/game/states/Prepared"
+import Question from "@/components/game/states/Question"
+import Responses from "@/components/game/states/Responses"
+import Room from "@/components/game/states/Room"
+import Start from "@/components/game/states/Start"
+import { useEvent, useSocket } from "@/contexts/socketProvider"
+import { useManagerStore } from "@/stores/manager"
+import { useQuestionStore } from "@/stores/question"
+import { GAME_STATE_COMPONENTS_MANAGER } from "@/utils/constants"
 import { useParams, useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 
@@ -47,7 +47,7 @@ const ManagerGame = () => {
       inviteCode: string
     }) => {
       setGameId(newGameId)
-      setStatus(STATUS.SHOW_ROOM, { inviteCode })
+      setStatus(STATUS.SHOW_ROOM, { text: "Kutish xonasi", inviteCode })
       setPlayers([])
       setQuestionStates({ current: 1, total: 0 })
     },

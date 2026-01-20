@@ -1,8 +1,8 @@
 "use client"
 
-import Room from "@eduarena/web/components/game/join/Room"
-import Username from "@eduarena/web/components/game/join/Username"
-import { usePlayerStore } from "@eduarena/web/stores/player"
+import Room from "@/components/game/join/Room"
+import Username from "@/components/game/join/Username"
+import { usePlayerStore } from "@/stores/player"
 import { useEffect } from "react"
 
 const JoinGame = () => {

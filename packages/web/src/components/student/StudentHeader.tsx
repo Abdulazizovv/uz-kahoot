@@ -11,7 +11,7 @@ export default function StudentHeader() {
         {/* Welcome Section */}
         <div>
           <h2 className="text-lg font-semibold text-gray-900">
-            {user?.firstName || "Talaba"} {user?.lastName || ""}
+            {user?.first_name || "Talaba"} {user?.last_name || ""}
           </h2>
           <p className="text-xs text-gray-500">ID: {user?.id || "000000"}</p>
         </div>
@@ -58,11 +58,11 @@ export default function StudentHeader() {
           {/* Profile */}
           <button className="flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-2 transition-colors hover:bg-gray-50">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-sm font-medium text-gray-700">
-              {user?.firstName?.[0] || "S"}
+              {user?.first_name?.[0] || "S"}
             </div>
             <div className="text-left">
               <div className="text-sm font-medium text-gray-900">
-                {user?.firstName} {user?.lastName}
+                {user?.first_name} {user?.last_name}
               </div>
             </div>
           </button>

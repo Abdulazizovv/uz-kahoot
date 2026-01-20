@@ -1,10 +1,10 @@
 "use client"
 
 import { CommonStatusDataMap } from "@eduarena/common/types/game/status"
-import CricleCheck from "@eduarena/web/components/icons/CricleCheck"
-import CricleXmark from "@eduarena/web/components/icons/CricleXmark"
-import { usePlayerStore } from "@eduarena/web/stores/player"
-import { SFX_RESULTS_SOUND } from "@eduarena/web/utils/constants"
+import CricleCheck from "@/components/icons/CricleCheck"
+import CricleXmark from "@/components/icons/CricleXmark"
+import { usePlayerStore } from "@/stores/player"
+import { SFX_RESULTS_SOUND } from "@/utils/constants"
 import { useEffect } from "react"
 import useSound from "use-sound"
 

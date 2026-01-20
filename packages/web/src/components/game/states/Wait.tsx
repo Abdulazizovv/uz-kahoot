@@ -1,7 +1,7 @@
 import { PlayerStatusDataMap } from "@eduarena/common/types/game/status"
-import Loader from "@eduarena/web/components/Loader"
-import { usePlayerStore } from "@eduarena/web/stores/player"
-import { useQuestionStore } from "@eduarena/web/stores/question"
+import Loader from "@/components/Loader"
+import { usePlayerStore } from "@/stores/player"
+import { useQuestionStore } from "@/stores/question"
 
 type Props = {
   data: PlayerStatusDataMap["WAIT"]

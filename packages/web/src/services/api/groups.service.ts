@@ -9,6 +9,13 @@ export interface StudentGroup {
   updated_at: string
 }
 
+interface PaginatedResponse<T> {
+  count: number
+  next: string | null
+  previous: string | null
+  results: T[]
+}
+
 export interface StudentGroupDetail extends StudentGroup {
   students: Array<{
     id: string
@@ -41,7 +48,7 @@ export const groupsService = {
     search?: string
     ordering?: string
   }) {
-    const response = await apiClient.get<{ results: StudentGroup[] }>(
+    const response = await apiClient.get<PaginatedResponse<StudentGroup>>(
       "/api/students/groups/",
       { params },
     )

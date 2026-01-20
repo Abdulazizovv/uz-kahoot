@@ -1,4 +1,4 @@
-import loader from "@eduarena/web/assets/loader.svg"
+import loader from "@/assets/loader.svg"
 import Image from "next/image"
 
 type Props = {

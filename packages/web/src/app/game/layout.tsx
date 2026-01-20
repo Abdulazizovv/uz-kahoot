@@ -1,6 +1,6 @@
 "use client"
 
-import { useSocket } from "@eduarena/web/contexts/socketProvider"
+import { useSocket } from "@/contexts/socketProvider"
 import { PropsWithChildren, useEffect } from "react"
 
 const GameLayout = ({ children }: PropsWithChildren) => {

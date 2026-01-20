@@ -1,5 +1,12 @@
 import apiClient from "@/lib/api-client"
 
+interface PaginatedResponse<T> {
+  count: number
+  next: string | null
+  previous: string | null
+  results: T[]
+}
+
 export interface Student {
   id: string
   user: {
@@ -36,8 +43,8 @@ export const studentsService = {
     search?: string
     ordering?: string
   }) {
-    const response = await apiClient.get<{ results: Student[] }>(
-      "/api/students/",
+    const response = await apiClient.get<PaginatedResponse<Student>>(
+      "/api/students/students/",
       { params },
     )
     return response.data.results
@@ -45,24 +52,30 @@ export const studentsService = {
 
   // Student tafsilotlari
   async getById(id: string) {
-    const response = await apiClient.get<StudentDetail>(`/api/students/${id}/`)
+    const response = await apiClient.get<StudentDetail>(
+      `/api/students/students/${id}/`,
+    )
     return response.data
   },
 
   // Mening profilim (student)
   async getMe() {
-    const response = await apiClient.get<StudentDetail>("/api/students/me/")
+    const response = await apiClient.get<StudentDetail>(
+      "/api/students/students/me/",
+    )
     return response.data
   },
 
   // Guruh bo'yicha studentlar
   async getByGroup(groupId: string) {
-    const response = await apiClient.get<{ results: Student[] }>(
-      "/api/students/by_group/",
+    console.log("Loading students for group:", groupId)
+    const response = await apiClient.get<PaginatedResponse<Student>>(
+      "/api/students/students/",
       {
-        params: { group_id: groupId },
+        params: { group: groupId },
       },
     )
+    console.log("Students response:", response.data)
     return response.data.results
   },
 
@@ -73,7 +86,10 @@ export const studentsService = {
     date_of_birth?: string
     address?: string
   }) {
-    const response = await apiClient.post<Student>("/api/students/", data)
+    const response = await apiClient.post<Student>(
+      "/api/students/students/",
+      data,
+    )
     return response.data
   },
 
@@ -87,7 +103,7 @@ export const studentsService = {
     }>,
   ) {
     const response = await apiClient.patch<Student>(
-      `/api/students/${id}/`,
+      `/api/students/students/${id}/`,
       data,
     )
     return response.data
@@ -95,6 +111,6 @@ export const studentsService = {
 
   // Studentni o'chirish
   async delete(id: string) {
-    await apiClient.delete(`/api/students/${id}/`)
+    await apiClient.delete(`/api/students/students/${id}/`)
   },
 }

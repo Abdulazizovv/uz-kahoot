@@ -1,7 +1,7 @@
-import Button from "@eduarena/web/components/Button"
-import Form from "@eduarena/web/components/Form"
-import Input from "@eduarena/web/components/Input"
-import { useEvent } from "@eduarena/web/contexts/socketProvider"
+import Button from "@/components/Button"
+import Form from "@/components/Form"
+import Input from "@/components/Input"
+import { useEvent } from "@/contexts/socketProvider"
 import { KeyboardEvent, useState } from "react"
 import toast from "react-hot-toast"
 

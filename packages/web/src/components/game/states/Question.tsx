@@ -1,7 +1,7 @@
 "use client"
 
 import { CommonStatusDataMap } from "@eduarena/common/types/game/status"
-import { SFX_SHOW_SOUND } from "@eduarena/web/utils/constants"
+import { SFX_SHOW_SOUND } from "@/utils/constants"
 import { useEffect } from "react"
 import useSound from "use-sound"
 

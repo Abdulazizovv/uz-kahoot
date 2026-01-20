@@ -1,9 +1,9 @@
 "use client"
 
-import Button from "@eduarena/web/components/Button"
-import Input from "@eduarena/web/components/Input"
-import { authService } from "@eduarena/web/services/auth"
-import { useAuthStore } from "@eduarena/web/stores/auth"
+import Button from "@/components/Button"
+import Input from "@/components/Input"
+import { authService } from "@/services/auth"
+import { useAuthStore } from "@/stores/auth"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import toast from "react-hot-toast"

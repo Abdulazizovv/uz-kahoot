@@ -1,4 +1,4 @@
-import env from "@eduarena/web/env"
+import env from "@/env"
 import ky from "ky"
 
 const API_BASE = env.NEXT_PUBLIC_API_URL

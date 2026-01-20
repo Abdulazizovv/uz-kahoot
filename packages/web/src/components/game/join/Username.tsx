@@ -1,11 +1,11 @@
 "use client"
 
 import { STATUS } from "@eduarena/common/types/game/status"
-import Button from "@eduarena/web/components/Button"
-import Form from "@eduarena/web/components/Form"
-import Input from "@eduarena/web/components/Input"
-import { useEvent, useSocket } from "@eduarena/web/contexts/socketProvider"
-import { usePlayerStore } from "@eduarena/web/stores/player"
+import Button from "@/components/Button"
+import Form from "@/components/Form"
+import Input from "@/components/Input"
+import { useEvent, useSocket } from "@/contexts/socketProvider"
+import { usePlayerStore } from "@/stores/player"
 
 import { useRouter } from "next/navigation"
 import { KeyboardEvent, useState } from "react"

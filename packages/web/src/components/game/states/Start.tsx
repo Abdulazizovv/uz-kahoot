@@ -1,8 +1,8 @@
 "use client"
 
 import { CommonStatusDataMap } from "@eduarena/common/types/game/status"
-import { useEvent } from "@eduarena/web/contexts/socketProvider"
-import { SFX_BOUMP_SOUND } from "@eduarena/web/utils/constants"
+import { useEvent } from "@/contexts/socketProvider"
+import { SFX_BOUMP_SOUND } from "@/utils/constants"
 import clsx from "clsx"
 import { useState } from "react"
 import useSound from "use-sound"

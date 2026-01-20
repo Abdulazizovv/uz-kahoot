@@ -1,6 +1,6 @@
 import { Player } from "@eduarena/common/types/game"
 import { StatusDataMap } from "@eduarena/common/types/game/status"
-import { createStatus, Status } from "@eduarena/web/utils/createStatus"
+import { createStatus, Status } from "@/utils/createStatus"
 import { create } from "zustand"
 
 type ManagerStore<T> = {

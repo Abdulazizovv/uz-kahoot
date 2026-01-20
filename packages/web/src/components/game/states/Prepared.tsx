@@ -1,5 +1,5 @@
 import { CommonStatusDataMap } from "@eduarena/common/types/game/status"
-import { ANSWERS_COLORS, ANSWERS_ICONS } from "@eduarena/web/utils/constants"
+import { ANSWERS_COLORS, ANSWERS_ICONS } from "@/utils/constants"
 import clsx from "clsx"
 import { createElement } from "react"
 

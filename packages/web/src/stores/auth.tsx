@@ -1,4 +1,4 @@
-import { User } from "@eduarena/web/services/auth"
+import { User } from "@/services/auth"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 

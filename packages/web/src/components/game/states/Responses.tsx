@@ -1,14 +1,14 @@
 "use client"
 
 import { ManagerStatusDataMap } from "@eduarena/common/types/game/status"
-import AnswerButton from "@eduarena/web/components/AnswerButton"
+import AnswerButton from "@/components/AnswerButton"
 import {
   ANSWERS_COLORS,
   ANSWERS_ICONS,
   SFX_ANSWERS_MUSIC,
   SFX_RESULTS_SOUND,
-} from "@eduarena/web/utils/constants"
-import { calculatePercentages } from "@eduarena/web/utils/score"
+} from "@/utils/constants"
+import { calculatePercentages } from "@/utils/score"
 import clsx from "clsx"
 import { useEffect, useState } from "react"
 import useSound from "use-sound"

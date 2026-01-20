@@ -1,9 +1,9 @@
 "use client"
 
-import Features from "@eduarena/web/components/landing/Features"
-import Footer from "@eduarena/web/components/landing/Footer"
-import Hero from "@eduarena/web/components/landing/Hero"
-import Roles from "@eduarena/web/components/landing/Roles"
+import Features from "@/components/landing/Features"
+import Footer from "@/components/landing/Footer"
+import Hero from "@/components/landing/Hero"
+import Roles from "@/components/landing/Roles"
 
 export default function Home() {
   return (
