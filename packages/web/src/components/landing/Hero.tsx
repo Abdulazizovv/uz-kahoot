@@ -1,7 +1,19 @@
+"use client"
+
+import { useAuthStore } from "@/stores/auth"
 import { motion } from "motion/react"
 import Link from "next/link"
 
 const Hero = () => {
+  const { isAuthenticated, user } = useAuthStore()
+
+  const getDashboardUrl = () => {
+    if (!user) return "/auth"
+    return user.user_type === "student"
+      ? "/student/dashboard"
+      : "/teacher/dashboard"
+  }
+
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
       {/* Background Pattern */}
@@ -36,13 +48,23 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="mb-12 flex flex-col items-center justify-center gap-6 sm:flex-row"
         >
-          <Link
-            href="/auth"
-            className="group relative transform rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl"
-          >
-            <span className="relative z-10">Boshlash</span>
-            <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-700 to-purple-700 opacity-0 transition-opacity duration-200 group-hover:opacity-100"></div>
-          </Link>
+          {isAuthenticated ? (
+            <Link
+              href={getDashboardUrl()}
+              className="group relative transform rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl"
+            >
+              <span className="relative z-10">Dashboard'ga o'tish</span>
+              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-700 to-purple-700 opacity-0 transition-opacity duration-200 group-hover:opacity-100"></div>
+            </Link>
+          ) : (
+            <Link
+              href="/auth"
+              className="group relative transform rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl"
+            >
+              <span className="relative z-10">Boshlash</span>
+              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-700 to-purple-700 opacity-0 transition-opacity duration-200 group-hover:opacity-100"></div>
+            </Link>
+          )}
           <Link
             href="#features"
             className="rounded-lg border-2 border-white/30 px-8 py-4 text-lg font-semibold text-white transition-all duration-200 hover:border-white/50 hover:bg-white/10"

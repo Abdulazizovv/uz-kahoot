@@ -83,9 +83,9 @@ export default function StudentSidebar() {
           icon="⚗️"
           label="Laboratoriyalar"
           badge={14}
-        />{" "}
-        <MenuItem href="/student/attendance" icon="📅" label="Davomat" />{" "}
-        <MenuItem href="/student/games" icon="�" label="Test O'yinlari" />
+        />
+        <MenuItem href="/game/join" icon="🎮" label="Testga qatnashish" />
+        <MenuItem href="/student/attendance" icon="📅" label="Davomat" />
         <MenuItem href="/student/results" icon="📈" label="Natijalarim" />
         <MenuItem
           href="/student/achievements"

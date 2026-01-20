@@ -43,15 +43,8 @@ export function middleware(request: NextRequest) {
   const authCookie = request.cookies.get("auth-storage")?.value
   const { isAuthenticated, userType } = parseAuthCookie(authCookie)
 
-  // Handle root path redirect
+  // Handle root path - allow everyone to access landing page
   if (pathname === "/") {
-    if (isAuthenticated && userType) {
-      // Authenticated users go to their dashboard
-      const dashboardUrl =
-        userType === "student" ? "/student/dashboard" : "/teacher/dashboard"
-      return NextResponse.redirect(new URL(dashboardUrl, request.url))
-    }
-    // Unauthenticated users can access landing page
     return NextResponse.next()
   }
 
@@ -96,10 +89,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/",
-    "/auth",
-    "/student/:path*",
-    "/teacher/:path*",
-  ],
+  matcher: ["/", "/auth", "/student/:path*", "/teacher/:path*"],
 }
