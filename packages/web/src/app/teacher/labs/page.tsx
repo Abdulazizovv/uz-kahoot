@@ -1,8 +1,8 @@
 "use client"
 
+import ComingSoon from "@/components/ComingSoon"
 import Header from "@/components/teacher/Header"
 import Sidebar from "@/components/teacher/Sidebar"
-import ComingSoon from "@/components/ComingSoon"
 
 const LabsPage = () => {
   return (
