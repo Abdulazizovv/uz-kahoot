@@ -3,6 +3,7 @@
 import { useAuthStore } from "@/stores/auth"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
+import { useState } from "react"
 
 interface MenuItemProps {
   href: string
@@ -38,6 +39,7 @@ const MenuItem = ({ href, icon, label, badge }: MenuItemProps) => {
 export default function StudentSidebar() {
   const router = useRouter()
   const { logout } = useAuthStore()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const handleLogout = () => {
     logout()
@@ -45,7 +47,38 @@ export default function StudentSidebar() {
   }
 
   return (
-    <div className="flex h-screen w-64 flex-col border-r border-gray-200 bg-white">
+    <>
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        className="fixed top-4 left-4 z-50 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-600 text-white shadow-lg lg:hidden"
+        aria-label="Toggle menu"
+      >
+        {isMobileMenuOpen ? (
+          <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        ) : (
+          <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        )}
+      </button>
+
+      {/* Overlay */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div
+        className={`fixed inset-y-0 left-0 z-40 flex h-screen w-64 flex-col border-r border-gray-200 bg-white transition-transform duration-300 lg:static lg:translate-x-0 ${
+          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
       {/* Logo */}
       <div className="flex h-20 items-center border-b border-gray-200 bg-gray-50 px-6">
         <div className="flex items-center gap-3">
@@ -122,6 +155,7 @@ export default function StudentSidebar() {
           <span>Chiqish</span>
         </button>
       </div>
-    </div>
+      </div>
+    </>
   )
 }

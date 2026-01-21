@@ -16,23 +16,23 @@ export default function ComingSoon({
   estimatedDate,
 }: ComingSoonProps) {
   return (
-    <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-8">
+    <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6 lg:p-8">
       <div className="w-full max-w-2xl">
-        <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-xl">
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-xl sm:p-8">
           {/* Icon */}
           <div className="mb-6 flex justify-center">
-            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-purple-100">
-              <span className="text-5xl">{icon}</span>
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-purple-100 sm:h-24 sm:w-24">
+              <span className="text-4xl sm:text-5xl">{icon}</span>
             </div>
           </div>
 
           {/* Title */}
-          <h1 className="mb-4 text-center text-3xl font-bold text-gray-900">
+          <h1 className="mb-4 text-center text-2xl font-bold text-gray-900 sm:text-3xl">
             {title}
           </h1>
 
           {/* Description */}
-          <p className="mb-6 text-center text-lg text-gray-600">
+          <p className="mb-6 text-center text-base text-gray-600 sm:text-lg">
             {description}
           </p>
 

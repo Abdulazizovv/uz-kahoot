@@ -58,7 +58,7 @@ const Hero = () => {
             ease: "easeInOut",
           }}
         />
-        
+
         {/* Grid Pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
       </div>
@@ -155,7 +155,9 @@ const Hero = () => {
             className="group rounded-2xl border border-blue-400/20 bg-gradient-to-br from-blue-500/10 to-purple-500/10 p-8 backdrop-blur-md transition-all"
           >
             <div className="mb-3 text-5xl">🎮</div>
-            <div className="mb-2 text-5xl font-black text-white group-hover:text-blue-400 transition-colors">Live</div>
+            <div className="mb-2 text-5xl font-black text-white transition-colors group-hover:text-blue-400">
+              Live
+            </div>
             <div className="text-lg text-gray-300">Real-time Testlar</div>
             <div className="mt-2 text-sm text-blue-300">Kahoot uslubida</div>
           </motion.div>
@@ -164,7 +166,9 @@ const Hero = () => {
             className="group rounded-2xl border border-purple-400/20 bg-gradient-to-br from-purple-500/10 to-pink-500/10 p-8 backdrop-blur-md transition-all"
           >
             <div className="mb-3 text-5xl">🔬</div>
-            <div className="mb-2 text-5xl font-black text-white group-hover:text-purple-400 transition-colors">14+</div>
+            <div className="mb-2 text-5xl font-black text-white transition-colors group-hover:text-purple-400">
+              14+
+            </div>
             <div className="text-lg text-gray-300">Laboratoriyalar</div>
             <div className="mt-2 text-sm text-purple-300">Fizika fanlari</div>
           </motion.div>
@@ -173,14 +177,16 @@ const Hero = () => {
             className="group rounded-2xl border border-pink-400/20 bg-gradient-to-br from-pink-500/10 to-orange-500/10 p-8 backdrop-blur-md transition-all"
           >
             <div className="mb-3 text-5xl">☁️</div>
-            <div className="mb-2 text-5xl font-black text-white group-hover:text-pink-400 transition-colors">24/7</div>
+            <div className="mb-2 text-5xl font-black text-white transition-colors group-hover:text-pink-400">
+              24/7
+            </div>
             <div className="text-lg text-gray-300">Cloud Access</div>
             <div className="mt-2 text-sm text-pink-300">Har qanday joydan</div>
           </motion.div>
         </motion.div>
 
         {/* Floating Icons */}
-        <div className="absolute inset-0 pointer-events-none">
+        <div className="pointer-events-none absolute inset-0">
           <motion.div
             className="absolute top-1/4 left-10 text-6xl"
             animate={{

@@ -16,7 +16,12 @@ const features = [
       "Fizika tajribalarini xavfsiz va interaktiv muhitda o'tkazing. 3D simulyatorlar va real vaqt kalkulyatorlari.",
     icon: "⚗️",
     color: "from-cyan-500 via-blue-500 to-indigo-500",
-    benefits: ["3D simulyatorlar", "Real kalkulyatorlar", "Step-by-step guide", "Video qo'llanmalar"],
+    benefits: [
+      "3D simulyatorlar",
+      "Real kalkulyatorlar",
+      "Step-by-step guide",
+      "Video qo'llanmalar",
+    ],
     image: "🧪",
   },
   {
@@ -25,7 +30,12 @@ const features = [
       "O'quvchilar progressini chuqur tahlil qiling. Kuchli va zaif tomonlarni aniqlang, individual yondashuv qo'llang.",
     icon: "📈",
     color: "from-emerald-500 via-teal-500 to-cyan-500",
-    benefits: ["Progress tracking", "Tahlil va hisobotlar", "Individual statistika", "Export PDF"],
+    benefits: [
+      "Progress tracking",
+      "Tahlil va hisobotlar",
+      "Individual statistika",
+      "Export PDF",
+    ],
     image: "📉",
   },
   {
@@ -34,19 +44,27 @@ const features = [
       "Barcha dars materiallari, video darslar va PDF fayllar bir joyda. Istalgan vaqt va joydan kirish imkoniyati.",
     icon: "💾",
     color: "from-purple-500 via-pink-500 to-rose-500",
-    benefits: ["Video darslar", "PDF materiallar", "Rasm galereya", "Cheksiz saqlash"],
+    benefits: [
+      "Video darslar",
+      "PDF materiallar",
+      "Rasm galereya",
+      "Cheksiz saqlash",
+    ],
     image: "📱",
   },
 ]
 
 const Features = () => {
   return (
-    <section id="features" className="relative bg-gradient-to-b from-gray-50 via-white to-gray-50 px-4 py-32 overflow-hidden">
+    <section
+      id="features"
+      className="relative overflow-hidden bg-gradient-to-b from-gray-50 via-white to-gray-50 px-4 py-32"
+    >
       {/* Background Decoration */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-20 -left-20 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-        <div className="absolute top-40 -right-20 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-20 left-1/2 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+      <div className="pointer-events-none absolute top-0 left-0 h-full w-full overflow-hidden">
+        <div className="animate-blob absolute top-20 -left-20 h-72 w-72 rounded-full bg-blue-200 opacity-20 mix-blend-multiply blur-3xl filter"></div>
+        <div className="animate-blob animation-delay-2000 absolute top-40 -right-20 h-72 w-72 rounded-full bg-purple-200 opacity-20 mix-blend-multiply blur-3xl filter"></div>
+        <div className="animate-blob animation-delay-4000 absolute -bottom-20 left-1/2 h-72 w-72 rounded-full bg-pink-200 opacity-20 mix-blend-multiply blur-3xl filter"></div>
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl">
@@ -134,7 +152,7 @@ const Features = () => {
 
                 {/* Decorative Image */}
                 <motion.div
-                  className="absolute -bottom-4 -right-4 text-8xl opacity-10"
+                  className="absolute -right-4 -bottom-4 text-8xl opacity-10"
                   animate={{
                     rotate: [0, 10, 0],
                     scale: [1, 1.1, 1],
@@ -165,7 +183,8 @@ const Features = () => {
               Hoziroq boshlang! 🚀
             </h3>
             <p className="mb-8 text-lg text-gray-600">
-              Beta test bosqichida bepul foydalaning. Birinchilar qatoridan bo'ling!
+              Beta test bosqichida bepul foydalaning. Birinchilar qatoridan
+              bo'ling!
             </p>
             <motion.a
               href="/auth"

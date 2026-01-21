@@ -221,11 +221,11 @@ export default function StudentLabsPage() {
       <div className="flex flex-1 flex-col overflow-hidden">
         <StudentHeader />
 
-        <main className="flex-1 overflow-y-auto p-8">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           {/* Header */}
-          <div className="mb-8">
+          <div className="mb-6 sm:mb-8">
             <div className="mb-3 flex items-center gap-3">
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 shadow-lg">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 shadow-lg sm:h-14 sm:w-14">
                 <svg
                   className="h-8 w-8 text-white"
                   fill="currentColor"
@@ -235,10 +235,10 @@ export default function StudentLabsPage() {
                 </svg>
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
                   Virtual Laboratoriyalar
                 </h1>
-                <p className="text-sm text-gray-600">
+                <p className="text-xs text-gray-600 sm:text-sm">
                   Fizika bo'yicha 14 ta interaktiv laboratoriya simulyatori
                 </p>
               </div>
@@ -246,7 +246,7 @@ export default function StudentLabsPage() {
           </div>
 
           {/* Stats */}
-          <div className="mb-8 grid gap-6 md:grid-cols-3">
+          <div className="mb-6 grid gap-4 sm:grid-cols-2 sm:gap-6 lg:mb-8 lg:grid-cols-3">
             <div className="group rounded-xl border border-green-200 bg-gradient-to-br from-white to-green-50 p-6 shadow-md transition-all hover:-translate-y-1 hover:shadow-xl">
               <div className="flex items-center gap-4">
                 <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg">

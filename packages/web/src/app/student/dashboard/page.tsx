@@ -118,9 +118,9 @@ export default function StudentDashboard() {
       <div className="flex flex-1 flex-col overflow-hidden">
         <StudentHeader />
 
-        <main className="flex-1 overflow-y-auto p-8">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           {/* Stats Grid */}
-          <div className="mb-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:mb-8 lg:grid-cols-4 lg:gap-6">
             {stats.map((stat) => (
               <div
                 key={stat.id}
@@ -158,10 +158,10 @@ export default function StudentDashboard() {
           </div>
 
           {/* Main Content Grid */}
-          <div className="grid gap-8 lg:grid-cols-3">
+          <div className="grid gap-6 lg:grid-cols-3 lg:gap-8">
             {/* Active Labs */}
             <div className="lg:col-span-2">
-              <div className="rounded-2xl border-2 border-slate-200 bg-white p-8 shadow-lg">
+              <div className="rounded-2xl border-2 border-slate-200 bg-white p-4 shadow-lg sm:p-6 lg:p-8">
                 <div className="mb-6 flex items-center justify-between border-b-2 border-slate-100 pb-4">
                   <div>
                     <h2 className="text-2xl font-bold tracking-tight text-slate-900">

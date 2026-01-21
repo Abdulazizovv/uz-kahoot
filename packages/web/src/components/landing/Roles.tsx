@@ -83,7 +83,7 @@ const roles = [
 
 const Roles = () => {
   return (
-    <section className="relative bg-gradient-to-b from-gray-50 via-white to-blue-50 px-4 py-32 overflow-hidden">
+    <section className="relative overflow-hidden bg-gradient-to-b from-gray-50 via-white to-blue-50 px-4 py-32">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-30"></div>
 
@@ -137,7 +137,9 @@ const Roles = () => {
                   <h3 className="mb-2 text-4xl font-black text-gray-900">
                     {role.title}
                   </h3>
-                  <p className={`mb-4 text-lg font-semibold bg-gradient-to-r ${role.gradient} bg-clip-text text-transparent`}>
+                  <p
+                    className={`mb-4 bg-gradient-to-r text-lg font-semibold ${role.gradient} bg-clip-text text-transparent`}
+                  >
                     {role.subtitle}
                   </p>
                   <p className="text-lg leading-relaxed text-gray-600">
@@ -173,7 +175,9 @@ const Roles = () => {
                       key={idx}
                       className="flex-1 rounded-xl bg-gradient-to-br from-gray-50 to-white p-4 text-center shadow-md"
                     >
-                      <div className={`text-3xl font-black bg-gradient-to-r ${role.gradient} bg-clip-text text-transparent`}>
+                      <div
+                        className={`bg-gradient-to-r text-3xl font-black ${role.gradient} bg-clip-text text-transparent`}
+                      >
                         {stat.value}
                       </div>
                       <div className="text-sm text-gray-600">{stat.label}</div>
@@ -191,7 +195,7 @@ const Roles = () => {
                     index % 2 === 0 ? "border-blue-500" : "border-emerald-500"
                   }`}
                 >
-                  <p className="mb-4 italic text-gray-700">
+                  <p className="mb-4 text-gray-700 italic">
                     "{role.testimonial.text}"
                   </p>
                   <div>
@@ -218,7 +222,7 @@ const Roles = () => {
                 >
                   {/* Mockup Content */}
                   <div className="relative z-10 space-y-6">
-                    <div className="rounded-2xl bg-white/20 backdrop-blur-sm p-6">
+                    <div className="rounded-2xl bg-white/20 p-6 backdrop-blur-sm">
                       <div className="mb-4 h-4 w-1/2 rounded bg-white/40"></div>
                       <div className="space-y-2">
                         <div className="h-3 w-full rounded bg-white/30"></div>
@@ -226,11 +230,11 @@ const Roles = () => {
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="rounded-xl bg-white/20 backdrop-blur-sm p-4">
+                      <div className="rounded-xl bg-white/20 p-4 backdrop-blur-sm">
                         <div className="mb-2 h-3 w-3/4 rounded bg-white/40"></div>
                         <div className="h-6 w-1/2 rounded bg-white/50"></div>
                       </div>
-                      <div className="rounded-xl bg-white/20 backdrop-blur-sm p-4">
+                      <div className="rounded-xl bg-white/20 p-4 backdrop-blur-sm">
                         <div className="mb-2 h-3 w-3/4 rounded bg-white/40"></div>
                         <div className="h-6 w-1/2 rounded bg-white/50"></div>
                       </div>
