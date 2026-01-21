@@ -7,7 +7,9 @@ const env = createEnv({
   },
 
   client: {
-    NEXT_PUBLIC_API_URL: z.string().default("http://localhost:8080"),
+    NEXT_PUBLIC_API_URL: z
+      .string()
+      .default("https://apieduarena.mendeleyev.uz"),
   },
 
   runtimeEnv: {
