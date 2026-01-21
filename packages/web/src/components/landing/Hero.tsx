@@ -71,9 +71,9 @@ const Hero = () => {
           transition={{ duration: 0.6 }}
           className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/10 px-6 py-2 backdrop-blur-sm"
         >
-          <span className="text-2xl">🎓</span>
+          <span className="text-2xl">💻</span>
           <span className="text-sm font-semibold text-blue-300">
-            O'zbekiston Universitetlari uchun #1 Platforma
+            Zamonaviy IT ta'limi uchun platforma
           </span>
         </motion.div>
 
@@ -107,9 +107,9 @@ const Hero = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="mx-auto max-w-3xl text-xl leading-relaxed text-gray-300 md:text-2xl"
           >
-            🚀 Ta'limni gamifikatsiya qiling! Interaktiv testlar, real-time
-            raqobat va zamonaviy o'qitish vositalari bilan talabalaringizni
-            ilhomlantiring.
+            🚀 Interaktiv testlar va real-time raqobat bilan IT bilimlaringizni
+            oshiring. Dasturlash, algoritm va texnologiyalarni qiziqarli
+            formatda o'rganing!
           </motion.p>
         </motion.div>
 
@@ -165,12 +165,14 @@ const Hero = () => {
             whileHover={{ scale: 1.05, y: -5 }}
             className="group rounded-2xl border border-purple-400/20 bg-gradient-to-br from-purple-500/10 to-pink-500/10 p-8 backdrop-blur-md transition-all"
           >
-            <div className="mb-3 text-5xl">🔬</div>
+            <div className="mb-3 text-5xl">�</div>
             <div className="mb-2 text-5xl font-black text-white transition-colors group-hover:text-purple-400">
-              14+
+              10+
             </div>
-            <div className="text-lg text-gray-300">Laboratoriyalar</div>
-            <div className="mt-2 text-sm text-purple-300">Fizika fanlari</div>
+            <div className="text-lg text-gray-300">IT Mavzular</div>
+            <div className="mt-2 text-sm text-purple-300">
+              Dasturlash va algoritmlar
+            </div>
           </motion.div>
           <motion.div
             whileHover={{ scale: 1.05, y: -5 }}

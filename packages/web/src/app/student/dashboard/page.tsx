@@ -3,7 +3,6 @@
 import StudentHeader from "@/components/student/StudentHeader"
 import StudentSidebar from "@/components/student/StudentSidebar"
 import { useAuthStore } from "@/stores/auth"
-import Link from "next/link"
 
 export default function StudentDashboard() {
   const { user } = useAuthStore()
@@ -11,11 +10,11 @@ export default function StudentDashboard() {
   const stats = [
     {
       id: 1,
-      title: "Bajarilgan laboratoriyalar",
-      value: "3",
-      total: "14",
-      subtitle: "21% to'ldirildi",
-      change: "+1 bu hafta",
+      title: "Topshirilgan testlar",
+      value: "8",
+      total: "test",
+      subtitle: "Faol ishtirok",
+      change: "+3 bu hafta",
       icon: (
         <svg className="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
@@ -79,32 +78,24 @@ export default function StudentDashboard() {
     },
   ]
 
-  const activeLabs = [
-    { id: 1, title: "Elektrostatika", progress: 100, status: "completed" },
-    { id: 2, title: "Kondensator", progress: 100, status: "completed" },
-    { id: 3, title: "Om qonuni", progress: 100, status: "completed" },
-    { id: 4, title: "Uitston ko'prigi", progress: 0, status: "new" },
-    { id: 5, title: "Kirxgof qonunlari", progress: 0, status: "new" },
-  ]
-
   const recentGames = [
     {
       id: 1,
-      name: "Fizika testi #42",
+      name: "Python Basics #15",
       date: "2 soat oldin",
       score: 95,
       rank: 3,
     },
     {
       id: 2,
-      name: "Elektromagnetizm",
+      name: "JavaScript Fundamentals",
       date: "1 kun oldin",
       score: 87,
       rank: 8,
     },
     {
       id: 3,
-      name: "Mexanika asoslari",
+      name: "Data Structures Quiz",
       date: "2 kun oldin",
       score: 92,
       rank: 5,
@@ -158,81 +149,64 @@ export default function StudentDashboard() {
           </div>
 
           {/* Main Content Grid */}
-          <div className="grid gap-6 lg:grid-cols-3 lg:gap-8">
-            {/* Active Labs */}
-            <div className="lg:col-span-2">
+          <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
+            {/* Recent Games - Made Larger */}
+            <div className="lg:col-span-1">
               <div className="rounded-2xl border-2 border-slate-200 bg-white p-4 shadow-lg sm:p-6 lg:p-8">
-                <div className="mb-6 flex items-center justify-between border-b-2 border-slate-100 pb-4">
-                  <div>
-                    <h2 className="text-2xl font-bold tracking-tight text-slate-900">
-                      Active Laboratory Sessions
-                    </h2>
-                    <p className="mt-1 text-sm text-gray-600">
-                      Joriy mavsum laboratoriya ishlari
-                    </p>
-                  </div>
-                  <Link
-                    href="/student/labs"
-                    className="rounded-lg border-2 border-blue-600 bg-blue-600 px-6 py-3 text-sm font-bold tracking-wider text-white uppercase shadow-md transition-all hover:bg-blue-700 hover:shadow-lg"
-                  >
-                    Hammasi
-                  </Link>
+                <div className="mb-6 border-b-2 border-slate-100 pb-4">
+                  <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+                    So'nggi Test Seanslar
+                  </h2>
+                  <p className="mt-1 text-sm text-gray-600">
+                    Oxirgi test natijalaringiz
+                  </p>
                 </div>
-
                 <div className="space-y-4">
-                  {activeLabs.map((lab) => (
+                  {recentGames.map((game) => (
                     <div
-                      key={lab.id}
-                      className="group rounded-xl border-2 border-gray-200 bg-gradient-to-r from-gray-50 to-blue-50 p-4 transition-all hover:scale-102 hover:border-blue-400 hover:shadow-md"
+                      key={game.id}
+                      className="rounded-xl border-2 border-slate-200 bg-gradient-to-r from-white to-blue-50 p-4 transition-all hover:border-blue-500 hover:shadow-md"
                     >
-                      <div className="mb-3 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 text-lg font-bold text-white shadow-md">
-                            {lab.id}
+                      <h4 className="font-bold text-gray-900">{game.name}</h4>
+                      <p className="text-xs tracking-wider text-gray-500 uppercase">
+                        {game.date}
+                      </p>
+                      <div className="mt-3 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="rounded-lg border-2 border-emerald-600 bg-emerald-600 px-4 py-2 text-lg font-bold text-white">
+                            {game.score}
                           </span>
-                          <div>
-                            <h3 className="font-bold text-gray-900">
-                              {lab.title}
-                            </h3>
-                            <p className="text-xs tracking-wider text-gray-500 uppercase">
-                              {lab.status === "completed" && "Completed"}
-                              {lab.status === "new" && "Available"}
-                            </p>
-                          </div>
+                          <span className="text-sm font-bold tracking-wider text-gray-500 uppercase">
+                            Ball
+                          </span>
                         </div>
-                        <Link
-                          href={`/student/labs/${lab.id}`}
-                          className="rounded-lg border-2 border-slate-700 bg-slate-700 px-5 py-2 text-sm font-bold tracking-wider text-white uppercase opacity-0 shadow-sm transition-all group-hover:opacity-100 hover:bg-slate-800"
-                        >
-                          {lab.status === "completed" ? "Review" : "Start"}
-                        </Link>
-                      </div>
-
-                      {/* Progress Bar */}
-                      <div className="relative h-2 overflow-hidden rounded-full bg-slate-200">
-                        <div
-                          className={`h-full rounded-full transition-all duration-500 ${lab.progress === 100 ? "bg-gradient-to-r from-emerald-500 to-green-600" : "bg-gradient-to-r from-blue-500 to-indigo-600"}`}
-                          style={{ width: `${lab.progress}%` }}
-                        ></div>
-                      </div>
-                      <div className="mt-2 flex justify-between text-xs font-bold">
-                        <span className="text-gray-500">Progress</span>
-                        <span className="text-slate-700">{lab.progress}%</span>
+                        <div className="flex items-center gap-1 text-sm font-bold text-slate-700">
+                          <svg
+                            className="h-4 w-4"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                          </svg>
+                          #{game.rank} O'rin
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
+            </div>
 
-              {/* Level Progress */}
-              <div className="mt-8 rounded-2xl border-2 border-slate-200 bg-white p-8 shadow-lg">
+            {/* Level Progress */}
+            <div className="lg:col-span-1">
+              <div className="rounded-2xl border-2 border-slate-200 bg-white p-8 shadow-lg">
                 <div className="mb-6 flex items-center justify-between border-b-2 border-slate-100 pb-4">
                   <div>
                     <h3 className="text-2xl font-bold tracking-tight text-slate-900">
-                      Academic Level 5
+                      Darajangiz: 5
                     </h3>
                     <p className="text-sm font-medium text-gray-600">
-                      250 XP to next level
+                      Keyingi darajagacha 250 XP
                     </p>
                   </div>
                   <div className="flex h-20 w-20 items-center justify-center rounded-xl border-4 border-blue-600 bg-gradient-to-br from-blue-50 to-indigo-50 text-3xl font-bold text-blue-900 shadow-lg">
@@ -251,10 +225,6 @@ export default function StudentDashboard() {
                   <span className="text-slate-900">1500 XP</span>
                 </div>
               </div>
-            </div>
-
-            {/* Right Sidebar */}
-            <div className="space-y-8">
               {/* Recent Games */}
               <div className="rounded-2xl border-2 border-slate-200 bg-white p-6 shadow-lg">
                 <div className="mb-4 border-b-2 border-slate-100 pb-3">
@@ -304,9 +274,11 @@ export default function StudentDashboard() {
               <div className="rounded-2xl border-2 border-slate-200 bg-white p-6 shadow-lg">
                 <div className="mb-4 border-b-2 border-slate-100 pb-3">
                   <h3 className="text-xl font-bold tracking-tight text-slate-900">
-                    Academic Achievements
+                    So'nggi Yutuqlar
                   </h3>
-                  <p className="text-xs text-gray-600">Eng so'nggi yutuqlar</p>
+                  <p className="text-xs text-gray-600">
+                    Sizning muvaffaqiyatlaringiz
+                  </p>
                 </div>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3 rounded-lg border-2 border-slate-200 bg-white p-4 transition-all hover:border-amber-500">
@@ -321,10 +293,10 @@ export default function StudentDashboard() {
                     </div>
                     <div>
                       <h4 className="text-sm font-bold tracking-wide text-slate-900 uppercase">
-                        Laboratory Explorer
+                        Kod Mahorati
                       </h4>
                       <p className="text-xs text-gray-600">
-                        Completed 3 laboratory sessions
+                        5 ta test topshirildi
                       </p>
                     </div>
                   </div>
@@ -340,10 +312,10 @@ export default function StudentDashboard() {
                     </div>
                     <div>
                       <h4 className="text-sm font-bold tracking-wide text-slate-900 uppercase">
-                        Consistent Learner
+                        Doimiylik
                       </h4>
                       <p className="text-xs text-gray-600">
-                        5 consecutive days streak
+                        5 kun ketma-ket faoliyat
                       </p>
                     </div>
                   </div>
@@ -359,9 +331,9 @@ export default function StudentDashboard() {
                     </div>
                     <div>
                       <h4 className="text-sm font-bold tracking-wide text-slate-900 uppercase">
-                        Top Performer
+                        Eng Yaxshi Natija
                       </h4>
-                      <p className="text-xs text-gray-600">Scored 90+ points</p>
+                      <p className="text-xs text-gray-600">90+ ball</p>
                     </div>
                   </div>
                 </div>

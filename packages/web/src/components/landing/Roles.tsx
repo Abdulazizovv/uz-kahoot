@@ -35,9 +35,9 @@ const roles = [
       { value: "Bepul", label: "Hozircha" },
     ],
     testimonial: {
-      text: "EduArena bilan o'qish juda qiziqarli! Test o'yinlari orqali o'rganish samarali.",
+      text: "EduArena bilan IT bilimlarni o'rganish juda qiziqarli! Test o'yinlari orqali dasturlashni o'rganish samarali.",
       author: "Aziza Karimova",
-      role: "Fizika talabasi, TATU",
+      role: "Dasturlash talabasi, TATU",
     },
   },
   {
@@ -76,7 +76,7 @@ const roles = [
     testimonial: {
       text: "Platformada test yaratish va talabalarni kuzatish juda qulay. Vaqtimni tejaydi.",
       author: "Prof. Jahongir Usmonov",
-      role: "Fizika o'qituvchisi, NUUz",
+      role: "Dasturlash o'qituvchisi, NUUz",
     },
   },
 ]

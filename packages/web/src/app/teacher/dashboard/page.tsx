@@ -13,17 +13,24 @@ const TeacherDashboard = () => {
 
   const quizzes = [
     {
-      id: "elektromagnetizm",
-      name: "Elektromagnetizm",
-      questions: 13,
-      icon: "⚡",
+      id: "python-basics",
+      name: "Python Basics",
+      questions: 15,
+      icon: "🐍",
       color: "from-blue-500 to-cyan-500",
     },
     {
-      id: "example",
-      name: "Example Quiz",
-      questions: 3,
-      icon: "📚",
+      id: "javascript-fundamentals",
+      name: "JavaScript Fundamentals",
+      questions: 12,
+      icon: "💛",
+      color: "from-yellow-500 to-amber-500",
+    },
+    {
+      id: "data-structures",
+      name: "Data Structures",
+      questions: 10,
+      icon: "📊",
       color: "from-purple-500 to-pink-500",
     },
   ]
@@ -108,9 +115,9 @@ const TeacherDashboard = () => {
       borderColor: "border-purple-200",
     },
     {
-      title: "Laboratoriyalar",
-      subtitle: "Virtual simulyatorlar",
-      value: "14",
+      title: "IT Mavzular",
+      subtitle: "Dasturlash yo'nalishlari",
+      value: "10+",
       change: "3 aktiv",
       icon: (
         <svg
@@ -123,7 +130,7 @@ const TeacherDashboard = () => {
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth={2}
-            d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+            d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
           />
         </svg>
       ),
@@ -142,9 +149,9 @@ const TeacherDashboard = () => {
       color: "from-purple-600 to-indigo-600",
     },
     {
-      title: "Laboratoriya",
-      description: "Fizika simulyatorlarini boshlash",
-      icon: "🔬",
+      title: "Test Amaliyoti",
+      description: "Amaliy mashqlar va testlar",
+      icon: "💻",
       href: "/teacher/labs",
       color: "from-blue-600 to-cyan-600",
     },

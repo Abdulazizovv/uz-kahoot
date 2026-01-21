@@ -9,7 +9,7 @@
 
 ## 🧩 What is this project?
 
-EduArena is a straightforward and open-source educational platform inspired by Kahoot!, designed for university classes with quizzes, physics simulators, and lesson materials.
+EduArena is a straightforward and open-source educational platform inspired by Kahoot!, designed for university classes with interactive quizzes, IT programming tests, and lesson materials.
 
 > ⚠️ This project is still under development, please report any bugs or suggestions in the [issues](https://github.com/Ralex91/EduArena/issues)
 

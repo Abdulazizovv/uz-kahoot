@@ -4,30 +4,30 @@ const features = [
   {
     title: "🎮 Gamifikatsiya",
     description:
-      "Kahoot uslubidagi real-time testlar! Talabalar bir vaqtda raqobatlashadi, leaderboard'da o'z o'rinlarini ko'radilar.",
+      "Kahoot uslubidagi real-time testlar! IT bilimlarini o'lchash uchun interaktiv va qiziqarli format.",
     icon: "🏆",
     color: "from-amber-500 via-orange-500 to-red-500",
     benefits: ["Live quiz", "Leaderboard", "Ball tizimi", "Yutuqlar"],
     image: "🎯",
   },
   {
-    title: "🔬 Virtual Laboratoriya",
+    title: "💻 IT Mavzular",
     description:
-      "Fizika tajribalarini xavfsiz va interaktiv muhitda o'tkazing. 3D simulyatorlar va real vaqt kalkulyatorlari.",
-    icon: "⚗️",
+      "Dasturlash tillari, algoritmlar, data structures va web development bo'yicha to'liq test banki.",
+    icon: "📚",
     color: "from-cyan-500 via-blue-500 to-indigo-500",
     benefits: [
-      "3D simulyatorlar",
-      "Real kalkulyatorlar",
-      "Step-by-step guide",
-      "Video qo'llanmalar",
+      "Dasturlash tillari",
+      "Algoritmlar",
+      "Data Structures",
+      "Web Development",
     ],
-    image: "🧪",
+    image: "💡",
   },
   {
     title: "📊 Analytics Dashboard",
     description:
-      "O'quvchilar progressini chuqur tahlil qiling. Kuchli va zaif tomonlarni aniqlang, individual yondashuv qo'llang.",
+      "Talabalar progressini chuqur tahlil qiling. Kuchli va zaif tomonlarni aniqlang, individual yondashuv qo'llang.",
     icon: "📈",
     color: "from-emerald-500 via-teal-500 to-cyan-500",
     benefits: [

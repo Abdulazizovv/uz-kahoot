@@ -22,17 +22,23 @@ export default function StudentHeader() {
           <div className="hidden items-center gap-3 rounded-md border border-gray-200 bg-gray-50 px-3 py-2 sm:flex sm:gap-4 sm:px-4">
             <div className="text-center">
               <div className="text-xs text-gray-500">Tajriba</div>
-              <div className="text-sm font-semibold text-gray-900 sm:text-lg">1250</div>
+              <div className="text-sm font-semibold text-gray-900 sm:text-lg">
+                1250
+              </div>
             </div>
             <div className="h-8 w-px bg-gray-300"></div>
             <div className="text-center">
               <div className="text-xs text-gray-500">Daraja</div>
-              <div className="text-sm font-semibold text-gray-900 sm:text-lg">5</div>
+              <div className="text-sm font-semibold text-gray-900 sm:text-lg">
+                5
+              </div>
             </div>
             <div className="h-8 w-px bg-gray-300"></div>
             <div className="text-center">
               <div className="text-xs text-gray-500">Reyting</div>
-              <div className="text-sm font-semibold text-gray-900 sm:text-lg">#12</div>
+              <div className="text-sm font-semibold text-gray-900 sm:text-lg">
+                #12
+              </div>
             </div>
           </div>
 
