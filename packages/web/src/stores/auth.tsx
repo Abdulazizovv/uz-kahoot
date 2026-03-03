@@ -31,32 +31,37 @@ interface AuthContextType extends AuthState {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<AuthState>({
-    user: null,
-    accessToken: null,
-    refreshToken: null,
-    isAuthenticated: false,
-    isLoading: false,
-    error: null,
-    isHydrated: false,
-  })
+export const useAuthStore = create<AuthStore>()(
+  persist(
+    (set) => ({
+      // State
+      user: null,
+      accessToken: null,
+      refreshToken: null,
+      isAuthenticated: false,
+      isLoading: false,
+      error: null,
 
-  /**
-   * Hydrate auth state from localStorage on client-side mount
-   * This prevents SSR/CSR mismatch issues
-   */
-  useEffect(() => {
-    if (typeof window === "undefined") return
+      // Actions
+      setTokens: (access: string, refresh: string) => {
+        set({ accessToken: access, refreshToken: refresh })
+      },
 
-    try {
-      const userStr = localStorage.getItem("user")
-      const accessToken = localStorage.getItem("access_token")
-      const refreshToken = localStorage.getItem("refresh_token")
+      setUser: (user: User) => {
+        set({ user, isAuthenticated: true })
+      },
 
-      if (userStr && accessToken && refreshToken) {
-        const user = JSON.parse(userStr)
-        setState({
+      setLoading: (loading: boolean) => {
+        set({ isLoading: loading })
+      },
+
+      setError: (error: string | null) => {
+        set({ error })
+      },
+
+      login: (tokens, user) => {
+        // Zustand store'ga saqlash
+        set({
           user,
           accessToken,
           refreshToken,

@@ -2,12 +2,9 @@
 
 import StudentHeader from "@/components/student/StudentHeader"
 import StudentSidebar from "@/components/student/StudentSidebar"
-import { useAuthStore } from "@/stores/auth"
 import Link from "next/link"
 
 export default function StudentDashboard() {
-  const { user } = useAuthStore()
-
   const stats = [
     {
       id: 1,

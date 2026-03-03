@@ -1,13 +1,25 @@
 version: "3.8"
 
 services:
-  rahoot:
-    image: ralex91/rahoot:latest
+  eduarena:
+    image: eduarena:latest
+    build:
+      context: .
     ports:
-      - "3000:3000"
-      - "3001:3001"
+      - "3100:3000"
+      - "3101:3001"
     volumes:
-      - ./config:/app/config # Path to your game config
+      - ./config:/app/config # Game config/quizzes (persist on host)
     environment:
-      - WEB_ORIGIN=http://localhost:3000
-      - SOCKET_URL=http://localhost:3001
+      WEB_ORIGIN: ${WEB_ORIGIN:-http://localhost:3100}
+      SOCKET_URL: ${SOCKET_URL:-http://localhost:3101}
+      SOCKET_PORT: ${SOCKET_PORT:-3001}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080}
+    restart: unless-stopped
+    init: true
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 5

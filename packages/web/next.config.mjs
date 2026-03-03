@@ -1,7 +1,19 @@
+import path from "node:path"
+import { fileURLToPath } from "node:url"
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 const nextConfig = {
   output: "standalone",
   productionBrowserSourceMaps: false,
-  transpilePackages: ["packages/*", "@t3-oss/env-nextjs"],
+  experimental: {
+    cpus: 1,
+  },
+  turbopack: {
+    root: path.resolve(__dirname, "../.."),
+  },
+  transpilePackages: ["@eduarena/common", "@eduarena/socket", "@t3-oss/env-nextjs"],
 }
 
 export default nextConfig

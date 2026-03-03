@@ -3,14 +3,8 @@ import Toaster from "@/components/Toaster"
 import { SocketProvider } from "@/contexts/socketProvider"
 import { AuthProvider } from "@/stores/auth"
 import type { Metadata } from "next"
-import { Montserrat } from "next/font/google"
 import { PropsWithChildren } from "react"
 import "./globals.css"
-
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
-  subsets: ["latin"],
-})
 
 export const metadata: Metadata = {
   title: "EduArena - Universitet Ta'lim Platformasi",
@@ -22,16 +16,12 @@ export const metadata: Metadata = {
 }
 
 const RootLayout = ({ children }: PropsWithChildren) => (
-  <html lang="en" suppressHydrationWarning={true} data-lt-installed="true">
-    <body className={`${montserrat.variable} bg-secondary antialiased`}>
-      <AuthErrorBoundary>
-        <AuthProvider>
-          <SocketProvider>
-            <main className="text-base-[8px] flex flex-col">{children}</main>
-            <Toaster />
-          </SocketProvider>
-        </AuthProvider>
-      </AuthErrorBoundary>
+  <html lang="uz" suppressHydrationWarning={true}>
+    <body className="bg-secondary font-sans antialiased">
+      <SocketProvider>
+        <main className="text-base-[8px] flex flex-col">{children}</main>
+        <Toaster />
+      </SocketProvider>
     </body>
   </html>
 )

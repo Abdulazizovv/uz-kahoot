@@ -7,11 +7,10 @@ export default function PNJunctionSimulator() {
   const [dopingLevel, setDopingLevel] = useState(5) // 10^x cm⁻³
   const [voltage, setVoltage] = useState(0) // V
   const [biasType, setBiasType] = useState<"forward" | "reverse">("forward")
-  const [junctionWidth, setJunctionWidth] = useState(1) // μm
+  const junctionWidth = 1 // μm
 
   // Fizik konstantalar
   const BOLTZMANN = 8.617e-5 // eV/K
-  const ELECTRON_CHARGE = 1.6e-19 // C
   const SATURATION_CURRENT = 1e-12 // A (modelda)
 
   // Shockley tenglamasi: I = Is(e^(V/(n*Vt)) - 1)

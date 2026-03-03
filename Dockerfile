@@ -62,12 +62,16 @@ COPY --from=builder /app/packages/socket/dist ./packages/socket/dist
 # Copy the game default config
 COPY --from=builder /app/config ./config
 
+# Entrypoint (start web + socket with proper signal handling)
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
+
 # Expose the web and socket ports
-EXPOSE 3000 5505
+EXPOSE 3000 3001
 
 # Environment variables
 ENV NODE_ENV=production
 ENV CONFIG_PATH=/app/config
 
 # Start both services (Next.js web app + Socket server)
-CMD ["sh", "-c", "node packages/web/server.js & node packages/socket/dist/index.cjs"]
+CMD ["/app/docker-entrypoint.sh"]

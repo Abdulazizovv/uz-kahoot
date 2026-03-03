@@ -2,12 +2,6 @@
 
 import { useState } from "react"
 
-interface CircuitElement {
-  resistance: number
-  voltage: number
-  current: number
-}
-
 interface SliderProps {
   label: string
   value: number

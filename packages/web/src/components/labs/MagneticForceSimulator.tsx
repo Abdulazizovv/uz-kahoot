@@ -7,7 +7,6 @@ export default function MagneticForceSimulator() {
   const [magneticField, setMagneticField] = useState(0.5) // T
   const [wireLength, setWireLength] = useState(10) // cm
   const [angle, setAngle] = useState(90) // degrees
-  const [isRunning, setIsRunning] = useState(false)
 
   // Amper kuchi: F = B × I × L × sin(α)
   const angleRad = (angle * Math.PI) / 180
@@ -17,9 +16,6 @@ export default function MagneticForceSimulator() {
   // Tezlanish (massani 0.01 kg deb olamiz)
   const wireMass = 0.01 // kg
   const acceleration = force / wireMass // m/s²
-
-  // Harakat yo'nalishi
-  const forceDirection = force > 0 ? "up" : force < 0 ? "down" : "none"
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
