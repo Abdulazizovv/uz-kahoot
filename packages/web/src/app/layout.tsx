@@ -1,7 +1,5 @@
-import { AuthErrorBoundary } from "@/components/AuthErrorBoundary"
 import Toaster from "@/components/Toaster"
 import { SocketProvider } from "@/contexts/socketProvider"
-import { AuthProvider } from "@/stores/auth"
 import type { Metadata } from "next"
 import { PropsWithChildren } from "react"
 import "./globals.css"
