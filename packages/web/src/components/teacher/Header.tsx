@@ -1,11 +1,13 @@
 "use client"
 
+import { useTeacherNav } from "@/contexts/teacher-nav"
 import { useAuthStore } from "@/stores/auth"
 import { useState } from "react"
 
 const Header = () => {
   const { user, logout } = useAuthStore()
   const [isProfileOpen, setIsProfileOpen] = useState(false)
+  const { toggleSidebar } = useTeacherNav()
   const currentTime = new Date()
 
   // O'zbek oylarining nomlari
@@ -38,85 +40,41 @@ const Header = () => {
   }
 
   return (
-    <header className="sticky top-0 z-30 border-b-2 border-gray-300 bg-white shadow-sm">
-      <div className="flex h-24 items-center justify-between px-8">
+    <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-white/80 backdrop-blur">
+      <div className="flex h-16 items-center justify-between px-4 sm:px-6">
         {/* Welcome Section */}
-        <div>
-          <div className="mb-1 flex items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900">
-              {user?.first_name} {user?.last_name}
-            </h1>
-            <span className="rounded-md bg-blue-900 px-3 py-1 text-xs font-bold tracking-wider text-white uppercase">
-              O'qituvchi
-            </span>
-          </div>
-          <div className="flex items-center gap-4 text-sm text-gray-600">
-            <div className="flex items-center gap-1.5">
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-              <span className="font-medium">{formatDate(currentTime)}</span>
+        <div className="flex min-w-0 items-center gap-3">
+          <button
+            onClick={toggleSidebar}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:bg-slate-50 lg:hidden"
+            aria-label="Open menu"
+          >
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <h1 className="truncate text-base font-semibold tracking-tight text-slate-900 sm:text-lg">
+                {user?.first_name} {user?.last_name}
+              </h1>
+              <span className="hidden rounded-full bg-slate-900 px-2.5 py-1 text-xs font-semibold text-white sm:inline-flex">
+                O'qituvchi
+              </span>
             </div>
-            <span className="text-gray-400">•</span>
-            <div className="flex items-center gap-1.5">
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <span className="font-medium">{formatTime(currentTime)}</span>
-            </div>
+            <p className="mt-0.5 hidden text-xs text-slate-600 sm:block">
+              {formatDate(currentTime)} • {formatTime(currentTime)}
+            </p>
           </div>
         </div>
 
         {/* Right Section */}
-        <div className="flex items-center gap-4">
-          {/* Quick Stats */}
-          <div className="flex items-center gap-6 rounded-lg border border-gray-200 bg-slate-50 px-6 py-3">
-            <div className="text-center">
-              <div className="text-xs font-medium tracking-wider text-gray-500 uppercase">
-                Faol
-              </div>
-              <div className="text-xl font-bold text-blue-900">0</div>
-            </div>
-            <div className="h-8 w-px bg-gray-300"></div>
-            <div className="text-center">
-              <div className="text-xs font-medium tracking-wider text-gray-500 uppercase">
-                Labs
-              </div>
-              <div className="text-xl font-bold text-green-700">14</div>
-            </div>
-            <div className="h-8 w-px bg-gray-300"></div>
-            <div className="text-center">
-              <div className="text-xs font-medium tracking-wider text-gray-500 uppercase">
-                Testlar
-              </div>
-              <div className="text-xl font-bold text-purple-700">2</div>
-            </div>
-          </div>
-
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* Notifications */}
-          <button className="relative rounded-lg border-2 border-gray-300 bg-white p-3 text-gray-700 transition-all hover:border-blue-600 hover:bg-blue-50">
+          <button className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:bg-slate-50">
             <svg
-              className="h-6 w-6"
+              className="h-5 w-5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -137,17 +95,17 @@ const Header = () => {
           <div className="relative">
             <button
               onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="flex items-center gap-3 rounded-lg border-2 border-blue-900 bg-gradient-to-br from-blue-900 to-indigo-900 px-5 py-3 text-white shadow-md transition-all hover:shadow-lg"
+              className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-900 shadow-sm transition hover:bg-slate-50"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-blue-500 bg-blue-700 text-lg font-bold">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-200 text-sm font-semibold text-slate-700">
                 {user?.first_name?.[0]}
                 {user?.last_name?.[0]}
               </div>
-              <div className="text-left">
+              <div className="hidden text-left sm:block">
                 <div className="text-sm font-semibold">
                   {user?.first_name} {user?.last_name}
                 </div>
-                <div className="text-xs text-blue-200">O'qituvchi</div>
+                <div className="text-xs text-slate-500">{user?.email}</div>
               </div>
               <svg
                 className={`h-5 w-5 transition-transform ${
@@ -168,15 +126,15 @@ const Header = () => {
 
             {/* Dropdown Menu */}
             {isProfileOpen && (
-              <div className="absolute right-0 mt-2 w-56 rounded-xl bg-white shadow-xl">
-                <div className="border-b border-gray-100 p-4">
+              <div className="absolute right-0 mt-2 w-64 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg">
+                <div className="border-b border-slate-100 p-4">
                   <p className="font-semibold text-gray-800">
                     {user?.first_name} {user?.last_name}
                   </p>
                   <p className="text-sm text-gray-500">{user?.email}</p>
                 </div>
                 <div className="p-2">
-                  <button className="flex w-full items-center gap-3 rounded-lg px-4 py-2 text-gray-700 transition-all hover:bg-gray-100">
+                  <button className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-gray-700 transition-all hover:bg-slate-50">
                     <svg
                       className="h-5 w-5"
                       fill="none"
@@ -192,7 +150,7 @@ const Header = () => {
                     </svg>
                     Profil
                   </button>
-                  <button className="flex w-full items-center gap-3 rounded-lg px-4 py-2 text-gray-700 transition-all hover:bg-gray-100">
+                  <button className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-gray-700 transition-all hover:bg-slate-50">
                     <svg
                       className="h-5 w-5"
                       fill="none"
@@ -215,10 +173,10 @@ const Header = () => {
                     Sozlamalar
                   </button>
                 </div>
-                <div className="border-t border-gray-100 p-2">
+                <div className="border-t border-slate-100 p-2">
                   <button
                     onClick={logout}
-                    className="flex w-full items-center gap-3 rounded-lg px-4 py-2 text-red-600 transition-all hover:bg-red-50"
+                    className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-red-600 transition-all hover:bg-red-50"
                   >
                     <svg
                       className="h-5 w-5"

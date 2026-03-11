@@ -40,6 +40,7 @@ export default defineConfig([
       ...reactHooksPlugin.configs.recommended.rules,
 
       "react-hooks/set-state-in-effect": "off",
+      "react/no-unknown-property": ["error", { ignore: ["jsx", "global"] }],
 
       "no-undef": "off",
       "no-unused-vars": "off",

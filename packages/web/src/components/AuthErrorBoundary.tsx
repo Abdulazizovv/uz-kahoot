@@ -37,18 +37,6 @@ export class AuthErrorBoundary extends Component<Props, State> {
     // Log error details for debugging
     console.error("Auth Error Boundary caught an error:", error, errorInfo)
 
-    // Check for specific error types
-    const isHydrationError =
-      error.message?.includes("Hydration") ||
-      error.message?.includes("hydration") ||
-      errorInfo.componentStack?.includes("Hydration")
-
-    const isAuthError =
-      error.message?.includes("auth") ||
-      error.message?.includes("Auth") ||
-      error.message?.includes("token") ||
-      error.message?.includes("unauthorized")
-
     this.setState({
       error,
       errorInfo,

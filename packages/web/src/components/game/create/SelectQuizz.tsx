@@ -22,7 +22,7 @@ const SelectQuizz = ({ quizzList, onSelect }: Props) => {
 
   const handleSubmit = () => {
     if (!selected) {
-      toast.error("Please select a quizz")
+      toast.error("Iltimos, test to'plamini tanlang")
 
       return
     }
@@ -31,32 +31,43 @@ const SelectQuizz = ({ quizzList, onSelect }: Props) => {
   }
 
   return (
-    <div className="z-10 flex w-full max-w-md flex-col gap-4 rounded-md bg-white p-4 shadow-sm">
-      <div className="flex flex-col items-center justify-center">
-        <h1 className="mb-2 text-2xl font-bold">
+    <div className="flex w-full flex-col gap-4">
+      <div className="flex flex-col">
+        <h2 className="text-xl font-semibold text-slate-900">
           Savollar to&apos;plamini tanlang
-        </h1>
-        <div className="w-full space-y-2">
-          {quizzList.map((quizz) => (
-            <button
-              key={quizz.id}
-              className={clsx(
-                "flex w-full items-center justify-between rounded-md p-3 outline outline-gray-300",
-              )}
-              onClick={handleSelect(quizz.id)}
-            >
-              {quizz.subject}
+        </h2>
+        <p className="mt-1 text-sm text-slate-600">
+          O&apos;yin uchun test mavzusini tanlang.
+        </p>
+      </div>
 
-              <div
-                className={clsx(
-                  "h-5 w-5 rounded outline outline-offset-3 outline-gray-300",
-                  selected === quizz.id &&
-                    "bg-primary border-primary/80 shadow-inset",
-                )}
-              ></div>
-            </button>
-          ))}
-        </div>
+      <div className="w-full space-y-2">
+        {quizzList.map((quizz) => (
+          <button
+            key={quizz.id}
+            className={clsx(
+              "flex w-full items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 text-left shadow-sm transition hover:bg-slate-50",
+              selected === quizz.id && "border-slate-900 ring-4 ring-slate-900/10",
+            )}
+            onClick={handleSelect(quizz.id)}
+          >
+            <span className="text-sm font-semibold text-slate-900">
+              {quizz.subject}
+            </span>
+
+            <span
+              className={clsx(
+                "flex h-5 w-5 items-center justify-center rounded-full border border-slate-300",
+                selected === quizz.id && "border-slate-900 bg-slate-900",
+              )}
+              aria-hidden="true"
+            >
+              {selected === quizz.id && (
+                <span className="h-2 w-2 rounded-full bg-white" />
+              )}
+            </span>
+          </button>
+        ))}
       </div>
       <Button onClick={handleSubmit}>Tanlash</Button>
     </div>

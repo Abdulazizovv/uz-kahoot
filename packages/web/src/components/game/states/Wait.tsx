@@ -13,13 +13,6 @@ const Wait = ({ data: { text } }: Props) => {
 
   return (
     <section className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col items-center justify-center px-4">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden opacity-10">
-        <div className="absolute top-20 left-10 h-32 w-32 animate-bounce rounded-full bg-yellow-300 blur-3xl"></div>
-        <div className="absolute top-40 right-20 h-40 w-40 animate-pulse rounded-full bg-pink-300 blur-3xl"></div>
-        <div className="absolute bottom-20 left-1/4 h-36 w-36 animate-bounce rounded-full bg-purple-300 blur-3xl"></div>
-      </div>
-
       {/* Main Content */}
       <div className="relative z-10 flex flex-col items-center gap-8">
         {/* Loading Animation */}

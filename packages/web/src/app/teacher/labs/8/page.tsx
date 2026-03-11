@@ -4,9 +4,9 @@ import Sidebar from "@/components/teacher/Sidebar"
 
 export default function Lab8() {
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className="flex h-screen overflow-hidden bg-slate-50">
       <Sidebar />
-      <div className="ml-72 flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col min-w-0 lg:ml-72">
         <Header />
         <main className="flex-1 overflow-y-auto p-8">
           {/* Breadcrumb */}

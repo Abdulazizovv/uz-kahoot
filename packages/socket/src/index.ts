@@ -20,6 +20,50 @@ const port = env.SOCKET_PORT
 console.log(`Socket server running on port ${port}`)
 io.listen(port)
 
+const isTeacherAccessToken = async (accessToken: string): Promise<boolean> => {
+  if (!accessToken) {
+    return false
+  }
+
+  const apiOrigin = env.API_ORIGIN?.replace(/\/$/, "")
+  if (!apiOrigin) {
+    return false
+  }
+
+  const endpoints = [
+    // API docs path
+    "/api/teachers/me/",
+    // Some backends namespace model under app name (similar to /api/students/students/me/)
+    "/api/teachers/teachers/me/",
+  ]
+
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 5000)
+
+  try {
+    for (const path of endpoints) {
+      const res = await fetch(`${apiOrigin}${path}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "application/json",
+        },
+        signal: controller.signal,
+      })
+
+      if (res.ok) {
+        return true
+      }
+    }
+
+    return false
+  } catch {
+    return false
+  } finally {
+    clearTimeout(timeout)
+  }
+}
+
 io.on("connection", (socket) => {
   console.log(
     `A user connected: socketId: ${socket.id}, clientId: ${socket.handshake.auth.clientId}`
@@ -52,13 +96,23 @@ io.on("connection", (socket) => {
     socket.emit("game:reset", "Test tugagan")
   })
 
-  socket.on("manager:auth", (password) => {
+  socket.on("manager:auth", async (payload) => {
     try {
       const config = Config.game()
 
+      const password =
+        typeof payload === "string" ? payload : (payload?.password ?? "")
+
+      const accessToken =
+        typeof payload === "object" && payload ? payload.accessToken : undefined
+
+      if (accessToken && (await isTeacherAccessToken(accessToken))) {
+        socket.emit("manager:quizzList", Config.quizz())
+        return
+      }
+
       if (password !== config.managerPassword) {
         socket.emit("manager:errorMessage", "Xato parol")
-
         return
       }
 
@@ -143,11 +197,10 @@ io.on("connection", (socket) => {
       registry.markGameAsEmpty(managerGame)
 
       if (!managerGame.started) {
-        console.log("Reset game (manager disconnected)")
+        // Allow the manager to refresh/reconnect without killing the room.
+        // The cleanup task will remove abandoned games after a timeout.
         managerGame.abortCooldown()
-        io.to(managerGame.gameId).emit("game:reset", "Manager disconnected")
-        registry.removeGame(managerGame.gameId)
-
+        console.log(`Manager disconnected (room kept): ${managerGame.gameId}`)
         return
       }
     }

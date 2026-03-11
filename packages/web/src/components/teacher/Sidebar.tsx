@@ -1,9 +1,10 @@
 "use client"
 
+import { useTeacherNav } from "@/contexts/teacher-nav"
 import { useAuthStore } from "@/stores/auth"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect } from "react"
 
 interface MenuItem {
   id: string
@@ -17,12 +18,16 @@ const Sidebar = () => {
   const pathname = usePathname()
   const router = useRouter()
   const { logout } = useAuthStore()
-  const [isCollapsed, setIsCollapsed] = useState(false)
+  const { isSidebarOpen, closeSidebar } = useTeacherNav()
 
   const handleLogout = () => {
     logout()
     router.push("/auth")
   }
+
+  useEffect(() => {
+    closeSidebar()
+  }, [pathname, closeSidebar])
 
   const menuItems: MenuItem[] = [
     {
@@ -221,44 +226,26 @@ const Sidebar = () => {
   ]
 
   return (
-    <aside
-      className={`fixed top-0 left-0 z-40 h-screen border-r border-gray-200 bg-white shadow-lg transition-all duration-300 ${
-        isCollapsed ? "w-20" : "w-72"
-      }`}
-    >
-      {/* Logo Section */}
-      <div className="flex h-24 items-center justify-between border-b border-gray-200 bg-gradient-to-r from-slate-50 to-gray-50 px-6">
-        {!isCollapsed && (
-          <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-blue-300 bg-gradient-to-br from-blue-900 via-blue-700 to-indigo-600 shadow-xl">
-              <svg
-                className="h-8 w-8 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
-                />
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-xl font-bold tracking-tight text-gray-900">
-                EduArena Lab
-              </h1>
-              <p className="text-xs font-medium tracking-wider text-gray-500 uppercase">
-                Professor Panel
-              </p>
-            </div>
-          </div>
-        )}
-        {isCollapsed && (
-          <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-blue-300 bg-gradient-to-br from-blue-900 via-blue-700 to-indigo-600 shadow-xl">
+    <>
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/40 backdrop-blur-sm lg:hidden"
+          onClick={closeSidebar}
+        />
+      )}
+
+      <aside
+        className={`fixed inset-y-0 left-0 z-40 flex h-screen flex-col border-r border-slate-200 bg-white shadow-lg transition-transform duration-300 lg:translate-x-0 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } w-72 lg:w-72`}
+        aria-label="Teacher navigation"
+      >
+        {/* Logo Section */}
+      <div className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 lg:h-20 lg:px-6">
+        <div className="flex items-center gap-4">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 shadow-sm">
             <svg
-              className="h-8 w-8 text-white"
+              className="h-6 w-6 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -271,43 +258,47 @@ const Sidebar = () => {
               />
             </svg>
           </div>
-        )}
+          <div>
+            <h1 className="text-base font-semibold tracking-tight text-slate-900">
+              EduArena
+            </h1>
+            <p className="text-xs text-slate-500">O'qituvchi</p>
+          </div>
+        </div>
+        <button
+          onClick={closeSidebar}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:bg-slate-50 lg:hidden"
+          aria-label="Close menu"
+        >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-2 p-4">
+      <nav className="flex-1 space-y-1 p-3 lg:p-4">
         {menuItems.map((item) => {
-          const isActive = pathname === item.href
+          const isActive = pathname === item.href || pathname?.startsWith(item.href + "/")
           return (
             <Link
               key={item.id}
               href={item.href}
-              className={`group flex items-center gap-4 rounded-lg px-4 py-3.5 transition-all duration-200 ${
-                isActive
-                  ? "border-l-4 border-blue-400 bg-gradient-to-r from-blue-900 to-indigo-800 text-white shadow-lg"
-                  : "border-l-4 border-transparent text-gray-700 hover:border-l-4 hover:border-blue-200 hover:bg-slate-100"
+              onClick={closeSidebar}
+              className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${
+                isActive ? "bg-slate-900 text-white" : "text-slate-700 hover:bg-slate-50"
               }`}
             >
-              <div
-                className={`transition-transform duration-200 ${
-                  isActive ? "" : "group-hover:scale-110"
-                }`}
-              >
+              <div className={`${isActive ? "" : "text-slate-600"} transition-colors`}>
                 {item.icon}
               </div>
-              {!isCollapsed && (
-                <div className="flex-1">
-                  <span className="text-sm font-semibold tracking-wide">
-                    {item.title}
-                  </span>
-                </div>
-              )}
-              {!isCollapsed && item.badge && (
+              <div className="flex-1">
+                <span className="font-medium">{item.title}</span>
+              </div>
+              {item.badge && (
                 <span
-                  className={`rounded-md px-2.5 py-1 text-xs font-bold ${
-                    isActive
-                      ? "bg-blue-400 text-blue-900"
-                      : "bg-blue-100 text-blue-800"
+                  className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
+                    isActive ? "bg-white/15 text-white" : "bg-slate-200 text-slate-700"
                   }`}
                 >
                   {item.badge}
@@ -318,55 +309,14 @@ const Sidebar = () => {
         })}
       </nav>
 
-      {/* Toggle Button */}
-      <div className="space-y-2 border-t border-gray-200 p-4">
+      {/* Footer */}
+      <div className="space-y-2 border-t border-slate-200 p-3 lg:p-4">
         <button
           onClick={handleLogout}
-          className="flex w-full items-center justify-center gap-3 rounded-xl border border-red-200 bg-white py-3 text-red-600 transition-all hover:bg-red-50"
-        >
-          {!isCollapsed && (
-            <>
-              <svg
-                className="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                />
-              </svg>
-              <span className="text-sm font-semibold">Chiqish</span>
-            </>
-          )}
-          {isCollapsed && (
-            <svg
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-              />
-            </svg>
-          )}
-        </button>
-
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="flex w-full items-center justify-center rounded-xl bg-gray-100 py-3 text-gray-700 transition-all hover:bg-gray-200"
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-red-200 bg-white py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50"
         >
           <svg
-            className={`h-5 w-5 transition-transform duration-300 ${
-              isCollapsed ? "rotate-180" : ""
-            }`}
+            className="h-5 w-5"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -375,12 +325,14 @@ const Sidebar = () => {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={2}
-              d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
             />
           </svg>
+          <span>Chiqish</span>
         </button>
       </div>
     </aside>
+    </>
   )
 }
 

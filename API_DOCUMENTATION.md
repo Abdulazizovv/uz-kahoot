@@ -2,10 +2,6 @@
 
 Bu hujjat Education Platform ning barcha API endpointlari haqida ma'lumot beradi.
 
-## Base URL
-```
-http://localhost:8000/api/
-```
 
 ## Authentication
 Barcha protected endpointlar uchun JWT token kerak.

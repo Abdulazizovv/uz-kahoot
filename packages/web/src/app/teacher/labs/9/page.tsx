@@ -7,10 +7,10 @@ import Link from "next/link"
 
 export default function Lab9Page() {
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-slate-50">
       <Sidebar />
 
-      <div className="ml-72 flex flex-1 flex-col overflow-hidden">
+      <div className="flex flex-1 flex-col overflow-hidden min-w-0 lg:ml-72">
         <Header />
 
         <main className="flex-1 overflow-y-auto">

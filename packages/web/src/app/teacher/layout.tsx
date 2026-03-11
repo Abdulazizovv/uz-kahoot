@@ -1,6 +1,7 @@
 "use client"
 
 import ProtectedRoute from "@/components/ProtectedRoute"
+import { TeacherNavProvider } from "@/contexts/teacher-nav"
 
 export default function TeacherLayout({
   children,
@@ -8,6 +9,8 @@ export default function TeacherLayout({
   children: React.ReactNode
 }) {
   return (
-    <ProtectedRoute allowedUserTypes={["teacher"]}>{children}</ProtectedRoute>
+    <ProtectedRoute allowedUserTypes={["teacher"]}>
+      <TeacherNavProvider>{children}</TeacherNavProvider>
+    </ProtectedRoute>
   )
 }

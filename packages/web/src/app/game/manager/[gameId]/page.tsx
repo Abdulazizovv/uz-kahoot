@@ -64,7 +64,7 @@ const ManagerGame = () => {
   )
 
   useEvent("game:reset", (message) => {
-    router.replace("/manager")
+    router.replace("/game/manager")
     reset()
     setQuestionStates(null)
     toast.error(message)

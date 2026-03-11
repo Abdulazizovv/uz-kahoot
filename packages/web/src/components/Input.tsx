@@ -7,7 +7,7 @@ const Input = ({ className, type = "text", ...otherProps }: Props) => (
   <input
     type={type}
     className={clsx(
-      "w-full rounded-lg border-2 border-gray-200 p-3 text-lg font-medium transition-all outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200",
+      "w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-base font-medium text-slate-900 shadow-sm outline-none transition focus:border-slate-900 focus:ring-4 focus:ring-slate-900/10",
       className,
     )}
     {...otherProps}

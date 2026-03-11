@@ -32,10 +32,10 @@ const Lab1Page = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-slate-50">
       <Sidebar />
 
-      <div className="ml-72 flex-1">
+      <div className="flex-1 min-w-0 lg:ml-72">
         <Header />
 
         <main className="p-8">
