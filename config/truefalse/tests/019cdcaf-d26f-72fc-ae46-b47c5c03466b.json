@@ -1,0 +1,21 @@
+{
+  "title": "1-TEST",
+  "description": "test",
+  "groupIds": [
+    "cefd599c-be9c-4343-9c43-b6f251b11fe0",
+    "41d90eb8-3b86-46d1-9d9c-4aa360270a57",
+    "3104e5dd-338a-4704-a424-c07efbf03ec4"
+  ],
+  "startAt": "2026-03-01T11:36:00.000Z",
+  "endAt": "2026-03-20T11:36:00.000Z",
+  "questions": [
+    {
+      "id": "019cdcae-ba3c-75d9-8c87-a25a77181f1e",
+      "statement": "test 1",
+      "correct": true
+    }
+  ],
+  "id": "019cdcaf-d26f-72fc-ae46-b47c5c03466b",
+  "createdAt": "2026-03-11T11:37:16.143Z",
+  "updatedAt": "2026-03-11T11:37:16.143Z"
+}

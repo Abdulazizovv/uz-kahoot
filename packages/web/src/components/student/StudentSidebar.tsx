@@ -115,6 +115,7 @@ export default function StudentSidebar() {
           badge={14}
         />
         <MenuItem href="/game/join" icon="🎮" label="Testga qatnashish" />
+        <MenuItem href="/student/quizzes/true-false" icon="🧩" label="True/False testlar" />
         <MenuItem href="/student/attendance" icon="📅" label="Davomat" />
         <MenuItem href="/student/results" icon="📈" label="Natijalarim" />
         <MenuItem

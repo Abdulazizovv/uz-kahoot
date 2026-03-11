@@ -1,6 +1,12 @@
 import { Server as ServerIO, Socket as SocketIO } from "socket.io"
 import { GameUpdateQuestion, Player, QuizzWithId } from "."
 import { Status, StatusDataMap } from "./status"
+import {
+  TrueFalseAttempt,
+  TrueFalseTest,
+  TrueFalseTestForStudent,
+  TrueFalseTestSummary,
+} from "../truefalse"
 
 export type Server = ServerIO<ClientToServerEvents, ServerToClientEvents>
 export type Socket = SocketIO<ClientToServerEvents, ServerToClientEvents>
@@ -61,14 +67,22 @@ export interface ServerToClientEvents {
   "manager:removePlayer": (_playerId: string) => void
   "manager:errorMessage": (_message: string) => void
   "manager:playerKicked": (_playerId: string) => void
+
+  // True/False tests
+  "tf:tests": (_tests: TrueFalseTestSummary[]) => void
+  "tf:test": (_test: TrueFalseTestForStudent | TrueFalseTest) => void
+  "tf:results": (_attempts: TrueFalseAttempt[]) => void
+  "tf:created": (_test: TrueFalseTestSummary) => void
+  "tf:updated": (_test: TrueFalseTestSummary) => void
+  "tf:deleted": (_testId: string) => void
+  "tf:submitted": (_attempt: TrueFalseAttempt) => void
+  "tf:error": (_message: string) => void
 }
 
 export interface ClientToServerEvents {
   // Manager actions
   "game:create": (_quizzId: string) => void
-  "manager:auth": (
-    _payload: string | { password?: string; accessToken?: string },
-  ) => void
+  "manager:auth": (_password: string) => void
   "manager:reconnect": (_message: { gameId: string }) => void
   "manager:kickPlayer": (_message: { gameId: string; playerId: string }) => void
   "manager:startGame": (_message: MessageGameId) => void
@@ -85,5 +99,13 @@ export interface ClientToServerEvents {
   ) => void
 
   // Common
+  // True/False tests
+  "tf:list": (_payload: { mode: "teacher" } | { mode: "student"; groupId?: string }) => void
+  "tf:get": (_payload: { id: string; mode: "teacher" | "student" }) => void
+  "tf:create": (_test: Omit<TrueFalseTest, "id" | "createdAt" | "updatedAt">) => void
+  "tf:update": (_test: TrueFalseTest) => void
+  "tf:delete": (_payload: { id: string }) => void
+  "tf:results": (_payload: { testId: string }) => void
+  "tf:submit": (_payload: { testId: string; studentUserId: string; studentName: string; groupId?: string; answers: Array<{ questionId: string; answer: boolean }>; startedAt?: string }) => void
   disconnect: () => void
 }

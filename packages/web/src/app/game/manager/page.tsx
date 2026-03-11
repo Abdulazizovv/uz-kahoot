@@ -6,31 +6,21 @@ import ManagerPassword from "@/components/game/create/ManagerPassword"
 import SelectQuizz from "@/components/game/create/SelectQuizz"
 import Loader from "@/components/Loader"
 import { useEvent, useSocket } from "@/contexts/socketProvider"
-import { useAuthStore } from "@/stores/auth"
 import { useManagerStore } from "@/stores/manager"
 import { useQuestionStore } from "@/stores/question"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useEffect, useMemo, useRef, useState } from "react"
-import toast from "react-hot-toast"
+import { useEffect, useState } from "react"
 
 const CreateGame = () => {
   const router = useRouter()
   const { socket } = useSocket()
-  const { user, accessToken, isHydrated } = useAuthStore()
   const { setGameId, setStatus, setPlayers, reset } = useManagerStore()
   const { setQuestionStates } = useQuestionStore()
   const [quizzList, setQuizzList] = useState<QuizzWithId[]>([])
   const [selectedQuizz, setSelectedQuizz] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [forcePassword, setForcePassword] = useState(false)
-  const hasRequestedAuthRef = useRef(false)
-
-  const isTeacher = useMemo(
-    () => Boolean(user && user.user_type === "teacher"),
-    [user],
-  )
 
   useEffect(() => {
     // Oldingi o'yin ma'lumotlarini tozalash
@@ -42,35 +32,6 @@ const CreateGame = () => {
     setIsLoading(false)
     setIsAuthenticated(true)
   })
-
-  useEvent("manager:errorMessage", (message) => {
-    toast.error(message)
-    if (isTeacher && !isAuthenticated) {
-      setIsLoading(false)
-      setForcePassword(true)
-    }
-  })
-
-  useEffect(() => {
-    if (
-      !socket ||
-      !isHydrated ||
-      !isTeacher ||
-      !accessToken ||
-      forcePassword ||
-      isAuthenticated
-    ) {
-      return
-    }
-
-    if (hasRequestedAuthRef.current) {
-      return
-    }
-
-    hasRequestedAuthRef.current = true
-    setIsLoading(true)
-    socket.emit("manager:auth", { accessToken })
-  }, [socket, isHydrated, isTeacher, accessToken])
 
   useEvent(
     "manager:gameCreated",
@@ -148,23 +109,7 @@ const CreateGame = () => {
           </div>
 
           {!isAuthenticated ? (
-            !isHydrated ? (
-              <div className="flex flex-col items-center justify-center gap-4 py-10 text-white/90">
-                <Loader />
-                <p className="text-sm font-semibold text-white/80">
-                  Yuklanmoqda...
-                </p>
-              </div>
-            ) : isTeacher && !forcePassword ? (
-              <div className="flex flex-col items-center justify-center gap-4 py-10 text-white/90">
-                <Loader />
-                <p className="text-sm font-semibold text-white/80">
-                  O&apos;qituvchi sifatida tekshirilmoqda...
-                </p>
-              </div>
-            ) : (
-              <ManagerPassword onSubmit={handleAuthSubmit} />
-            )
+            <ManagerPassword onSubmit={handleAuthSubmit} />
           ) : isLoading ? (
             <div className="flex justify-center py-10">
               <Loader />
