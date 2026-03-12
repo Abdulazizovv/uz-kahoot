@@ -46,6 +46,17 @@ You can find the docker compose configuration in the repository:
 docker compose up -d
 ```
 
+By default, `compose.yml` publishes:
+
+- Web: `http://localhost:3100` (container `3000`)
+- Socket.IO: `http://localhost:3101` (container `3001`)
+
+You can override host ports via environment variables:
+
+```bash
+WEB_HOST_PORT=3100 SOCKET_HOST_PORT=3001 docker compose -f compose.yml up -d --build
+```
+
 Or using Docker directly:
 
 ```bash
@@ -71,6 +82,23 @@ The application will be available at:
 
 - Web Interface: http://localhost:3000
 - WebSocket Server: ws://localhost:3001
+
+### Reverse proxy (Nginx)
+
+If you mount Socket.IO under a base path like `/ws`, proxy the Socket.IO endpoint:
+
+```nginx
+location /ws/socket.io/ {
+  proxy_pass http://127.0.0.1:3101/socket.io/; # or 3001 depending on your docker publish
+  proxy_http_version 1.1;
+  proxy_set_header Upgrade $http_upgrade;
+  proxy_set_header Connection "Upgrade";
+  proxy_set_header Host $host;
+  proxy_read_timeout 600s;
+  proxy_send_timeout 600s;
+  proxy_buffering off;
+}
+```
 
 ### 🛠️ Without Docker
 

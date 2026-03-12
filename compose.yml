@@ -1,19 +1,16 @@
-version: "3.8"
-
 services:
   eduarena:
     image: eduarena:latest
     build:
       context: .
     ports:
-      - "3100:3000"
-      - "3101:3001"
+      - "${WEB_HOST_PORT:-3100}:3000"
+      - "${SOCKET_HOST_PORT:-3101}:3001"
     volumes:
       - ./config:/app/config # Game config/quizzes (persist on host)
     environment:
-      WEB_ORIGIN: ${WEB_ORIGIN:-http://localhost:3100}
-      SOCKET_URL: ${SOCKET_URL:-http://localhost:3101}
-      SOCKET_PORT: ${SOCKET_PORT:-3001}
+      WEB_ORIGIN: ${WEB_ORIGIN:-http://localhost:${WEB_HOST_PORT:-3100}}
+      SOCKET_URL: ${SOCKET_URL:-http://localhost:${SOCKET_HOST_PORT:-3101}}
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080}
     restart: unless-stopped
     init: true
