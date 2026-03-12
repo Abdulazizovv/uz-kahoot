@@ -82,7 +82,11 @@ export interface ServerToClientEvents {
 export interface ClientToServerEvents {
   // Manager actions
   "game:create": (_quizzId: string) => void
-  "manager:auth": (_password: string) => void
+  "manager:auth": (
+    _payload:
+      | string
+      | { accessToken?: string; userType?: "student" | "teacher" },
+  ) => void
   "manager:reconnect": (_message: { gameId: string }) => void
   "manager:kickPlayer": (_message: { gameId: string; playerId: string }) => void
   "manager:startGame": (_message: MessageGameId) => void

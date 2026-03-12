@@ -7,6 +7,7 @@ import Loader from "@/components/Loader"
 import ManagerPassword from "@/components/game/create/ManagerPassword"
 import { useEvent, useSocket } from "@/contexts/socketProvider"
 import { groupsService, StudentGroup } from "@/services/api/groups.service"
+import { useAuthStore } from "@/stores/auth"
 import {
   TrueFalseAttempt,
   TrueFalseTest,
@@ -27,8 +28,10 @@ type DraftQuestion = {
 
 export default function TeacherTrueFalsePage() {
   const { socket, isConnected, connect } = useSocket()
+  const { user, accessToken, isHydrated } = useAuthStore()
 
   const [isAuthed, setIsAuthed] = useState(false)
+  const [forcePassword, setForcePassword] = useState(false)
   const [tests, setTests] = useState<TrueFalseTestSummary[]>([])
   const [selectedTestId, setSelectedTestId] = useState<string | null>(null)
   const [attempts, setAttempts] = useState<TrueFalseAttempt[]>([])
@@ -50,6 +53,20 @@ export default function TeacherTrueFalsePage() {
   useEffect(() => {
     if (!isConnected) connect()
   }, [connect, isConnected])
+
+  useEffect(() => {
+    if (
+      !socket ||
+      !isHydrated ||
+      forcePassword ||
+      isAuthed ||
+      user?.user_type !== "teacher" ||
+      !accessToken
+    ) {
+      return
+    }
+    socket.emit("manager:auth", { accessToken, userType: user?.user_type })
+  }, [socket, isHydrated, forcePassword, isAuthed, user, accessToken])
 
   useEffect(() => {
     let mounted = true
@@ -75,7 +92,12 @@ export default function TeacherTrueFalsePage() {
   }, [socket])
 
   useEvent("manager:quizzList", handleAuthed)
-  useEvent("manager:errorMessage", (message) => toast.error(message))
+  useEvent("manager:errorMessage", (message) => {
+    toast.error(message)
+    if (user?.user_type === "teacher" && !isAuthed) {
+      setForcePassword(true)
+    }
+  })
   useEvent("tf:error", (message) => toast.error(message))
   useEvent("tf:tests", (list) => setTests(list))
   useEvent("tf:results", (list) => setAttempts(list))
@@ -199,13 +221,19 @@ export default function TeacherTrueFalsePage() {
             <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
               <h2 className="text-lg font-bold text-slate-900">Kirish</h2>
               <p className="mt-1 text-sm text-slate-600">
-                True/False testlarni boshqarish uchun manager parolini kiriting.
+                True/False testlarni boshqarish uchun avtorizatsiya kerak.
               </p>
-              <div className="mt-4 max-w-md">
-                <ManagerPassword
-                  onSubmit={(password) => socket?.emit("manager:auth", password)}
-                />
-              </div>
+              {user?.user_type === "teacher" && !forcePassword ? (
+                <div className="mt-4 flex items-center gap-2 text-sm text-slate-600">
+                  <Loader /> O&apos;qituvchi sifatida tekshirilmoqda...
+                </div>
+              ) : (
+                <div className="mt-4 max-w-md">
+                  <ManagerPassword
+                    onSubmit={(password) => socket?.emit("manager:auth", password)}
+                  />
+                </div>
+              )}
             </div>
           ) : (
             <div className="grid gap-4 lg:grid-cols-5">

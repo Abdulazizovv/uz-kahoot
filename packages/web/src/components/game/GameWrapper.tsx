@@ -26,7 +26,7 @@ const PLAYER_PATTERN_BG =
 
 const GameWrapper = ({ children, statusName, onNext, manager }: Props) => {
   const router = useRouter()
-  const { isConnected } = useSocket()
+  const { isConnected, lastError, serverUrl, reconnect } = useSocket()
   const { player, reset: resetPlayer } = usePlayerStore()
   const { reset: resetManager } = useManagerStore()
   const { questionStates, setQuestionStates } = useQuestionStore()
@@ -99,9 +99,37 @@ const GameWrapper = ({ children, statusName, onNext, manager }: Props) => {
       </div>
 
       {!isConnected && !statusName ? (
-        <div className="relative z-10 flex h-full w-full flex-1 flex-col items-center justify-center">
+        <div className="relative z-10 flex h-full w-full flex-1 flex-col items-center justify-center px-4 text-center">
           <Loader />
           <h1 className="text-4xl font-bold text-white">Ulanmoqda...</h1>
+          {lastError && (
+            <p className="mt-3 max-w-xl text-sm font-semibold text-white/80">
+              Socket xatosi: {lastError}
+            </p>
+          )}
+          {serverUrl && (
+            <p className="mt-2 max-w-xl text-xs text-white/70">
+              Socket server: <span className="font-mono">{serverUrl}</span>
+            </p>
+          )}
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+            <button
+              onClick={reconnect}
+              className="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/10"
+            >
+              Qayta ulanish
+            </button>
+            <Link
+              href="/"
+              className="inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/10"
+            >
+              Bosh sahifa
+            </Link>
+          </div>
+          <p className="mt-4 max-w-xl text-xs text-white/60">
+            Agar lokalda ishlayotgan bo&apos;lsangiz `pnpm dev:socket` (yoki
+            `pnpm dev`) ni ishga tushiring va `.env` dagi `SOCKET_URL` ni tekshiring.
+          </p>
         </div>
       ) : (
         <>

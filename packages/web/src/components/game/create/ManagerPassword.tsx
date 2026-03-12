@@ -1,7 +1,7 @@
 import Button from "@/components/Button"
 import Form from "@/components/Form"
 import Input from "@/components/Input"
-import { useEvent } from "@/contexts/socketProvider"
+import { useEvent, useSocket } from "@/contexts/socketProvider"
 import { KeyboardEvent, useState } from "react"
 import toast from "react-hot-toast"
 
@@ -10,9 +10,17 @@ type Props = {
 }
 
 const ManagerPassword = ({ onSubmit }: Props) => {
+  const { isConnected, connect } = useSocket()
   const [password, setPassword] = useState("")
+  const [pending, setPending] = useState(false)
 
   const handleSubmit = () => {
+    if (!isConnected) {
+      setPending(true)
+      connect()
+      toast.error("Socket ulanmagan. Ulanmoqda, qayta urinib ko'ring.")
+      return
+    }
     onSubmit(password)
   }
 
@@ -26,6 +34,13 @@ const ManagerPassword = ({ onSubmit }: Props) => {
     toast.error(message)
   })
 
+  useEvent("connect", () => {
+    if (!pending) return
+    setPending(false)
+    if (!password) return
+    onSubmit(password)
+  })
+
   return (
     <Form>
       <Input
@@ -34,7 +49,9 @@ const ManagerPassword = ({ onSubmit }: Props) => {
         onKeyDown={handleKeyDown}
         placeholder="Boshqaruvchi parolini kiriting"
       />
-      <Button onClick={handleSubmit}>Kirish</Button>
+      <Button onClick={handleSubmit}>
+        {pending ? "Ulanmoqda..." : "Kirish"}
+      </Button>
     </Form>
   )
 }

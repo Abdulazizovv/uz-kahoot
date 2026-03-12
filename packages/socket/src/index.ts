@@ -24,9 +24,21 @@ import { Server as ServerIO } from "socket.io"
 import dayjs from "dayjs"
 import { v7 as uuid } from "uuid"
 
+const parseOrigins = (raw: string | undefined): "*" | string[] => {
+  const value = (raw ?? "").trim()
+  if (!value || value === "*") return "*"
+  const parts = value
+    .split(",")
+    .map((p) => p.trim())
+    .filter(Boolean)
+  return parts.length ? parts : "*"
+}
+
 const io: Server = new ServerIO({
   cors: {
-    origin: [env.WEB_ORIGIN],
+    origin: parseOrigins(env.WEB_ORIGIN),
+    credentials: true,
+    methods: ["GET", "POST"],
   },
 })
 Config.init()
@@ -80,10 +92,23 @@ io.on("connection", (socket) => {
     socket.emit("game:reset", "Test tugagan")
   })
 
-  socket.on("manager:auth", (password) => {
+  socket.on("manager:auth", (payload) => {
     try {
       const config = Config.game()
 
+      // No backend-socket validation in this deployment:
+      // trust app storage info for teacher (client sends userType + accessToken).
+      if (
+        typeof payload === "object" &&
+        payload?.userType === "teacher" &&
+        Boolean(payload.accessToken)
+      ) {
+        socket.data.isManagerAuthed = true
+        socket.emit("manager:quizzList", Config.quizz())
+        return
+      }
+
+      const password = String(payload ?? "")
       if (password !== config.managerPassword) {
         socket.emit("manager:errorMessage", "Xato parol")
         return

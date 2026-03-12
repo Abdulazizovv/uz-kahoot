@@ -21,6 +21,8 @@ type TypedSocket = Socket<ServerToClientEvents, ClientToServerEvents>
 interface SocketContextValue {
   socket: TypedSocket | null
   isConnected: boolean
+  lastError: string | null
+  serverUrl: string | null
   clientId: string
   connect: () => void
   disconnect: () => void
@@ -30,6 +32,8 @@ interface SocketContextValue {
 const SocketContext = createContext<SocketContextValue>({
   socket: null,
   isConnected: false,
+  lastError: null,
+  serverUrl: null,
   clientId: "",
   connect: () => {},
   disconnect: () => {},
@@ -62,7 +66,10 @@ const getClientId = (): string => {
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket, setSocket] = useState<TypedSocket | null>(null)
   const [isConnected, setIsConnected] = useState(false)
+  const [lastError, setLastError] = useState<string | null>(null)
+  const [serverUrl, setServerUrl] = useState<string | null>(null)
   const [clientId] = useState<string>(() => getClientId())
+  const connectRequestedRef = React.useRef(false)
 
   useEffect(() => {
     if (socket) {
@@ -74,10 +81,24 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     const initSocket = async () => {
       try {
         const socketUrl = await getSocketServer()
+        let normalizedUrl = socketUrl.trim()
 
-        s = io(socketUrl, {
-          transports: ["websocket"],
+        // socket.io prefers http(s) URL; ws(s) may break polling/fallback.
+        normalizedUrl = normalizedUrl.replace(/^ws:\/\//, "http://")
+        normalizedUrl = normalizedUrl.replace(/^wss:\/\//, "https://")
+
+        if (
+          typeof window !== "undefined" &&
+          window.location.protocol === "https:"
+        ) {
+          normalizedUrl = normalizedUrl.replace(/^http:\/\//, "https://")
+        }
+
+        setServerUrl(normalizedUrl)
+        s = io(normalizedUrl, {
+          transports: ["websocket", "polling"],
           autoConnect: false,
+          timeout: 8000,
           auth: {
             clientId,
           },
@@ -87,6 +108,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
         s.on("connect", () => {
           setIsConnected(true)
+          setLastError(null)
         })
 
         s.on("disconnect", () => {
@@ -94,9 +116,17 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         })
 
         s.on("connect_error", (err) => {
-          console.error("Connection error:", err.message)
+          const message = err?.message || "Socket connection error"
+          setLastError(message)
+          console.error("Connection error:", message)
         })
+
+        if (connectRequestedRef.current) {
+          connectRequestedRef.current = false
+          s.connect()
+        }
       } catch (error) {
+        setLastError("Failed to initialize socket")
         console.error("Failed to initialize socket:", error)
       }
     }
@@ -110,9 +140,12 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   }, [clientId])
 
   const connect = useCallback(() => {
-    if (socket && !socket.connected) {
-      socket.connect()
+    if (!socket) {
+      connectRequestedRef.current = true
+      return
     }
+
+    if (!socket.connected) socket.connect()
   }, [socket])
 
   const disconnect = useCallback(() => {
@@ -122,10 +155,13 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   }, [socket])
 
   const reconnect = useCallback(() => {
-    if (socket) {
-      socket.disconnect()
-      socket.connect()
+    if (!socket) {
+      connectRequestedRef.current = true
+      return
     }
+
+    socket.disconnect()
+    socket.connect()
   }, [socket])
 
   return (
@@ -133,6 +169,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       value={{
         socket,
         isConnected,
+        lastError,
+        serverUrl,
         clientId,
         connect,
         disconnect,

@@ -6,32 +6,64 @@ import ManagerPassword from "@/components/game/create/ManagerPassword"
 import SelectQuizz from "@/components/game/create/SelectQuizz"
 import Loader from "@/components/Loader"
 import { useEvent, useSocket } from "@/contexts/socketProvider"
+import { useAuthStore } from "@/stores/auth"
 import { useManagerStore } from "@/stores/manager"
 import { useQuestionStore } from "@/stores/question"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
+import toast from "react-hot-toast"
 
 const CreateGame = () => {
   const router = useRouter()
-  const { socket } = useSocket()
+  const { socket, isConnected, connect, lastError, serverUrl } = useSocket()
+  const { user, accessToken, isHydrated } = useAuthStore()
   const { setGameId, setStatus, setPlayers, reset } = useManagerStore()
   const { setQuestionStates } = useQuestionStore()
   const [quizzList, setQuizzList] = useState<QuizzWithId[]>([])
   const [selectedQuizz, setSelectedQuizz] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [forcePassword, setForcePassword] = useState(false)
+  const hasRequestedAuthRef = useRef(false)
+
+  const isTeacher = useMemo(
+    () => Boolean(user && user.user_type === "teacher"),
+    [user],
+  )
 
   useEffect(() => {
     // Oldingi o'yin ma'lumotlarini tozalash
     reset()
   }, [reset])
 
+  useEffect(() => {
+    if (!isConnected) connect()
+  }, [connect, isConnected])
+
   useEvent("manager:quizzList", (quizzList: QuizzWithId[]) => {
     setQuizzList(quizzList)
     setIsLoading(false)
     setIsAuthenticated(true)
   })
+
+  useEvent("manager:errorMessage", (message) => {
+    toast.error(message)
+    if (isTeacher && !isAuthenticated) {
+      setForcePassword(true)
+      setIsLoading(false)
+    }
+  })
+
+  useEffect(() => {
+    if (!socket || !isHydrated || !isTeacher || !accessToken || forcePassword) {
+      return
+    }
+    if (hasRequestedAuthRef.current) return
+    hasRequestedAuthRef.current = true
+    setIsLoading(true)
+    socket.emit("manager:auth", { accessToken, userType: user?.user_type })
+  }, [socket, isHydrated, isTeacher, accessToken, forcePassword])
 
   useEvent(
     "manager:gameCreated",
@@ -109,7 +141,45 @@ const CreateGame = () => {
           </div>
 
           {!isAuthenticated ? (
-            <ManagerPassword onSubmit={handleAuthSubmit} />
+            !isHydrated ? (
+              <div className="flex flex-col items-center justify-center gap-4 py-10 text-white/90">
+                <Loader />
+                <p className="text-sm font-semibold text-white/80">
+                  Yuklanmoqda...
+                </p>
+              </div>
+            ) : isTeacher && !forcePassword ? (
+              <div className="flex flex-col items-center justify-center gap-4 py-10 text-white/90">
+                <Loader />
+                <p className="text-sm font-semibold text-white/80">
+                  O&apos;qituvchi sifatida tekshirilmoqda...
+                </p>
+                {!isConnected && (
+                  <div className="max-w-md text-center text-xs text-white/70">
+                    <p>Socket ulanmagan.</p>
+                    {lastError && <p className="mt-1">Xato: {lastError}</p>}
+                    {serverUrl && (
+                      <p className="mt-1">
+                        Server: <span className="font-mono">{serverUrl}</span>
+                      </p>
+                    )}
+                    <p className="mt-2">
+                      `pnpm dev:socket` ni ishga tushiring. Agar telefon/emulatorda
+                      ochayotgan bo&apos;lsangiz, `.env` dagi `SOCKET_URL` da
+                      `localhost` emas, kompyuter IP manzilini yozing.
+                    </p>
+                    <button
+                      onClick={() => setForcePassword(true)}
+                      className="mt-3 inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-semibold text-white/90 transition hover:bg-white/10"
+                    >
+                      Parol bilan kirish
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <ManagerPassword onSubmit={handleAuthSubmit} />
+            )
           ) : isLoading ? (
             <div className="flex justify-center py-10">
               <Loader />
