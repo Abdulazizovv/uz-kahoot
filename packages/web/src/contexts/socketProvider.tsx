@@ -94,11 +94,25 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
           normalizedUrl = normalizedUrl.replace(/^http:\/\//, "https://")
         }
 
-        setServerUrl(normalizedUrl)
-        s = io(normalizedUrl, {
+        // Support reverse-proxy setups where socket is mounted under a base path
+        // e.g. https://example.com/ws  -> path: /ws/socket.io
+        let baseUrl = normalizedUrl
+        let path = "/socket.io"
+        try {
+          const u = new URL(normalizedUrl)
+          baseUrl = u.origin
+          const basePath = (u.pathname || "/").replace(/\/$/, "")
+          path = `${basePath}${path}`.replace(/\/{2,}/g, "/")
+        } catch {
+          // If URL parsing fails, fall back to default behavior
+        }
+
+        setServerUrl(`${baseUrl}${path}`)
+        s = io(baseUrl, {
           transports: ["websocket", "polling"],
           autoConnect: false,
           timeout: 8000,
+          path,
           auth: {
             clientId,
           },
