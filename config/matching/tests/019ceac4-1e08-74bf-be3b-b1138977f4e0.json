@@ -1,0 +1,38 @@
+{
+  "title": "Fizika",
+  "description": "test",
+  "groupIds": [
+    "cefd599c-be9c-4343-9c43-b6f251b11fe0",
+    "41d90eb8-3b86-46d1-9d9c-4aa360270a57",
+    "3104e5dd-338a-4704-a424-c07efbf03ec4"
+  ],
+  "startAt": "2026-03-01T05:13:00.000Z",
+  "endAt": "2026-03-28T05:13:00.000Z",
+  "pairs": [
+    {
+      "id": "019ceac3-4209-77ab-b67f-a8fdf7e7d43f",
+      "left": {
+        "id": "019ceac4-1e03-7698-9d84-803bbe0ea341",
+        "text": "Paris"
+      },
+      "right": {
+        "id": "019ceac4-1e03-7698-9d84-85b9a041a7eb",
+        "text": "Fransiya poytaxti"
+      }
+    },
+    {
+      "id": "019ceac3-c847-719a-920b-d22069dc4570",
+      "left": {
+        "id": "019ceac4-1e03-7698-9d84-8b544d2035f8",
+        "text": "Toshkent"
+      },
+      "right": {
+        "id": "019ceac4-1e03-7698-9d84-8ff77831c769",
+        "text": "O'zbekiston poytaxti"
+      }
+    }
+  ],
+  "id": "019ceac4-1e08-74bf-be3b-b1138977f4e0",
+  "createdAt": "2026-03-14T05:14:07.239Z",
+  "updatedAt": "2026-03-14T05:14:07.239Z"
+}

@@ -4,9 +4,9 @@ import Header from "@/components/student/StudentHeader"
 import StudentSidebar from "@/components/student/StudentSidebar"
 import Loader from "@/components/Loader"
 import Button from "@/components/Button"
-import { useEvent, useSocket } from "@/contexts/socketProvider"
 import { studentsService } from "@/services/api/students.service"
 import { useAuthStore } from "@/stores/auth"
+import { apiGet, apiSend } from "@/lib/async-api"
 import {
   TrueFalseAttempt,
   TrueFalseTestForStudent,
@@ -19,7 +19,6 @@ import toast from "react-hot-toast"
 export default function StudentTrueFalseTakePage() {
   const router = useRouter()
   const { id }: { id?: string } = useParams()
-  const { socket, isConnected, connect } = useSocket()
   const { user, isHydrated } = useAuthStore()
 
   const [groupId, setGroupId] = useState<string | null>(null)
@@ -31,10 +30,6 @@ export default function StudentTrueFalseTakePage() {
   const [submitting, setSubmitting] = useState(false)
   const [result, setResult] = useState<TrueFalseAttempt | null>(null)
   const [tick, setTick] = useState(0)
-
-  useEffect(() => {
-    if (!isConnected) connect()
-  }, [connect, isConnected])
 
   useEffect(() => {
     let mounted = true
@@ -53,25 +48,29 @@ export default function StudentTrueFalseTakePage() {
     }
   }, [])
 
-  useEvent("tf:error", (message) => toast.error(message))
-  useEvent("tf:test", (payload) => {
-    const t = payload as TrueFalseTestForStudent
-    if (id && t.id !== id) return
-    setTest(t)
-    setStartedAt(new Date().toISOString())
-    const initial: Record<string, boolean | null> = {}
-    for (const q of t.questions) initial[q.id] = null
-    setAnswers(initial)
-  })
-  useEvent("tf:submitted", (attempt) => {
-    setSubmitting(false)
-    setResult(attempt)
-  })
-
   useEffect(() => {
-    if (!socket || !id) return
-    socket.emit("tf:get", { id, mode: "student" })
-  }, [socket, id])
+    let mounted = true
+    ;(async () => {
+      if (!id) return
+      try {
+        const t = await apiGet<TrueFalseTestForStudent>(
+          `/api/async/truefalse/tests/${encodeURIComponent(id)}?mode=student`,
+        )
+        if (!mounted) return
+        setTest(t)
+        setStartedAt(new Date().toISOString())
+        const initial: Record<string, boolean | null> = {}
+        for (const q of t.questions) initial[q.id] = null
+        setAnswers(initial)
+      } catch (e) {
+        console.error(e)
+        toast.error((e as Error).message)
+      }
+    })()
+    return () => {
+      mounted = false
+    }
+  }, [id])
 
   const total = test?.questions.length ?? 0
   const answeredCount = useMemo(
@@ -108,23 +107,37 @@ export default function StudentTrueFalseTakePage() {
   }
 
   const handleSubmit = () => {
-    if (!socket || !test || !user || !startedAt) return
+    if (!test || !user || !startedAt) return
     if (!canSubmit) {
       toast.error("Avval barcha savollarga javob bering")
       return
     }
     setSubmitting(true)
-    socket.emit("tf:submit", {
-      testId: test.id,
-      studentUserId: user.id,
-      studentName: `${user.first_name} ${user.last_name}`.trim(),
-      groupId: groupId ?? undefined,
-      startedAt,
-      answers: test.questions.map((q) => ({
-        questionId: q.id,
-        answer: Boolean(answers[q.id]),
-      })),
-    })
+    ;(async () => {
+      try {
+        const attempt = await apiSend<TrueFalseAttempt>(
+          "/api/async/truefalse/submit",
+          "POST",
+          {
+            testId: test.id,
+            studentUserId: user.id,
+            studentName: `${user.first_name} ${user.last_name}`.trim(),
+            groupId: groupId ?? undefined,
+            startedAt,
+            answers: test.questions.map((q) => ({
+              questionId: q.id,
+              answer: Boolean(answers[q.id]),
+            })),
+          },
+        )
+        setResult(attempt)
+      } catch (e) {
+        console.error(e)
+        toast.error((e as Error).message)
+      } finally {
+        setSubmitting(false)
+      }
+    })()
   }
 
   const formattedLeft = useMemo(() => {
@@ -162,7 +175,7 @@ export default function StudentTrueFalseTakePage() {
             </button>
           </div>
 
-          {loadingProfile || !isConnected || !test ? (
+          {loadingProfile || !test ? (
             <div className="flex items-center gap-2 text-slate-600">
               <Loader /> Yuklanmoqda...
             </div>

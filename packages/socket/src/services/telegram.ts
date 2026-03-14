@@ -18,10 +18,10 @@ export const sendTelegramMessage = async (
       Accept: "application/json",
     },
     body: JSON.stringify({
-      chat_id: chatId,
+      "chat_id": chatId,
       text,
-      parse_mode: options?.parseMode,
-      disable_web_page_preview: options?.disableWebPagePreview,
+      "parse_mode": options?.parseMode,
+      "disable_web_page_preview": options?.disableWebPagePreview,
     }),
   })
 
@@ -30,4 +30,3 @@ export const sendTelegramMessage = async (
     throw new Error(`Telegram sendMessage failed: ${res.status} ${body}`)
   }
 }
-

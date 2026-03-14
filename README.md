@@ -181,6 +181,22 @@ Quiz Options:
   - `cooldown`: Time in seconds before showing the question
   - `time`: Time in seconds allowed to answer
 
+### 3. Async Quizzes (JSON storage)
+
+In addition to the live quiz, the project supports teacher-created quizzes that work in a time window and persist results to JSON:
+
+- **True/False**: `config/truefalse/tests/*.json` and results in `config/truefalse/results/*.json`
+- **Matching (left/right)**: `config/matching/tests/*.json` and results in `config/matching/results/*.json`
+
+Teacher UI:
+
+- `http://localhost:3000/teacher/quizzes` (choose quiz type)
+- Group statistics: `http://localhost:3000/teacher/quizzes/stats`
+
+Kahoot session results are also persisted to JSON after a session ends:
+
+- `config/kahoot/results/*.json`
+
 ## 🎮 How to Play
 
 1. Access the manager interface at http://localhost:3000/manager

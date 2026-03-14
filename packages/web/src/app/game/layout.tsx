@@ -1,17 +1,7 @@
-"use client"
+import { SocketProvider } from "@/contexts/socketProvider"
+import { PropsWithChildren } from "react"
 
-import { useSocket } from "@/contexts/socketProvider"
-import { PropsWithChildren, useEffect } from "react"
-
-const GameLayout = ({ children }: PropsWithChildren) => {
-  const { isConnected, connect } = useSocket()
-  useEffect(() => {
-    if (!isConnected) {
-      connect()
-    }
-  }, [connect, isConnected])
-
-  return children
+export default function GameLayout({ children }: PropsWithChildren) {
+  return <SocketProvider>{children}</SocketProvider>
 }
 
-export default GameLayout

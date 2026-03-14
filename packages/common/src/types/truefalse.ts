@@ -10,11 +10,16 @@ export type TrueFalseTest = {
   title: string
   description?: string
   groupIds: string[]
-  telegramChatId?: string // optional: pre-configured group chat to notify
-  startAt: string // ISO datetime
-  endAt: string // ISO datetime
-  createdAt: string // ISO datetime
-  updatedAt: string // ISO datetime
+  // Optional: Pre-configured group chat to notify
+  telegramChatId?: string
+  // ISO datetime
+  startAt: string
+  // ISO datetime
+  endAt: string
+  // ISO datetime
+  createdAt: string
+  // ISO datetime
+  updatedAt: string
   questions: TrueFalseQuestion[]
 }
 
@@ -48,8 +53,10 @@ export type TrueFalseAttempt = {
   studentUserId: string
   studentName: string
   groupId?: string
-  startedAt: string // ISO datetime
-  submittedAt: string // ISO datetime
+  // ISO datetime
+  startedAt: string
+  // ISO datetime
+  submittedAt: string
   score: number
   total: number
   answers: TrueFalseAttemptAnswer[]
@@ -57,6 +64,7 @@ export type TrueFalseAttempt = {
 
 export type TrueFalseResultsFile = {
   testId: string
-  updatedAt: string // ISO datetime
+  // ISO datetime
+  updatedAt: string
   attempts: TrueFalseAttempt[]
 }

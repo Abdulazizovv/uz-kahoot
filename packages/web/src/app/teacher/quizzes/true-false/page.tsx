@@ -4,10 +4,9 @@ import Button from "@/components/Button"
 import Header from "@/components/teacher/Header"
 import Sidebar from "@/components/teacher/Sidebar"
 import Loader from "@/components/Loader"
-import ManagerPassword from "@/components/game/create/ManagerPassword"
-import { useEvent, useSocket } from "@/contexts/socketProvider"
 import { groupsService, StudentGroup } from "@/services/api/groups.service"
 import { useAuthStore } from "@/stores/auth"
+import { apiGet, apiSend } from "@/lib/async-api"
 import {
   TrueFalseAttempt,
   TrueFalseTest,
@@ -15,7 +14,7 @@ import {
 } from "@eduarena/common/types/truefalse"
 import clsx from "clsx"
 import Link from "next/link"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import toast from "react-hot-toast"
 import { v7 as uuid } from "uuid"
 
@@ -26,20 +25,27 @@ type DraftQuestion = {
   image?: string
 }
 
-export default function TeacherTrueFalsePage() {
-  const { socket, isConnected, connect } = useSocket()
-  const { user, accessToken, isHydrated } = useAuthStore()
+const toDatetimeLocal = (iso: string) => {
+  const d = new Date(iso)
+  const tz = d.getTimezoneOffset() * 60_000
+  return new Date(d.getTime() - tz).toISOString().slice(0, 16)
+}
 
-  const [isAuthed, setIsAuthed] = useState(false)
-  const [forcePassword, setForcePassword] = useState(false)
+export default function TeacherTrueFalsePage() {
+  const { user, accessToken, isHydrated } = useAuthStore()
+  const isTeacher = Boolean(accessToken && user?.user_type === "teacher")
+
   const [tests, setTests] = useState<TrueFalseTestSummary[]>([])
   const [selectedTestId, setSelectedTestId] = useState<string | null>(null)
   const [attempts, setAttempts] = useState<TrueFalseAttempt[]>([])
+  const [loadingTests, setLoadingTests] = useState(false)
 
   const [groups, setGroups] = useState<StudentGroup[]>([])
   const [groupsLoading, setGroupsLoading] = useState(true)
 
   const [isCreating, setIsCreating] = useState(false)
+  const [modalMode, setModalMode] = useState<"create" | "edit">("create")
+  const [editingTest, setEditingTest] = useState<TrueFalseTest | null>(null)
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [groupIds, setGroupIds] = useState<string[]>([])
@@ -50,23 +56,15 @@ export default function TeacherTrueFalsePage() {
     { id: uuid(), statement: "", correct: true },
   ])
 
-  useEffect(() => {
-    if (!isConnected) connect()
-  }, [connect, isConnected])
-
-  useEffect(() => {
-    if (
-      !socket ||
-      !isHydrated ||
-      forcePassword ||
-      isAuthed ||
-      user?.user_type !== "teacher" ||
-      !accessToken
-    ) {
-      return
+  const teacherHeaders = useMemo(() => {
+    if (!accessToken || user?.user_type !== "teacher") {
+      return null
     }
-    socket.emit("manager:auth", { accessToken, userType: user?.user_type })
-  }, [socket, isHydrated, forcePassword, isAuthed, user, accessToken])
+    return {
+      authorization: `Bearer ${accessToken}`,
+      "x-user-type": "teacher",
+    }
+  }, [accessToken, user?.user_type])
 
   useEffect(() => {
     let mounted = true
@@ -86,31 +84,43 @@ export default function TeacherTrueFalsePage() {
     }
   }, [])
 
-  const handleAuthed = useCallback(() => {
-    setIsAuthed(true)
-    socket?.emit("tf:list", { mode: "teacher" })
-  }, [socket])
-
-  useEvent("manager:quizzList", handleAuthed)
-  useEvent("manager:errorMessage", (message) => {
-    toast.error(message)
-    if (user?.user_type === "teacher" && !isAuthed) {
-      setForcePassword(true)
+  useEffect(() => {
+    let mounted = true
+    ;(async () => {
+      if (!isHydrated) return
+      if (!teacherHeaders) return
+      setLoadingTests(true)
+      try {
+        const list = await apiGet<TrueFalseTestSummary[]>(
+          "/api/async/truefalse/tests?mode=teacher",
+          { headers: teacherHeaders },
+        )
+        if (mounted) setTests(list)
+      } catch (e) {
+        console.error(e)
+        toast.error("Testlarni yuklashda xatolik")
+      } finally {
+        if (mounted) setLoadingTests(false)
+      }
+    })()
+    return () => {
+      mounted = false
     }
-  })
-  useEvent("tf:error", (message) => toast.error(message))
-  useEvent("tf:tests", (list) => setTests(list))
-  useEvent("tf:results", (list) => setAttempts(list))
-  useEvent("tf:created", () => {
-    toast.success("Test yaratildi")
-    setIsCreating(false)
-    resetDraft()
-  })
+  }, [isHydrated, teacherHeaders])
 
   const selectedTest = useMemo(
     () => tests.find((t) => t.id === selectedTestId) ?? null,
     [tests, selectedTestId],
   )
+
+  const reloadTests = async () => {
+    if (!teacherHeaders) return
+    const list = await apiGet<TrueFalseTestSummary[]>(
+      "/api/async/truefalse/tests?mode=teacher",
+      { headers: teacherHeaders },
+    )
+    setTests(list)
+  }
 
   const toggleGroup = (id: string) => {
     setGroupIds((prev) =>
@@ -130,7 +140,21 @@ export default function TeacherTrueFalsePage() {
     setQuestions((prev) => prev.map((q) => (q.id === id ? { ...q, ...patch } : q)))
   }
 
+  const moveQuestion = (id: string, dir: -1 | 1) => {
+    setQuestions((prev) => {
+      const idx = prev.findIndex((q) => q.id === id)
+      if (idx < 0) return prev
+      const nextIdx = idx + dir
+      if (nextIdx < 0 || nextIdx >= prev.length) return prev
+      const next = [...prev]
+      ;[next[idx], next[nextIdx]] = [next[nextIdx], next[idx]]
+      return next
+    })
+  }
+
   const resetDraft = () => {
+    setModalMode("create")
+    setEditingTest(null)
     setTitle("")
     setDescription("")
     setGroupIds([])
@@ -140,8 +164,46 @@ export default function TeacherTrueFalsePage() {
     setQuestions([{ id: uuid(), statement: "", correct: true }])
   }
 
-  const handleCreate = () => {
-    if (!socket) return
+  const openCreate = () => {
+    resetDraft()
+    setModalMode("create")
+    setIsCreating(true)
+  }
+
+  const openEdit = (testId: string) => {
+    if (!teacherHeaders) return
+    ;(async () => {
+      try {
+        const test = await apiGet<TrueFalseTest>(
+          `/api/async/truefalse/tests/${encodeURIComponent(testId)}?mode=teacher`,
+          { headers: teacherHeaders },
+        )
+        setModalMode("edit")
+        setEditingTest(test)
+        setTitle(test.title ?? "")
+        setDescription(test.description ?? "")
+        setGroupIds(test.groupIds ?? [])
+        setTelegramChatId(test.telegramChatId ?? "")
+        setStartAt(toDatetimeLocal(test.startAt))
+        setEndAt(toDatetimeLocal(test.endAt))
+        setQuestions(
+          (test.questions ?? []).map((q) => ({
+            id: q.id,
+            statement: q.statement ?? "",
+            correct: Boolean(q.correct),
+            image: q.image,
+          })),
+        )
+        setIsCreating(true)
+      } catch (e) {
+        console.error(e)
+        toast.error((e as Error).message)
+      }
+    })()
+  }
+
+  const handleSave = () => {
+    if (!teacherHeaders) return
     if (!title.trim()) {
       toast.error("Sarlavha kiriting")
       return
@@ -174,22 +236,99 @@ export default function TeacherTrueFalsePage() {
       return
     }
 
-    const payload: Omit<TrueFalseTest, "id" | "createdAt" | "updatedAt"> = {
-      title: title.trim(),
-      description: description.trim() || undefined,
-      groupIds,
-      telegramChatId: telegramChatId.trim() || undefined,
-      startAt: startIso,
-      endAt: endIso,
-      questions: cleaned,
-    }
+    ;(async () => {
+      try {
+        if (modalMode === "create") {
+          const payload: Omit<TrueFalseTest, "id" | "createdAt" | "updatedAt"> = {
+            title: title.trim(),
+            description: description.trim() || undefined,
+            groupIds,
+            telegramChatId: telegramChatId.trim() || undefined,
+            startAt: startIso,
+            endAt: endIso,
+            questions: cleaned,
+          }
+          await apiSend<TrueFalseTest>("/api/async/truefalse/tests", "POST", payload, {
+            headers: teacherHeaders,
+          })
+          toast.success("Test yaratildi")
+        } else {
+          if (!editingTest) {
+            toast.error("Tahrirlash uchun test topilmadi")
+            return
+          }
+          const payload: TrueFalseTest = {
+            ...editingTest,
+            title: title.trim(),
+            description: description.trim() || undefined,
+            groupIds,
+            telegramChatId: telegramChatId.trim() || undefined,
+            startAt: startIso,
+            endAt: endIso,
+            questions: cleaned,
+          }
+          await apiSend<TrueFalseTest>(
+            `/api/async/truefalse/tests/${encodeURIComponent(editingTest.id)}`,
+            "PUT",
+            payload,
+            { headers: teacherHeaders },
+          )
+          toast.success("Test yangilandi")
+        }
 
-    socket.emit("tf:create", payload)
+        await reloadTests()
+        setIsCreating(false)
+        resetDraft()
+      } catch (e) {
+        console.error(e)
+        toast.error((e as Error).message)
+      }
+    })()
+  }
+
+  const handleDelete = (testId: string) => {
+    if (!teacherHeaders) return
+    const found = tests.find((t) => t.id === testId)
+    const ok = window.confirm(
+      `Test o'chirilsinmi?\n\n${found?.title ?? testId}\n\nEslatma: test natijalari ham o'chiriladi.`,
+    )
+    if (!ok) return
+    ;(async () => {
+      try {
+        await apiSend<{ ok: true }>(
+          `/api/async/truefalse/tests/${encodeURIComponent(testId)}`,
+          "DELETE",
+          undefined,
+          { headers: teacherHeaders },
+        )
+        if (selectedTestId === testId) {
+          setSelectedTestId(null)
+          setAttempts([])
+        }
+        await reloadTests()
+        toast.success("Test o'chirildi")
+      } catch (e) {
+        console.error(e)
+        toast.error((e as Error).message)
+      }
+    })()
   }
 
   const openResults = (testId: string) => {
     setSelectedTestId(testId)
-    socket?.emit("tf:results", { testId })
+    ;(async () => {
+      try {
+        if (!teacherHeaders) return
+        const list = await apiGet<TrueFalseAttempt[]>(
+          `/api/async/truefalse/results/${testId}`,
+          { headers: teacherHeaders },
+        )
+        setAttempts(list)
+      } catch (e) {
+        console.error(e)
+        toast.error((e as Error).message)
+      }
+    })()
   }
 
   return (
@@ -217,22 +356,20 @@ export default function TeacherTrueFalsePage() {
             </Link>
           </div>
 
-          {!isAuthed ? (
+          {!isTeacher ? (
             <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-              <h2 className="text-lg font-bold text-slate-900">Kirish</h2>
+              <h2 className="text-lg font-bold text-slate-900">Ruxsat</h2>
               <p className="mt-1 text-sm text-slate-600">
-                True/False testlarni boshqarish uchun avtorizatsiya kerak.
+                Bu sahifa faqat o&apos;qituvchilar uchun.
               </p>
-              {user?.user_type === "teacher" && !forcePassword ? (
+              {!isHydrated ? (
                 <div className="mt-4 flex items-center gap-2 text-sm text-slate-600">
-                  <Loader /> O&apos;qituvchi sifatida tekshirilmoqda...
+                  <Loader /> Yuklanmoqda...
                 </div>
               ) : (
-                <div className="mt-4 max-w-md">
-                  <ManagerPassword
-                    onSubmit={(password) => socket?.emit("manager:auth", password)}
-                  />
-                </div>
+                <p className="mt-4 text-sm text-slate-700">
+                  Iltimos, o&apos;qituvchi sifatida tizimga kiring.
+                </p>
               )}
             </div>
           ) : (
@@ -245,19 +382,22 @@ export default function TeacherTrueFalsePage() {
                     </h2>
                     <Button
                       className="w-auto bg-slate-900 text-white hover:bg-slate-800"
-                      onClick={() => setIsCreating(true)}
+                      onClick={openCreate}
                     >
                       + Yangi test
                     </Button>
                   </div>
 
-                  {!isConnected && (
-                    <p className="mt-3 text-sm text-slate-600">
-                      Socket ulanmoqda...
-                    </p>
+                  {loadingTests && (
+                    <p className="mt-3 text-sm text-slate-600">Yuklanmoqda...</p>
                   )}
 
                   <div className="mt-4 space-y-3">
+                    {loadingTests && (
+                      <div className="flex items-center gap-2 text-sm text-slate-600">
+                        <Loader /> Testlar yuklanmoqda...
+                      </div>
+                    )}
                     {tests.length === 0 ? (
                       <div className="rounded-2xl border border-dashed border-slate-200 p-6 text-center text-sm text-slate-600">
                         Hozircha testlar yo&apos;q.
@@ -289,6 +429,18 @@ export default function TeacherTrueFalsePage() {
                               className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
                             >
                               Natijalar
+                            </button>
+                            <button
+                              onClick={() => openEdit(t.id)}
+                              className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+                            >
+                              Tahrirlash
+                            </button>
+                            <button
+                              onClick={() => handleDelete(t.id)}
+                              className="inline-flex items-center justify-center rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700 transition hover:bg-rose-100"
+                            >
+                              O&apos;chirish
                             </button>
                           </div>
                         </div>
@@ -360,14 +512,19 @@ export default function TeacherTrueFalsePage() {
                 <div className="flex items-center justify-between border-b border-slate-200 p-5">
                   <div>
                     <p className="text-lg font-bold text-slate-900">
-                      Yangi True/False test
+                      {modalMode === "create"
+                        ? "Yangi True/False test"
+                        : "True/False testni tahrirlash"}
                     </p>
                     <p className="text-sm text-slate-600">
                       Savollar JSON faylga saqlanadi.
                     </p>
                   </div>
                   <button
-                    onClick={() => setIsCreating(false)}
+                    onClick={() => {
+                      setIsCreating(false)
+                      resetDraft()
+                    }}
                     className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 transition hover:bg-slate-50"
                     aria-label="Close"
                   >
@@ -497,13 +654,46 @@ export default function TeacherTrueFalsePage() {
                             <p className="text-xs font-semibold text-slate-600">
                               Savol #{idx + 1}
                             </p>
-                            <button
-                              onClick={() => removeQuestion(q.id)}
-                              className="text-xs font-semibold text-rose-600 hover:underline"
-                              disabled={questions.length <= 1}
-                            >
-                              O&apos;chirish
-                            </button>
+                            <div className="flex items-center gap-2">
+                              <button
+                                type="button"
+                                onClick={() => moveQuestion(q.id, -1)}
+                                disabled={idx === 0}
+                                className={clsx(
+                                  "inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50",
+                                  idx === 0 && "cursor-not-allowed opacity-50",
+                                )}
+                                aria-label="Yuqoriga"
+                              >
+                                ↑
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => moveQuestion(q.id, 1)}
+                                disabled={idx === questions.length - 1}
+                                className={clsx(
+                                  "inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50",
+                                  idx === questions.length - 1 &&
+                                    "cursor-not-allowed opacity-50",
+                                )}
+                                aria-label="Pastga"
+                              >
+                                ↓
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => removeQuestion(q.id)}
+                                className={clsx(
+                                  "rounded-xl border px-3 py-1.5 text-xs font-semibold transition",
+                                  questions.length <= 1
+                                    ? "cursor-not-allowed border-slate-200 bg-white text-slate-400"
+                                    : "border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100",
+                                )}
+                                disabled={questions.length <= 1}
+                              >
+                                O&apos;chirish
+                              </button>
+                            </div>
                           </div>
                           <textarea
                             value={q.statement}
@@ -580,7 +770,7 @@ export default function TeacherTrueFalsePage() {
                   </button>
                   <Button
                     className="w-auto bg-slate-900 text-white hover:bg-slate-800"
-                    onClick={handleCreate}
+                    onClick={handleSave}
                   >
                     Saqlash
                   </Button>

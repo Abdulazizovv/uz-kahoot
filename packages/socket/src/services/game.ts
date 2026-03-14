@@ -5,9 +5,11 @@ import {
   STATUS,
   StatusDataMap,
 } from "@eduarena/common/types/game/status"
+import { saveKahootSessionResult } from "@eduarena/socket/services/kahoot-results-store"
 import Registry from "@eduarena/socket/services/registry"
 import { createInviteCode, timeToPoint } from "@eduarena/socket/utils/game"
 import sleep from "@eduarena/socket/utils/sleep"
+import dayjs from "dayjs"
 import { v4 as uuid } from "uuid"
 
 const registry = Registry.getInstance()
@@ -16,6 +18,7 @@ class Game {
   io: Server
 
   gameId: string
+  quizzId: string
   manager: {
     id: string;
     clientId: string;
@@ -23,6 +26,9 @@ class Game {
   }
   inviteCode: string
   started: boolean
+  createdAt: string
+  finishedAt: string | null
+  private resultsSaved: boolean
 
   lastBroadcastStatus: { name: Status; data: StatusDataMap[Status] } | null =
     null
@@ -47,13 +53,14 @@ class Game {
     ms: number;
   }
 
-  constructor(io: Server, socket: Socket, quizz: Quizz) {
+  constructor(io: Server, socket: Socket, quizz: Quizz, quizzId: string) {
     if (!io) {
       throw new Error("Socket server not initialized")
     }
 
     this.io = io
     this.gameId = uuid()
+    this.quizzId = quizzId
     this.manager = {
       id: "",
       clientId: "",
@@ -61,6 +68,9 @@ class Game {
     }
     this.inviteCode = ""
     this.started = false
+    this.createdAt = dayjs().toISOString()
+    this.finishedAt = null
+    this.resultsSaved = false
 
     this.lastBroadcastStatus = null
     this.managerStatus = null
@@ -124,7 +134,14 @@ class Game {
     this.io.to(target).emit("game:status", statusData)
   }
 
-  join(socket: Socket, username: string) {
+  join(
+    socket: Socket,
+    payload: { username: string; studentUserId?: string; groupId?: string }
+  ) {
+    const name = payload.username
+    const studentUserId = payload.studentUserId || undefined
+    const groupId = payload.groupId || undefined
+
     const isAlreadyConnected = this.players.find(
       (p) => p.clientId === socket.handshake.auth.clientId
     )
@@ -141,7 +158,9 @@ class Game {
       id: socket.id,
       clientId: socket.handshake.auth.clientId,
       connected: true,
-      username,
+      username: name,
+      studentUserId,
+      groupId,
       points: 0,
     }
 
@@ -509,13 +528,17 @@ class Game {
 
     if (isLastRound) {
       this.started = false
+      this.finishedAt = dayjs().toISOString()
 
       this.broadcastStatus(STATUS.FINISHED, {
         subject: this.quizz.subject,
         top: this.leaderboard.slice(0, 3),
       })
 
-      return
+      this.persistResults()
+
+      
+return
     }
 
     const oldLeaderboard = this.tempOldLeaderboard
@@ -528,6 +551,35 @@ class Game {
     })
 
     this.tempOldLeaderboard = null
+  }
+
+  private persistResults() {
+    if (this.resultsSaved || !this.finishedAt) {return}
+
+    this.resultsSaved = true
+
+    try {
+      const players = this.leaderboard.map((p, index) => ({
+        studentUserId: p.studentUserId,
+        studentName: p.username,
+        groupId: p.groupId,
+        points: p.points,
+        rank: index + 1,
+      }))
+
+      saveKahootSessionResult({
+        sessionId: this.gameId,
+        inviteCode: this.inviteCode,
+        quizzId: this.quizzId,
+        subject: this.quizz.subject,
+        createdAt: this.createdAt,
+        finishedAt: this.finishedAt,
+        players,
+      })
+      console.log(`Kahoot session saved: ${this.gameId} (${this.inviteCode})`)
+    } catch (e) {
+      console.error("Failed to persist kahoot results:", e)
+    }
   }
 }
 

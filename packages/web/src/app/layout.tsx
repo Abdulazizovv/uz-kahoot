@@ -1,5 +1,4 @@
 import Toaster from "@/components/Toaster"
-import { SocketProvider } from "@/contexts/socketProvider"
 import type { Metadata } from "next"
 import { PropsWithChildren } from "react"
 import "./globals.css"
@@ -16,10 +15,8 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: PropsWithChildren) => (
   <html lang="uz" suppressHydrationWarning={true}>
     <body className="bg-secondary font-sans antialiased">
-      <SocketProvider>
-        <main className="text-base-[8px] flex flex-col">{children}</main>
-        <Toaster />
-      </SocketProvider>
+      <main className="text-base-[8px] flex flex-col">{children}</main>
+      <Toaster />
     </body>
   </html>
 )

@@ -69,7 +69,9 @@ export const listTests = (): TrueFalseTestSummary[] => {
       try {
         const data = fs.readFileSync(resolve(testsDir(), file), "utf-8")
         const parsed = JSON.parse(data) as TrueFalseTest
-        return toSummary(parsed)
+
+        
+return toSummary(parsed)
       } catch {
         return null
       }
@@ -82,10 +84,16 @@ export const listTests = (): TrueFalseTestSummary[] => {
 export const getTest = (id: string): TrueFalseTest | null => {
   initTrueFalseStore()
   const path = testFile(id)
-  if (!fs.existsSync(path)) return null
+
+  if (!fs.existsSync(path)) {
+    return null
+  }
+
   try {
     const data = fs.readFileSync(path, "utf-8")
-    return JSON.parse(data) as TrueFalseTest
+
+    
+return JSON.parse(data) as TrueFalseTest
   } catch {
     return null
   }
@@ -93,11 +101,14 @@ export const getTest = (id: string): TrueFalseTest | null => {
 
 export const getTestForStudent = (id: string): TrueFalseTestForStudent | null => {
   const test = getTest(id)
-  if (!test) return null
+
+  if (!test) {
+    return null
+  }
 
   return {
     ...test,
-    questions: test.questions.map(({ correct, ...q }) => q),
+    questions: test.questions.map(({ correct: _correct, ...q }) => q),
   }
 }
 
@@ -114,7 +125,9 @@ export const createTest = (
     updatedAt: now,
   }
   writeJsonAtomic(testFile(id), test)
-  return test
+
+  
+return test
 }
 
 export const updateTest = (test: TrueFalseTest): TrueFalseTest => {
@@ -122,35 +135,50 @@ export const updateTest = (test: TrueFalseTest): TrueFalseTest => {
   const now = dayjs().toISOString()
   const updated: TrueFalseTest = { ...test, updatedAt: now }
   writeJsonAtomic(testFile(test.id), updated)
-  return updated
+
+  
+return updated
 }
 
 export const deleteTest = (id: string): boolean => {
   initTrueFalseStore()
   const path = testFile(id)
-  if (!fs.existsSync(path)) return false
+
+  if (!fs.existsSync(path)) {return false}
+
   fs.unlinkSync(path)
-  return true
+
+  
+return true
 }
 
 export const listAvailableTestsForStudent = (groupId?: string): TrueFalseTestSummary[] => {
   const now = dayjs()
-  return listTests().filter((t) => {
+
+  
+return listTests().filter((t) => {
     const within = now.isAfter(dayjs(t.startAt)) && now.isBefore(dayjs(t.endAt))
-    if (!within) return false
-    if (!groupId) return true
-    return t.groupIds.includes(groupId)
+
+    if (!within) {return false}
+
+    if (!groupId) {return true}
+    
+return t.groupIds.includes(groupId)
   })
 }
 
 export const getResults = (testId: string): TrueFalseAttempt[] => {
   initTrueFalseStore()
   const path = resultsFile(testId)
-  if (!fs.existsSync(path)) return []
+
+  if (!fs.existsSync(path)) {return []}
+
   try {
     const data = fs.readFileSync(path, "utf-8")
     const parsed = JSON.parse(data) as TrueFalseResultsFile
-    return parsed.attempts ?? []
+
+    
+return parsed.attempts ?? []
   } catch {
     return []
   }
@@ -178,7 +206,9 @@ export const appendResult = (attempt: TrueFalseAttempt): TrueFalseAttempt => {
   }
 
   writeJsonAtomic(path, next)
-  return attempt
+
+  
+return attempt
 }
 
 export const gradeAttempt = (test: TrueFalseTest, answers: Array<{ questionId: string; answer: boolean }>) => {
@@ -186,17 +216,23 @@ export const gradeAttempt = (test: TrueFalseTest, answers: Array<{ questionId: s
   let score = 0
   for (const q of test.questions) {
     const a = answerMap.get(q.id)
-    if (a === q.correct) score += 1
+
+    if (a === q.correct) {score += 1}
   }
-  return { score, total: test.questions.length }
+
+  
+return { score, total: test.questions.length }
 }
 
 export const readTelegramMap = (): { groups: Record<string, string>; students: Record<string, string> } => {
   initTrueFalseStore()
+
   try {
     const data = fs.readFileSync(telegramFile(), "utf-8")
     const parsed = JSON.parse(data) as { groups?: Record<string, string>; students?: Record<string, string> }
-    return { groups: parsed.groups ?? {}, students: parsed.students ?? {} }
+
+    
+return { groups: parsed.groups ?? {}, students: parsed.students ?? {} }
   } catch {
     return { groups: {}, students: {} }
   }

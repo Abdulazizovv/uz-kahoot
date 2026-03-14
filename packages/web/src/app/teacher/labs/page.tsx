@@ -148,7 +148,7 @@ const LabsPage = () => {
       color: "from-cyan-500 to-blue-500",
       difficulty: "O'rta",
       duration: "50 min",
-      status: "coming-soon",
+      status: "available",
     },
     {
       id: 11,
@@ -159,7 +159,7 @@ const LabsPage = () => {
       color: "from-green-600 to-teal-600",
       difficulty: "Qiyin",
       duration: "55 min",
-      status: "coming-soon",
+      status: "available",
     },
     {
       id: 12,
@@ -169,7 +169,7 @@ const LabsPage = () => {
       color: "from-purple-600 to-indigo-600",
       difficulty: "O'rta",
       duration: "45 min",
-      status: "coming-soon",
+      status: "available",
     },
     {
       id: 13,
@@ -180,7 +180,7 @@ const LabsPage = () => {
       color: "from-pink-500 to-rose-500",
       difficulty: "Qiyin",
       duration: "60 min",
-      status: "coming-soon",
+      status: "available",
     },
     {
       id: 14,
@@ -191,7 +191,7 @@ const LabsPage = () => {
       color: "from-red-600 to-orange-600",
       difficulty: "O'rta",
       duration: "50 min",
-      status: "coming-soon",
+      status: "available",
     },
   ]
 

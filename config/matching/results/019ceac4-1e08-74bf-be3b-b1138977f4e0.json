@@ -1,0 +1,48 @@
+{
+  "testId": "019ceac4-1e08-74bf-be3b-b1138977f4e0",
+  "updatedAt": "2026-03-14T06:27:02.695Z",
+  "attempts": [
+    {
+      "id": "019ceb06-e1a7-7772-ae72-ba12504b44dc",
+      "testId": "019ceac4-1e08-74bf-be3b-b1138977f4e0",
+      "studentUserId": "58394224-e8cc-4295-8585-2a6a381db40e",
+      "studentName": "abduvokhidov.7",
+      "groupId": "cefd599c-be9c-4343-9c43-b6f251b11fe0",
+      "startedAt": "2026-03-14T06:26:55.455Z",
+      "submittedAt": "2026-03-14T06:27:02.695Z",
+      "score": 2,
+      "total": 2,
+      "answers": [
+        {
+          "leftId": "019ceac4-1e03-7698-9d84-803bbe0ea341",
+          "rightId": "019ceac4-1e03-7698-9d84-85b9a041a7eb"
+        },
+        {
+          "leftId": "019ceac4-1e03-7698-9d84-8b544d2035f8",
+          "rightId": "019ceac4-1e03-7698-9d84-8ff77831c769"
+        }
+      ]
+    },
+    {
+      "id": "019ceac9-8fef-70e4-aa3d-12437626f63a",
+      "testId": "019ceac4-1e08-74bf-be3b-b1138977f4e0",
+      "studentUserId": "58394224-e8cc-4295-8585-2a6a381db40e",
+      "studentName": "abduvokhidov.7",
+      "groupId": "cefd599c-be9c-4343-9c43-b6f251b11fe0",
+      "startedAt": "2026-03-14T05:19:21.141Z",
+      "submittedAt": "2026-03-14T05:20:04.079Z",
+      "score": 2,
+      "total": 2,
+      "answers": [
+        {
+          "leftId": "019ceac4-1e03-7698-9d84-803bbe0ea341",
+          "rightId": "019ceac4-1e03-7698-9d84-85b9a041a7eb"
+        },
+        {
+          "leftId": "019ceac4-1e03-7698-9d84-8b544d2035f8",
+          "rightId": "019ceac4-1e03-7698-9d84-8ff77831c769"
+        }
+      ]
+    }
+  ]
+}

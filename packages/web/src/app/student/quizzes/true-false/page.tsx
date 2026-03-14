@@ -3,22 +3,18 @@
 import Header from "@/components/student/StudentHeader"
 import StudentSidebar from "@/components/student/StudentSidebar"
 import Loader from "@/components/Loader"
-import { useEvent, useSocket } from "@/contexts/socketProvider"
 import { studentsService } from "@/services/api/students.service"
+import { apiGet } from "@/lib/async-api"
 import { TrueFalseTestSummary } from "@eduarena/common/types/truefalse"
 import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
 import toast from "react-hot-toast"
 
 export default function StudentTrueFalseListPage() {
-  const { socket, isConnected, connect } = useSocket()
   const [groupId, setGroupId] = useState<string | null>(null)
   const [loadingProfile, setLoadingProfile] = useState(true)
   const [tests, setTests] = useState<TrueFalseTestSummary[]>([])
-
-  useEffect(() => {
-    if (!isConnected) connect()
-  }, [connect, isConnected])
+  const [loadingTests, setLoadingTests] = useState(false)
 
   useEffect(() => {
     let mounted = true
@@ -38,13 +34,27 @@ export default function StudentTrueFalseListPage() {
     }
   }, [])
 
-  useEvent("tf:error", (message) => toast.error(message))
-  useEvent("tf:tests", (list) => setTests(list))
-
   useEffect(() => {
-    if (!socket || !groupId) return
-    socket.emit("tf:list", { mode: "student", groupId })
-  }, [socket, groupId])
+    let mounted = true
+    ;(async () => {
+      if (!groupId) return
+      setLoadingTests(true)
+      try {
+        const list = await apiGet<TrueFalseTestSummary[]>(
+          `/api/async/truefalse/tests?mode=student&groupId=${encodeURIComponent(groupId)}`,
+        )
+        if (mounted) setTests(list)
+      } catch (e) {
+        console.error(e)
+        toast.error((e as Error).message)
+      } finally {
+        if (mounted) setLoadingTests(false)
+      }
+    })()
+    return () => {
+      mounted = false
+    }
+  }, [groupId])
 
   const sorted = useMemo(
     () =>
@@ -75,9 +85,9 @@ export default function StudentTrueFalseListPage() {
             <div className="flex items-center gap-2 text-slate-600">
               <Loader /> Yuklanmoqda...
             </div>
-          ) : !isConnected ? (
+          ) : loadingTests ? (
             <div className="flex items-center gap-2 text-slate-600">
-              <Loader /> Ulanmoqda...
+              <Loader /> Testlar yuklanmoqda...
             </div>
           ) : sorted.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-slate-200 bg-white p-10 text-center text-sm text-slate-600">
@@ -119,4 +129,3 @@ export default function StudentTrueFalseListPage() {
     </div>
   )
 }
-

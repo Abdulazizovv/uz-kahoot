@@ -7,6 +7,13 @@ import {
   TrueFalseTestForStudent,
   TrueFalseTestSummary,
 } from "../truefalse"
+import {
+  MatchingAttempt,
+  MatchingTest,
+  MatchingTestForStudent,
+  MatchingTestSummary,
+} from "../matching"
+import { GroupQuizStats, QuizTestStats } from "../stats"
 
 export type Server = ServerIO<ClientToServerEvents, ServerToClientEvents>
 export type Socket = SocketIO<ClientToServerEvents, ServerToClientEvents>
@@ -77,6 +84,21 @@ export interface ServerToClientEvents {
   "tf:deleted": (_testId: string) => void
   "tf:submitted": (_attempt: TrueFalseAttempt) => void
   "tf:error": (_message: string) => void
+
+  // Matching tests
+  "match:tests": (_tests: MatchingTestSummary[]) => void
+  "match:test": (_test: MatchingTestForStudent | MatchingTest) => void
+  "match:results": (_attempts: MatchingAttempt[]) => void
+  "match:created": (_test: MatchingTestSummary) => void
+  "match:updated": (_test: MatchingTestSummary) => void
+  "match:deleted": (_testId: string) => void
+  "match:submitted": (_attempt: MatchingAttempt) => void
+  "match:error": (_message: string) => void
+
+  // Stats
+  "stats:group": (_stats: GroupQuizStats) => void
+  "stats:test": (_stats: QuizTestStats) => void
+  "stats:error": (_message: string) => void
 }
 
 export interface ClientToServerEvents {
@@ -96,7 +118,13 @@ export interface ClientToServerEvents {
 
   // Player actions
   "player:join": (_inviteCode: string) => void
-  "player:login": (_message: MessageWithoutStatus<{ username: string }>) => void
+  "player:login": (
+    _message: MessageWithoutStatus<{
+      username: string
+      studentUserId?: string
+      groupId?: string
+    }>,
+  ) => void
   "player:reconnect": (_message: { gameId: string }) => void
   "player:selectedAnswer": (
     _message: MessageWithoutStatus<{ answerKey: number }>
@@ -111,5 +139,18 @@ export interface ClientToServerEvents {
   "tf:delete": (_payload: { id: string }) => void
   "tf:results": (_payload: { testId: string }) => void
   "tf:submit": (_payload: { testId: string; studentUserId: string; studentName: string; groupId?: string; answers: Array<{ questionId: string; answer: boolean }>; startedAt?: string }) => void
+
+  // Matching tests
+  "match:list": (_payload: { mode: "teacher" } | { mode: "student"; groupId?: string }) => void
+  "match:get": (_payload: { id: string; mode: "teacher" | "student" }) => void
+  "match:create": (_test: Omit<MatchingTest, "id" | "createdAt" | "updatedAt">) => void
+  "match:update": (_test: MatchingTest) => void
+  "match:delete": (_payload: { id: string }) => void
+  "match:results": (_payload: { testId: string }) => void
+  "match:submit": (_payload: { testId: string; studentUserId: string; studentName: string; groupId?: string; answers: Array<{ leftId: string; rightId: string | null }>; startedAt?: string }) => void
+
+  // Stats
+  "stats:group": (_payload: { groupId: string; from?: string; to?: string }) => void
+  "stats:test": (_payload: { kind: "truefalse" | "matching" | "kahoot"; testId: string }) => void
   disconnect: () => void
 }
