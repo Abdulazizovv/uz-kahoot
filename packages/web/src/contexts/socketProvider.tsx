@@ -117,7 +117,9 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
         setServerUrl(`${baseUrl}${path}`)
         s = io(baseUrl, {
-          transports: ["websocket", "polling"],
+          // Keep default transport order (polling -> websocket upgrade).
+          // Some reverse-proxy setups block direct websocket, but polling still works.
+          transports: ["polling", "websocket"],
           autoConnect: false,
           timeout: 8000,
           path,
