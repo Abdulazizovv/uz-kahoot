@@ -2,17 +2,25 @@
 
 import Room from "@/components/game/join/Room"
 import Username from "@/components/game/join/Username"
+import { useSocket } from "@/contexts/socketProvider"
 import { usePlayerStore } from "@/stores/player"
 import Link from "next/link"
 import { useEffect } from "react"
 
 const JoinGame = () => {
   const { gameId, reset } = usePlayerStore()
+  const { isConnected, connect } = useSocket()
 
   useEffect(() => {
     // Yangi o'yinga qo'shilish uchun oldingi ma'lumotlarni tozalash
     reset()
   }, [reset])
+
+  useEffect(() => {
+    if (!isConnected) {
+      connect()
+    }
+  }, [connect, isConnected])
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-900 via-blue-800 to-cyan-700 px-4">

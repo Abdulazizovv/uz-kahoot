@@ -13,14 +13,27 @@ import { usePlayerStore } from "@/stores/player"
 import { useQuestionStore } from "@/stores/question"
 import { GAME_STATE_COMPONENTS } from "@/utils/constants"
 import { useParams, useRouter } from "next/navigation"
+import { useEffect } from "react"
 import toast from "react-hot-toast"
 
 const Game = () => {
   const router = useRouter()
-  const { socket } = useSocket()
+  const { socket, isConnected, connect } = useSocket()
   const { gameId: gameIdParam }: { gameId?: string } = useParams()
   const { status, setPlayer, setGameId, setStatus, reset } = usePlayerStore()
   const { setQuestionStates } = useQuestionStore()
+
+  useEffect(() => {
+    if (!isConnected) {
+      connect()
+    }
+  }, [connect, isConnected])
+
+  useEffect(() => {
+    if (socket && isConnected && gameIdParam) {
+      socket.emit("player:reconnect", { gameId: gameIdParam })
+    }
+  }, [socket, isConnected, gameIdParam])
 
   useEvent("connect", () => {
     if (gameIdParam) {
