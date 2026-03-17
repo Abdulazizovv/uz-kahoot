@@ -6,6 +6,7 @@ import {
   StatusDataMap,
 } from "@eduarena/common/types/game/status"
 import { saveKahootSessionResult } from "@eduarena/socket/services/kahoot-results-store"
+import { takeoverPlayerSocket } from "@eduarena/socket/services/game-connection"
 import Registry from "@eduarena/socket/services/registry"
 import { createInviteCode, timeToPoint } from "@eduarena/socket/utils/game"
 import sleep from "@eduarena/socket/utils/sleep"
@@ -147,7 +148,14 @@ class Game {
     )
 
     if (isAlreadyConnected) {
-      socket.emit("game:errorMessage", "Player already connected")
+      takeoverPlayerSocket(
+        { io: this.io, gameId: this.gameId, managerId: this.manager.id, playersLength: this.players.length, playerStatus: this.playerStatus },
+        socket,
+        isAlreadyConnected,
+        { username: name, studentUserId, groupId }
+      )
+
+      socket.emit("game:successJoin", this.gameId)
 
       return
     }
@@ -187,9 +195,7 @@ class Game {
     this.playerStatus.delete(playerId)
 
     this.io.in(playerId).socketsLeave(this.gameId)
-    this.io
-      .to(player.id)
-      .emit("game:reset", "You have been kicked by the manager")
+    this.io.to(player.id).emit("game:reset", "You have been kicked by the manager")
     this.io.to(this.manager.id).emit("manager:playerKicked", player.id)
 
     this.io.to(this.gameId).emit("game:totalPlayers", this.players.length)
@@ -208,9 +214,16 @@ class Game {
 
   private reconnectManager(socket: Socket) {
     if (this.manager.connected) {
-      socket.emit("game:reset", "Manager already connected")
+      const oldSocketId = this.manager.id
 
-      return
+      if (oldSocketId !== socket.id) {
+        this.io.to(oldSocketId).emit(
+          "game:reset",
+          "Siz boshqa qurilmada qayta ulandingiz"
+        )
+        this.io.in(oldSocketId).socketsLeave(this.gameId)
+        ;(this.io as any)?.sockets?.sockets?.get?.(oldSocketId)?.disconnect?.(true)
+      }
     }
 
     socket.join(this.gameId)
@@ -247,28 +260,37 @@ class Game {
     }
 
     if (player.connected) {
-      socket.emit("game:reset", "Player already connected")
+      takeoverPlayerSocket(
+        { io: this.io, gameId: this.gameId, managerId: this.manager.id, playersLength: this.players.length, playerStatus: this.playerStatus },
+        socket,
+        player
+      )
+    } else {
+      socket.join(this.gameId)
 
-      return
+      const oldSocketId = player.id
+      player.id = socket.id
+      player.connected = true
+
+      if (this.playerStatus.has(oldSocketId)) {
+        const oldStatus = this.playerStatus.get(oldSocketId)!
+        this.playerStatus.delete(oldSocketId)
+        this.playerStatus.set(socket.id, oldStatus)
+      }
+
+      if (oldSocketId !== socket.id) {
+        this.io.to(this.manager.id).emit("manager:removePlayer", oldSocketId)
+        this.io.to(this.manager.id).emit("manager:newPlayer", { ...player })
+      }
     }
 
-    socket.join(this.gameId)
-
     const oldSocketId = player.id
-    player.id = socket.id
-    player.connected = true
 
     const status = this.playerStatus.get(oldSocketId) ||
       this.lastBroadcastStatus || {
         name: STATUS.WAIT,
         data: { text: "O'yin boshlanishi kutilmoqda" },
       }
-
-    if (this.playerStatus.has(oldSocketId)) {
-      const oldStatus = this.playerStatus.get(oldSocketId)!
-      this.playerStatus.delete(oldSocketId)
-      this.playerStatus.set(socket.id, oldStatus)
-    }
 
     socket.emit("player:successReconnect", {
       gameId: this.gameId,
