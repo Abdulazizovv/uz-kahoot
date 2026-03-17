@@ -26,12 +26,14 @@ export interface Student {
 }
 
 export interface StudentDetail extends Omit<Student, "group"> {
-  group: {
-    id: string
-    name: string
-    grade: number
-    students_count: number
-  }
+  group:
+    | {
+        id: string
+        name: string
+        grade: number
+        students_count: number
+      }
+    | null
   age?: number
 }
 

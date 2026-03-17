@@ -11,7 +11,7 @@ import { useEffect, useMemo, useState } from "react"
 import toast from "react-hot-toast"
 
 export default function StudentTrueFalseListPage() {
-  const [groupId, setGroupId] = useState<string | null>(null)
+  const [groupId, setGroupId] = useState<string | undefined>(undefined)
   const [loadingProfile, setLoadingProfile] = useState(true)
   const [tests, setTests] = useState<TrueFalseTestSummary[]>([])
   const [loadingTests, setLoadingTests] = useState(false)
@@ -21,9 +21,10 @@ export default function StudentTrueFalseListPage() {
     ;(async () => {
       try {
         const me = await studentsService.getMe()
-        if (mounted) setGroupId(me.group.id)
+        if (mounted) setGroupId(me.group?.id)
       } catch (e) {
         console.error(e)
+        // Guruh bo'lmasa ham testlar ko'rinishi kerak.
         toast.error("Profil ma'lumotlarini olishda xatolik")
       } finally {
         if (mounted) setLoadingProfile(false)
@@ -37,11 +38,13 @@ export default function StudentTrueFalseListPage() {
   useEffect(() => {
     let mounted = true
     ;(async () => {
-      if (!groupId) return
+      if (loadingProfile) return
       setLoadingTests(true)
       try {
+        const params = new URLSearchParams({ mode: "student" })
+        if (groupId) params.set("groupId", groupId)
         const list = await apiGet<TrueFalseTestSummary[]>(
-          `/api/async/truefalse/tests?mode=student&groupId=${encodeURIComponent(groupId)}`,
+          `/api/async/truefalse/tests?${params.toString()}`,
         )
         if (mounted) setTests(list)
       } catch (e) {
@@ -54,7 +57,7 @@ export default function StudentTrueFalseListPage() {
     return () => {
       mounted = false
     }
-  }, [groupId])
+  }, [groupId, loadingProfile])
 
   const sorted = useMemo(
     () =>

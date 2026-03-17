@@ -21,7 +21,7 @@ export default function StudentTrueFalseTakePage() {
   const { id }: { id?: string } = useParams()
   const { user, isHydrated } = useAuthStore()
 
-  const [groupId, setGroupId] = useState<string | null>(null)
+  const [groupId, setGroupId] = useState<string | undefined>(undefined)
   const [loadingProfile, setLoadingProfile] = useState(true)
 
   const [test, setTest] = useState<TrueFalseTestForStudent | null>(null)
@@ -36,7 +36,7 @@ export default function StudentTrueFalseTakePage() {
     ;(async () => {
       try {
         const me = await studentsService.getMe()
-        if (mounted) setGroupId(me.group.id)
+        if (mounted) setGroupId(me.group?.id)
       } catch (e) {
         console.error(e)
       } finally {
