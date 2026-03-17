@@ -16,10 +16,10 @@ import Square from "@/components/icons/Square"
 import Triangle from "@/components/icons/Triangle"
 
 export const ANSWERS_COLORS = [
-  "bg-red-500",
-  "bg-blue-500",
-  "bg-yellow-500",
-  "bg-green-500",
+  "bg-red-500 text-white",
+  "bg-blue-500 text-white",
+  "bg-yellow-400 text-slate-900",
+  "bg-green-500 text-white",
 ]
 
 export const ANSWERS_ICONS = [Triangle, Rhombus, Circle, Square]
