@@ -2,8 +2,7 @@ import WheatstoneSimulator from "@/components/labs/WheatstoneSimulator"
 
 export default function Lab4Page() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-8">
-      <div className="container mx-auto px-4">
+    <div className="space-y-6">
         {/* Breadcrumb */}
         <div className="mb-6 flex items-center gap-2 text-sm text-gray-600">
           <a href="/teacher/labs" className="hover:text-blue-600">
@@ -89,7 +88,6 @@ export default function Lab4Page() {
             </p>
           </div>
         </div>
-      </div>
     </div>
   )
 }

@@ -1,14 +1,8 @@
 import PNJunctionSimulator from "@/components/labs/PNJunctionSimulator"
-import StudentHeader from "@/components/student/StudentHeader"
-import StudentSidebar from "@/components/student/StudentSidebar"
 
 export default function Lab8Student() {
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50">
-      <StudentSidebar />
-      <div className="flex flex-1 flex-col">
-        <StudentHeader />
-        <main className="flex-1 overflow-y-auto p-8">
+    <div>
           {/* Breadcrumb */}
           <div className="mb-6 text-sm text-gray-600">
             <span className="hover:text-indigo-600">Bosh sahifa</span>
@@ -386,8 +380,6 @@ export default function Lab8Student() {
               </div>
             </div>
           </div>
-        </main>
-      </div>
     </div>
   )
 }

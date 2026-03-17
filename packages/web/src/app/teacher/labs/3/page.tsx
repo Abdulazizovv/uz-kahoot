@@ -1,8 +1,6 @@
 "use client"
 
 import OhmsLawSimulator from "@/components/labs/OhmsLawSimulator"
-import Header from "@/components/teacher/Header"
-import Sidebar from "@/components/teacher/Sidebar"
 import { useAuthStore } from "@/stores/auth"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -32,13 +30,7 @@ const Lab3Page = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <Sidebar />
-
-      <div className="flex-1 min-w-0 lg:ml-72">
-        <Header />
-
-        <main className="p-8">
+    <div className="space-y-6">
           {/* Breadcrumb */}
           <div className="mb-6 flex items-center gap-2 text-sm text-gray-600">
             <Link href="/teacher/labs" className="hover:text-blue-600">
@@ -180,8 +172,6 @@ const Lab3Page = () => {
               </ul>
             </div>
           </div>
-        </main>
-      </div>
     </div>
   )
 }

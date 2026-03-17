@@ -1,16 +1,8 @@
 import ElectrostaticsSimulator from "@/components/labs/ElectrostaticsSimulator"
-import StudentHeader from "@/components/student/StudentHeader"
-import StudentSidebar from "@/components/student/StudentSidebar"
 
 export default function StudentLab1Page() {
   return (
-    <div className="flex h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-      <StudentSidebar />
-
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <StudentHeader />
-
-        <main className="flex-1 overflow-y-auto p-8">
+    <div>
           {/* Breadcrumb */}
           <div className="mb-6 flex items-center gap-2 text-sm text-gray-600">
             <a href="/student/labs" className="hover:text-blue-600">
@@ -94,8 +86,6 @@ export default function StudentLab1Page() {
               </p>
             </div>
           </div>
-        </main>
-      </div>
     </div>
   )
 }

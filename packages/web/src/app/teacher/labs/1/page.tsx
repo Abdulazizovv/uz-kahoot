@@ -1,8 +1,6 @@
 "use client"
 
 import ElectrostaticsSimulator from "@/components/labs/ElectrostaticsSimulator"
-import Header from "@/components/teacher/Header"
-import Sidebar from "@/components/teacher/Sidebar"
 import { useAuthStore } from "@/stores/auth"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -32,13 +30,7 @@ const Lab1Page = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <Sidebar />
-
-      <div className="flex-1 min-w-0 lg:ml-72">
-        <Header />
-
-        <main className="p-8">
+    <div className="space-y-6">
           <div className="mb-6 flex items-center gap-2 text-sm text-gray-600">
             <Link href="/teacher/labs" className="hover:text-blue-600">
               Laboratoriyalar
@@ -120,8 +112,6 @@ const Lab1Page = () => {
           </div>
 
           <ElectrostaticsSimulator />
-        </main>
-      </div>
     </div>
   )
 }

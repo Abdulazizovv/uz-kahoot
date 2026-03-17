@@ -174,7 +174,7 @@ const GameWrapper = ({ children, statusName, onNext, manager }: Props) => {
               <div className="flex items-center gap-2">
                 {manager && next && (
                   <Button
-                    className={clsx("w-auto bg-white text-slate-900 hover:bg-slate-100", {
+                    className={clsx("w-auto !bg-white !text-slate-900 hover:!bg-slate-100", {
                       "pointer-events-none": isDisabled,
                     })}
                     onClick={handleNext}

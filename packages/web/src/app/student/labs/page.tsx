@@ -1,7 +1,5 @@
 "use client"
 
-import StudentHeader from "@/components/student/StudentHeader"
-import StudentSidebar from "@/components/student/StudentSidebar"
 import Link from "next/link"
 
 export default function StudentLabsPage() {
@@ -215,13 +213,7 @@ export default function StudentLabsPage() {
     completedCount > 0 ? Math.round(totalScore / completedCount) : 0
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <StudentSidebar />
-
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <StudentHeader />
-
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+    <div>
           {/* Header */}
           <div className="mb-6 sm:mb-8">
             <div className="mb-3 flex items-center gap-3">
@@ -497,8 +489,6 @@ export default function StudentLabsPage() {
               </div>
             ))}
           </div>
-        </main>
-      </div>
     </div>
   )
 }

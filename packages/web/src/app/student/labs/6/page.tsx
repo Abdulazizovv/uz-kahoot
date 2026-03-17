@@ -1,19 +1,11 @@
 "use client"
 
 import HeatingDeviceSimulator from "@/components/labs/HeatingDeviceSimulator"
-import StudentHeader from "@/components/student/StudentHeader"
-import StudentSidebar from "@/components/student/StudentSidebar"
 import Link from "next/link"
 
 export default function StudentLab6Page() {
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <StudentSidebar />
-
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <StudentHeader />
-
-        <main className="flex-1 overflow-y-auto p-8">
+    <div>
           {/* Breadcrumb */}
           <div className="mb-6 flex items-center gap-2 text-sm text-gray-600">
             <Link href="/student/dashboard" className="hover:text-blue-600">
@@ -254,8 +246,6 @@ export default function StudentLab6Page() {
               </ul>
             </div>
           </div>
-        </main>
-      </div>
     </div>
   )
 }

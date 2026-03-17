@@ -4,8 +4,7 @@ import MagneticForceSimulator from "@/components/labs/MagneticForceSimulator"
 
 export default function StudentLab9Page() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-8">
-      <div className="mx-auto max-w-7xl space-y-8">
+    <div className="space-y-8">
         {/* Sarlavha */}
         <div className="rounded-2xl border border-indigo-200 bg-white p-8 shadow-xl">
           <div className="mb-6 flex items-start justify-between">
@@ -682,7 +681,6 @@ export default function StudentLab9Page() {
             </li>
           </ul>
         </div>
-      </div>
     </div>
   )
 }

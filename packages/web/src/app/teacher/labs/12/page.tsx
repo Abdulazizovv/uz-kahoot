@@ -1,20 +1,11 @@
 "use client"
 
 import FaradayInductionSimulator from "@/components/labs/FaradayInductionSimulator"
-import Header from "@/components/teacher/Header"
-import Sidebar from "@/components/teacher/Sidebar"
 import Link from "next/link"
 
 export default function Lab12Page() {
   return (
-    <div className="flex h-screen bg-slate-50">
-      <Sidebar />
-
-      <div className="flex flex-1 flex-col overflow-hidden min-w-0 lg:ml-72">
-        <Header />
-
-        <main className="flex-1 overflow-y-auto">
-          <div className="mx-auto max-w-7xl p-6 sm:p-8">
+    <div className="space-y-6">
             {/* Breadcrumb */}
             <div className="mb-6 flex items-center gap-2 text-sm text-gray-600">
               <Link href="/teacher/dashboard" className="hover:text-blue-600">
@@ -124,10 +115,6 @@ export default function Lab12Page() {
               </h3>
               <FaradayInductionSimulator />
             </div>
-          </div>
-        </main>
-      </div>
     </div>
   )
 }
-

@@ -4,8 +4,7 @@ import EarthMagneticFieldSimulator from "@/components/labs/EarthMagneticFieldSim
 
 export default function StudentLab11Page() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-sky-50 p-4 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-7xl space-y-6 lg:space-y-8">
+    <div className="space-y-6 lg:space-y-8">
         {/* Sarlavha */}
         <div className="rounded-2xl border border-emerald-200 bg-white p-6 shadow-xl sm:p-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -140,8 +139,6 @@ export default function StudentLab11Page() {
             </div>
           </div>
         </div>
-      </div>
     </div>
   )
 }
-
