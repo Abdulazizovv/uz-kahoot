@@ -67,7 +67,7 @@ COPY docker-entrypoint.sh /app/docker-entrypoint.sh
 RUN chmod +x /app/docker-entrypoint.sh
 
 # Expose the web and socket ports
-EXPOSE 3000 3001
+EXPOSE 3200 3201
 
 # Environment variables
 ENV NODE_ENV=production

@@ -1,494 +1,407 @@
 "use client"
 
 import Link from "next/link"
+import { useEffect, useMemo, useState } from "react"
+import { itPosts } from "@/lib/it-posts"
+
+const levelTone = (level: string) => {
+  switch (level) {
+    case "Boshlang'ich":
+      return "bg-emerald-100 text-emerald-800"
+    case "O'rta":
+      return "bg-amber-100 text-amber-800"
+    case "Yuqori":
+      return "bg-red-100 text-red-800"
+    default:
+      return "bg-slate-100 text-slate-700"
+  }
+}
+
+const statusTone = (status: string) => {
+  switch (status) {
+    case "read":
+      return "bg-emerald-50 text-emerald-700 border-emerald-200"
+    case "available":
+      return "bg-blue-50 text-blue-700 border-blue-200"
+    case "locked":
+      return "bg-slate-100 text-slate-500 border-slate-200"
+    default:
+      return "bg-slate-100 text-slate-500 border-slate-200"
+  }
+}
+
+const pageSize = 8
 
 export default function StudentLabsPage() {
-  const labs = [
-    {
-      id: 1,
-      title: "Elektrostatika. Kulon qonuni",
-      description:
-        "Elektr zaryadlari o'zaro ta'sirini o'rganish va Kulon qonunini eksperimental tekshirish",
-      difficulty: "Oson",
-      duration: "45 daqiqa",
-      status: "completed",
-      progress: 100,
-      score: 95,
-    },
-    {
-      id: 2,
-      title: "Kondensatorlar va dielektriklar",
-      description:
-        "Kondensator sig'imi, dielektrik singdiruvchanlik va energiya to'planishini o'rganish",
-      difficulty: "Oson",
-      duration: "50 daqiqa",
-      status: "completed",
-      progress: 100,
-      score: 92,
-    },
-    {
-      id: 3,
-      title: "Om qonuni. Ketma-ket va parallel ulanishlar",
-      description:
-        "Om qonunini o'rganish, tok kuchi, kuchlanish va qarshilik bog'lanishini tekshirish",
-      difficulty: "Oson",
-      duration: "40 daqiqa",
-      status: "completed",
-      progress: 100,
-      score: 88,
-    },
-    {
-      id: 4,
-      title: "Uitston ko'prigi yordamida qarshilikni o'lchash",
-      description:
-        "Uitston ko'prigi prinsipini o'rganish va noma'lum qarshiliklarni yuqori aniqlikda o'lchash",
-      difficulty: "O'rta",
-      duration: "60 daqiqa",
-      status: "available",
-      progress: 0,
-      score: null,
-    },
-    {
-      id: 5,
-      title: "Kirxgof qonunlarini o'rganish va tekshirish",
-      description:
-        "Ampermetr va voltmetr yordamida murakkab elektr zanjirlarda Kirxgof qonunlarini eksperimental tekshirish",
-      difficulty: "Qiyin",
-      duration: "70 daqiqa",
-      status: "available",
-      progress: 0,
-      score: null,
-    },
-    {
-      id: 6,
-      title: "Isitish qurilmalarining F.I.K.",
-      description:
-        "Elektr isitish qurilmalarining foydali ish koeffitsientini aniqlash va energiya samaradorligini baholash",
-      difficulty: "O'rta",
-      duration: "55 daqiqa",
-      status: "available",
-      progress: 0,
-      score: null,
-    },
-    {
-      id: 7,
-      title: "Vakuumli diod xarakteristikasi",
-      description:
-        "Vakuumli diodning volt-amper xarakteristikasini o'rganish va Child-Lengmyur qonunini tekshirish",
-      difficulty: "O'rta",
-      duration: "60 daqiqa",
-      status: "available",
-      progress: 0,
-      score: null,
-    },
-    {
-      id: 8,
-      title: "Yarim o'tkazgichlar va p-n o'tish",
-      description:
-        "Yarim o'tkazgichlarning xossalari va p-n o'tishning volt-amper xarakteristikasini o'rganish",
-      difficulty: "Murakkab",
-      duration: "70 daqiqa",
-      status: "available",
-      progress: 0,
-      score: null,
-    },
-    {
-      id: 9,
-      title: "Magnit maydoni tokli o'tkazgichga ta'siri",
-      description:
-        "Amper kuchi qonunini o'rganish va magnit maydonining tok o'tkazgichga ta'sirini tekshirish",
-      difficulty: "O'rta",
-      duration: "60 daqiqa",
-      status: "available",
-      progress: 0,
-      score: null,
-    },
-    {
-      id: 10,
-      title: "To'g'ri o'tkazgich va g'altakning magnit maydoni",
-      description:
-        "Bio-Savar-Laplas qonuni va magnit maydonining kuchlanganligini o'rganish",
-      difficulty: "O'rta",
-      duration: "55 daqiqa",
-      status: "available",
-      progress: 0,
-      score: null,
-    },
-    {
-      id: 11,
-      title: "Yer magnit maydonini o'lchash",
-      description:
-        "Tangens-galvanometr yordamida Yer magnit maydonining gorizontal tashkil etuvchisini aniqlash",
-      difficulty: "Qiyin",
-      duration: "60 daqiqa",
-      status: "available",
-      progress: 0,
-      score: null,
-    },
-    {
-      id: 12,
-      title: "Elektromagnit induksiya. Faradey qonuni",
-      description:
-        "Elektromagnit induksiya hodisasini o'rganish va induksiya EYuK ni aniqlash",
-      difficulty: "O'rta",
-      duration: "50 daqiqa",
-      status: "available",
-      progress: 0,
-      score: null,
-    },
-    {
-      id: 13,
-      title: "Erkin elektromagnit tebranishlar",
-      description:
-        "Tebranish konturdagi erkin elektromagnit tebranishlarni o'rganish va Thomson formulasini tekshirish",
-      difficulty: "Qiyin",
-      duration: "70 daqiqa",
-      status: "available",
-      progress: 0,
-      score: null,
-    },
-    {
-      id: 14,
-      title: "Transformator F.I.K. va o'zgaruvchan tok qonunlari",
-      description:
-        "Transformatorning foydali ish koeffitsientini aniqlash va o'zgaruvchan tok qonunlarini o'rganish",
-      difficulty: "Qiyin",
-      duration: "65 daqiqa",
-      status: "available",
-      progress: 0,
-      score: null,
-    },
-  ]
+  const [query, setQuery] = useState("")
+  const [category, setCategory] = useState("Barchasi")
+  const [level, setLevel] = useState("Barchasi")
+  const [status, setStatus] = useState("Barchasi")
+  const [tag, setTag] = useState("Barchasi")
+  const [sort, setSort] = useState("newest")
+  const [page, setPage] = useState(1)
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "Oson":
-        return "bg-green-100 text-green-700 border border-green-300"
-      case "O'rta":
-        return "bg-yellow-100 text-yellow-700 border border-yellow-300"
-      case "Qiyin":
-        return "bg-red-100 text-red-700 border border-red-300"
-      default:
-        return "bg-gray-100 text-gray-700 border border-gray-300"
-    }
-  }
+  const categories = useMemo(() => {
+    const unique = Array.from(new Set(itPosts.map((post) => post.category)))
+    return ["Barchasi", ...unique]
+  }, [])
 
-  const getStatusBadge = (status: string, score: number | null) => {
-    switch (status) {
-      case "completed":
-        return (
-          <div className="flex items-center gap-2">
-            <span className="rounded-md border border-green-600 bg-green-50 px-3 py-1 text-sm font-medium text-green-700">
-              Bajarildi
-            </span>
-            {score && (
-              <span className="rounded-md border border-blue-600 bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
-                Ball: {score}
-              </span>
-            )}
-          </div>
-        )
-      case "available":
-        return (
-          <span className="rounded-md border border-blue-600 bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
-            Mavjud
-          </span>
-        )
-      case "locked":
-        return (
-          <span className="rounded-md border border-gray-400 bg-gray-100 px-3 py-1 text-sm font-medium text-gray-600">
-            Yopiq
-          </span>
-        )
-      default:
-        return null
-    }
-  }
+  const tags = useMemo(() => {
+    const unique = Array.from(new Set(itPosts.flatMap((post) => post.tags)))
+    return ["Barchasi", ...unique]
+  }, [])
 
-  const completedCount = labs.filter((lab) => lab.status === "completed").length
-  const totalScore = labs
-    .filter((lab) => lab.score)
-    .reduce((sum, lab) => sum + (lab.score || 0), 0)
+  const featured = useMemo(
+    () => itPosts.filter((post) => post.status !== "locked").slice(0, 3),
+    []
+  )
+
+  const filtered = useMemo(() => {
+    const normalized = query.trim().toLowerCase()
+
+    return itPosts
+      .filter((post) => {
+        if (category !== "Barchasi" && post.category !== category) return false
+        if (level !== "Barchasi" && post.level !== level) return false
+        if (status !== "Barchasi" && post.status !== status) return false
+        if (tag !== "Barchasi" && !post.tags.includes(tag)) return false
+
+        if (!normalized) return true
+        const haystack = [
+          post.title,
+          post.summary,
+          post.category,
+          post.tags.join(" "),
+        ]
+          .join(" ")
+          .toLowerCase()
+        return haystack.includes(normalized)
+      })
+      .sort((a, b) => {
+        if (sort === "title") return a.title.localeCompare(b.title)
+        if (sort === "progress") return b.progress - a.progress
+        return b.id - a.id
+      })
+  }, [category, level, status, tag, query, sort])
+
+  useEffect(() => {
+    setPage(1)
+  }, [query, category, level, status, tag, sort])
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize))
+  const paged = filtered.slice((page - 1) * pageSize, page * pageSize)
+
+  const completedCount = itPosts.filter((post) => post.status === "read").length
+  const totalScore = itPosts
+    .filter((post) => post.score)
+    .reduce((sum, post) => sum + (post.score || 0), 0)
   const avgScore =
     completedCount > 0 ? Math.round(totalScore / completedCount) : 0
 
   return (
     <div>
-          {/* Header */}
-          <div className="mb-6 sm:mb-8">
-            <div className="mb-3 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 shadow-lg sm:h-14 sm:w-14">
-                <svg
-                  className="h-8 w-8 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                </svg>
-              </div>
+      <div className="rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-800 p-8 text-white shadow-lg">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="text-sm uppercase tracking-wider text-blue-200">
+              IT postlar kutubxonasi
+            </p>
+            <h1 className="mt-2 text-3xl font-bold sm:text-4xl">
+              {itPosts.length} ta IT post, qo'llanma va checklist
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm text-blue-100">
+              Dasturlash, backend, DevOps, xavfsizlik va product mindset bo'yicha
+              jamlangan postlar. Qidiruv va filtrlar orqali tez toping.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-2xl bg-white/10 px-4 py-3">
+              <p className="text-xs uppercase text-blue-200">O'qilgan</p>
+              <p className="mt-1 text-2xl font-semibold text-white">
+                {completedCount}
+              </p>
+            </div>
+            <div className="rounded-2xl bg-white/10 px-4 py-3">
+              <p className="text-xs uppercase text-blue-200">O'rtacha ball</p>
+              <p className="mt-1 text-2xl font-semibold text-white">
+                {avgScore}
+              </p>
+            </div>
+            <div className="rounded-2xl bg-white/10 px-4 py-3">
+              <p className="text-xs uppercase text-blue-200">Kategoriyalar</p>
+              <p className="mt-1 text-2xl font-semibold text-white">
+                {categories.length - 1}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+          <Link
+            href="/student/it-posts"
+            className="inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-slate-100"
+          >
+            IT markazi
+          </Link>
+          <Link
+            href="/student/it-posts/roadmap"
+            className="inline-flex items-center justify-center rounded-xl border border-white/30 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+          >
+            Yo'l xarita
+          </Link>
+          <Link
+            href="/student/it-posts/resources"
+            className="inline-flex items-center justify-center rounded-xl border border-white/30 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+          >
+            Resurslar
+          </Link>
+        </div>
+      </div>
+
+      <div className="mt-8 grid gap-4 lg:grid-cols-3">
+        {featured.map((post) => (
+          <div
+            key={post.id}
+            className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+          >
+            <div className="flex items-start justify-between gap-3">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
-                  Virtual Laboratoriyalar
-                </h1>
-                <p className="text-xs text-gray-600 sm:text-sm">
-                  Fizika bo'yicha 14 ta interaktiv laboratoriya simulyatori
+                <p className="text-xs font-semibold uppercase text-slate-500">
+                  Featured
                 </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Stats */}
-          <div className="mb-6 grid gap-4 sm:grid-cols-2 sm:gap-6 lg:mb-8 lg:grid-cols-3">
-            <div className="group rounded-xl border border-green-200 bg-gradient-to-br from-white to-green-50 p-6 shadow-md transition-all hover:-translate-y-1 hover:shadow-xl">
-              <div className="flex items-center gap-4">
-                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg">
-                  <svg
-                    className="h-8 w-8 text-white"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                  </svg>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-gray-900">
-                    {completedCount}/14
-                  </div>
-                  <div className="text-sm font-medium text-gray-600">
-                    Bajarilgan laboratoriyalar
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="group rounded-xl border border-blue-200 bg-gradient-to-br from-white to-blue-50 p-6 shadow-md transition-all hover:-translate-y-1 hover:shadow-xl">
-              <div className="flex items-center gap-4">
-                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg">
-                  <svg
-                    className="h-8 w-8 text-white"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                  </svg>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-gray-900">
-                    {avgScore}
-                  </div>
-                  <div className="text-sm font-medium text-gray-600">
-                    O'rtacha ball
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="group rounded-xl border border-purple-200 bg-gradient-to-br from-white to-purple-50 p-6 shadow-md transition-all hover:-translate-y-1 hover:shadow-xl">
-              <div className="flex items-center gap-4">
-                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 shadow-lg">
-                  <svg
-                    className="h-8 w-8 text-white"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-gray-900">
-                    {Math.round((completedCount / labs.length) * 100)}%
-                  </div>
-                  <div className="text-sm font-medium text-gray-600">
-                    To'ldirildi
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Progress Bar */}
-          <div className="mb-8 rounded-xl border border-gray-200 bg-white p-6 shadow-md">
-            <div className="mb-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600">
-                  <svg
-                    className="h-6 w-6 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Umumiy progress
+                <h3 className="mt-2 text-lg font-semibold text-slate-900">
+                  {post.title}
                 </h3>
+                <p className="mt-2 text-sm text-slate-600">{post.summary}</p>
               </div>
-              <span className="text-sm font-medium text-gray-600">
-                {completedCount} / {labs.length} laboratoriya
+              <span
+                className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${levelTone(post.level)}`}
+              >
+                {post.level}
               </span>
             </div>
-            <div className="relative h-4 overflow-hidden rounded-full bg-gray-100">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-green-500 via-emerald-500 to-teal-600 shadow-sm transition-all duration-500"
-                style={{ width: `${(completedCount / labs.length) * 100}%` }}
-              >
-                <div className="absolute inset-0 animate-pulse bg-white/20"></div>
-              </div>
-            </div>
-            <div className="mt-2 text-right text-xs text-gray-500">
-              {Math.round((completedCount / labs.length) * 100)}% to'ldirildi
-            </div>
+            <Link
+              href={`/student/labs/${post.id}`}
+              className="mt-4 inline-flex text-sm font-semibold text-indigo-600 hover:text-indigo-700"
+            >
+              O'qishni boshlash →
+            </Link>
           </div>
+        ))}
+      </div>
 
-          {/* Labs Grid */}
-          <div className="grid gap-6 md:grid-cols-2">
-            {labs.map((lab) => (
-              <div
-                key={lab.id}
-                className={`group rounded-xl border bg-white shadow-md transition-all ${
-                  lab.status === "locked"
-                    ? "border-gray-200 opacity-60"
-                    : "border-gray-200 hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl"
-                }`}
-              >
-                {/* Header */}
-                <div className="relative overflow-hidden rounded-t-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-6">
-                  <div className="bg-grid-white/[0.05] absolute inset-0 bg-[length:20px_20px]"></div>
-                  <div className="relative flex items-center justify-between">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-white/20 text-xl font-bold text-white backdrop-blur-sm">
-                      {lab.id}
-                    </span>
-                    <span
-                      className={`rounded-lg px-3 py-1 text-xs font-semibold ${getDifficultyColor(lab.difficulty)}`}
-                    >
-                      {lab.difficulty}
-                    </span>
-                  </div>
-                  <h3 className="relative mt-4 text-lg font-bold text-white">
-                    {lab.title}
-                  </h3>
-                </div>
-
-                {/* Body */}
-                <div className="p-6">
-                  <p className="mb-4 text-sm leading-relaxed text-gray-600">
-                    {lab.description}
-                  </p>
-
-                  <div className="mb-4 flex items-center gap-4 text-sm text-gray-500">
-                    <div className="flex items-center gap-2">
-                      <svg
-                        className="h-5 w-5 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      <span className="font-medium">{lab.duration}</span>
-                    </div>
-                    {lab.progress > 0 && (
-                      <div className="flex items-center gap-2">
-                        <svg
-                          className="h-5 w-5 text-green-500"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span className="font-medium">
-                          {lab.progress}% bajarildi
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="mb-4 flex items-center justify-between">
-                    {getStatusBadge(lab.status, lab.score)}
-                  </div>
-
-                  {lab.status !== "locked" && (
-                    <Link
-                      href={`/student/labs/${lab.id}`}
-                      className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition-all hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg"
-                    >
-                      {lab.status === "completed" ? (
-                        <>
-                          <svg
-                            className="h-5 w-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                            />
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                            />
-                          </svg>
-                          <span>Ko'rib chiqish</span>
-                        </>
-                      ) : (
-                        <>
-                          <svg
-                            className="h-5 w-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                            />
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                          <span>Boshlash</span>
-                        </>
-                      )}
-                    </Link>
-                  )}
-
-                  {lab.status === "locked" && (
-                    <div className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-gray-200 bg-gray-50 px-6 py-3 text-sm font-medium text-gray-500">
-                      <svg
-                        className="h-5 w-5"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
-                      </svg>
-                      <span>Oldingi lablarni bajaring</span>
-                    </div>
-                  )}
-                </div>
-              </div>
+      <div className="mt-10 grid gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:grid-cols-6">
+        <div className="lg:col-span-2">
+          <p className="text-xs font-semibold uppercase text-slate-500">
+            Qidiruv
+          </p>
+          <div className="mt-2 flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+            <span className="text-slate-400">🔎</span>
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Post nomi, kategoriya yoki tag..."
+              className="w-full bg-transparent text-sm text-slate-700 outline-none"
+            />
+          </div>
+        </div>
+        <div>
+          <p className="text-xs font-semibold uppercase text-slate-500">
+            Kategoriya
+          </p>
+          <select
+            className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700"
+            value={category}
+            onChange={(event) => setCategory(event.target.value)}
+          >
+            {categories.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
             ))}
+          </select>
+        </div>
+        <div>
+          <p className="text-xs font-semibold uppercase text-slate-500">
+            Daraja
+          </p>
+          <select
+            className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700"
+            value={level}
+            onChange={(event) => setLevel(event.target.value)}
+          >
+            {["Barchasi", "Boshlang'ich", "O'rta", "Yuqori"].map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <p className="text-xs font-semibold uppercase text-slate-500">
+            Holat
+          </p>
+          <select
+            className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700"
+            value={status}
+            onChange={(event) => setStatus(event.target.value)}
+          >
+            {["Barchasi", "read", "available", "locked"].map((item) => (
+              <option key={item} value={item}>
+                {item === "read"
+                  ? "O'qilgan"
+                  : item === "available"
+                    ? "Mavjud"
+                    : item === "locked"
+                      ? "Yopiq"
+                      : "Barchasi"}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <p className="text-xs font-semibold uppercase text-slate-500">
+            Tag
+          </p>
+          <select
+            className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700"
+            value={tag}
+            onChange={(event) => setTag(event.target.value)}
+          >
+            {tags.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <p className="text-xs font-semibold uppercase text-slate-500">
+            Saralash
+          </p>
+          <select
+            className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700"
+            value={sort}
+            onChange={(event) => setSort(event.target.value)}
+          >
+            <option value="newest">Eng yangi</option>
+            <option value="progress">Progress bo'yicha</option>
+            <option value="title">A-Z</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-4 lg:grid-cols-4">
+        {categories
+          .filter((item) => item !== "Barchasi")
+          .slice(0, 8)
+          .map((item) => {
+            const count = itPosts.filter((post) => post.category === item).length
+            return (
+              <button
+                key={item}
+                onClick={() => setCategory(item)}
+                className="rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:border-indigo-300 hover:shadow-md"
+              >
+                <p className="text-sm font-semibold text-slate-900">{item}</p>
+                <p className="mt-2 text-xs text-slate-500">{count} ta post</p>
+              </button>
+            )
+          })}
+      </div>
+
+      <div className="mt-8 grid gap-6 md:grid-cols-2">
+        {paged.map((post) => (
+          <div
+            key={post.id}
+            className={`rounded-2xl border bg-white p-6 shadow-sm transition ${
+              post.status === "locked"
+                ? "border-slate-200 opacity-70"
+                : "border-slate-200 hover:-translate-y-1 hover:border-indigo-300 hover:shadow-md"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase text-slate-500">Post #{post.id}</p>
+                <h3 className="mt-2 text-lg font-semibold text-slate-900">
+                  {post.title}
+                </h3>
+                <p className="mt-2 text-sm text-slate-600">{post.summary}</p>
+              </div>
+              <span
+                className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${levelTone(post.level)}`}
+              >
+                {post.level}
+              </span>
+            </div>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              {post.tags.slice(0, 3).map((item) => (
+                <span
+                  key={item}
+                  className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700"
+                >
+                  #{item}
+                </span>
+              ))}
+            </div>
+
+            <div className="mt-4 flex items-center justify-between">
+              <div className="flex items-center gap-3 text-xs text-slate-500">
+                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+                  {post.readTime}
+                </span>
+                <span
+                  className={`rounded-full border px-3 py-1 text-xs font-semibold ${statusTone(post.status)}`}
+                >
+                  {post.status === "read"
+                    ? "O'qilgan"
+                    : post.status === "available"
+                      ? "Mavjud"
+                      : "Yopiq"}
+                </span>
+              </div>
+              {post.status !== "locked" ? (
+                <Link
+                  href={`/student/labs/${post.id}`}
+                  className="text-sm font-semibold text-indigo-600 hover:text-indigo-700"
+                >
+                  O'qish →
+                </Link>
+              ) : (
+                <span className="text-xs font-semibold text-slate-400">
+                  Yopiq
+                </span>
+              )}
+            </div>
           </div>
+        ))}
+      </div>
+
+      <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-slate-500">
+          {filtered.length} ta post topildi
+        </p>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+            disabled={page === 1}
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Oldingi
+          </button>
+          <span className="text-xs font-semibold text-slate-600">
+            {page} / {totalPages}
+          </span>
+          <button
+            onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
+            disabled={page === totalPages}
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 transition disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Keyingi
+          </button>
+        </div>
+      </div>
     </div>
   )
 }

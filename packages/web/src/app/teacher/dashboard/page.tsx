@@ -44,8 +44,8 @@ export default function TeacherDashboard() {
       ),
     },
     {
-      title: "Laboratoriyalar",
-      subtitle: "Simulyatorlar",
+      title: "IT postlar",
+      subtitle: "Maqolalar",
       value: "14",
       hint: "Bo'lim",
       iconBg: "bg-amber-100 text-amber-900",
@@ -70,8 +70,8 @@ export default function TeacherDashboard() {
       ),
     },
     {
-      title: "Laboratoriyalar",
-      description: "Fizika simulyatorlari",
+      title: "IT postlar",
+      description: "Maqolalar va qo'llanmalar",
       href: "/teacher/labs",
       color: "bg-emerald-600 hover:bg-emerald-700",
       icon: (
@@ -105,8 +105,8 @@ export default function TeacherDashboard() {
   ]
 
   const modules = [
-    { id: "elektromagnetizm", name: "Elektromagnetizm", questions: 13, icon: "⚡", tone: "from-blue-50 to-white" },
-    { id: "example", name: "Namuna test", questions: 3, icon: "📚", tone: "from-violet-50 to-white" },
+    { id: "frontend", name: "Frontend asoslari", questions: 13, icon: "🧩", tone: "from-blue-50 to-white" },
+    { id: "backend", name: "Backend basics", questions: 6, icon: "🛠️", tone: "from-violet-50 to-white" },
   ]
 
   return (
@@ -124,7 +124,7 @@ export default function TeacherDashboard() {
                 O'qituvchi paneli
               </h2>
               <p className="mt-1 text-sm text-slate-600">
-                Guruhlar, testlar va laboratoriyalar bo'yicha umumiy ko'rinish.
+                Guruhlar, testlar va IT postlar bo'yicha umumiy ko'rinish.
               </p>
             </div>
             <div className="grid grid-cols-2 gap-2 sm:flex">

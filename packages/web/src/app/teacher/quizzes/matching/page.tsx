@@ -601,7 +601,7 @@ export default function TeacherMatchingPage() {
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         className="mt-1 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-slate-400"
-                        placeholder="Masalan: Fizika - moslashtirish"
+                        placeholder="Masalan: IT - moslashtirish"
                       />
                     </div>
                     <div>

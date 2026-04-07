@@ -11,18 +11,18 @@ const features = [
     image: "🎯",
   },
   {
-    title: "🔬 Virtual Laboratoriya",
+    title: "💻 IT Postlar",
     description:
-      "Fizika tajribalarini xavfsiz va interaktiv muhitda o'tkazing. 3D simulyatorlar va real vaqt kalkulyatorlari.",
-    icon: "⚗️",
+      "Dasturlash, backend, DevOps va xavfsizlik bo'yicha qisqa, amaliy postlar. Kod parchalari va checklistlar bilan.",
+    icon: "📚",
     color: "from-cyan-500 via-blue-500 to-indigo-500",
     benefits: [
-      "3D simulyatorlar",
-      "Real kalkulyatorlar",
-      "Step-by-step guide",
-      "Video qo'llanmalar",
+      "Qisqa qo'llanmalar",
+      "Kod misollar",
+      "Checklistlar",
+      "Amaliy vazifalar",
     ],
-    image: "🧪",
+    image: "🧑‍💻",
   },
   {
     title: "📊 Analytics Dashboard",

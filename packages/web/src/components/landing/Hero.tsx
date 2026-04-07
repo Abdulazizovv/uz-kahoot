@@ -165,12 +165,12 @@ const Hero = () => {
             whileHover={{ scale: 1.05, y: -5 }}
             className="group rounded-2xl border border-purple-400/20 bg-gradient-to-br from-purple-500/10 to-pink-500/10 p-8 backdrop-blur-md transition-all"
           >
-            <div className="mb-3 text-5xl">🔬</div>
+            <div className="mb-3 text-5xl">💻</div>
             <div className="mb-2 text-5xl font-black text-white transition-colors group-hover:text-purple-400">
               14+
             </div>
-            <div className="text-lg text-gray-300">Laboratoriyalar</div>
-            <div className="mt-2 text-sm text-purple-300">Fizika fanlari</div>
+            <div className="text-lg text-gray-300">IT postlar</div>
+            <div className="mt-2 text-sm text-purple-300">Dasturlash va IT</div>
           </motion.div>
           <motion.div
             whileHover={{ scale: 1.05, y: -5 }}
@@ -213,7 +213,7 @@ const Hero = () => {
               ease: "easeInOut",
             }}
           >
-            🔬
+            💻
           </motion.div>
           <motion.div
             className="absolute bottom-1/4 left-1/4 text-5xl"

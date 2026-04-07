@@ -18,9 +18,9 @@ const roles = [
         desc: "Leaderboard'da birinchi bo'ling",
       },
       {
-        icon: "🔬",
-        title: "Virtual Lab",
-        desc: "Tajribalarni online bajaring",
+        icon: "📚",
+        title: "IT postlar",
+        desc: "Maqolalar va qo'llanmalardan foydalaning",
       },
       {
         icon: "📊",
@@ -37,7 +37,7 @@ const roles = [
     testimonial: {
       text: "EduArena bilan o'qish juda qiziqarli! Test o'yinlari orqali o'rganish samarali.",
       author: "Aziza Karimova",
-      role: "Fizika talabasi, TATU",
+      role: "Frontend talabasi, TATU",
     },
   },
   {
@@ -76,7 +76,7 @@ const roles = [
     testimonial: {
       text: "Platformada test yaratish va talabalarni kuzatish juda qulay. Vaqtimni tejaydi.",
       author: "Prof. Jahongir Usmonov",
-      role: "Fizika o'qituvchisi, NUUz",
+      role: "IT o'qituvchisi, NUUz",
     },
   },
 ]

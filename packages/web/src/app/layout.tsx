@@ -6,8 +6,8 @@ import "./globals.css"
 export const metadata: Metadata = {
   title: "EduArena - Universitet Ta'lim Platformasi",
   description:
-    "Interaktiv testlar, fizik simulyatorlar va dars materiallari bilan zamonaviy ta'lim. O'quvchilar va o'qituvchilar uchun.",
-  keywords: "ta'lim, universitet, testlar, simulyatorlar, o'yinlar",
+    "Interaktiv testlar, IT postlar va dars materiallari bilan zamonaviy ta'lim. O'quvchilar va o'qituvchilar uchun.",
+  keywords: "ta'lim, universitet, testlar, IT, postlar, o'yinlar",
   authors: [{ name: "EduArena Team" }],
   icons: "/icon.svg",
 }

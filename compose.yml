@@ -4,18 +4,18 @@ services:
     build:
       context: .
     ports:
-      - "${WEB_HOST_PORT:-3100}:3000"
-      - "${SOCKET_HOST_PORT:-3101}:3001"
+      - "${WEB_HOST_PORT:-3200}:3200"
+      - "${SOCKET_HOST_PORT:-3201}:3201"
     volumes:
       - ./config:/app/config # Game config/quizzes (persist on host)
     environment:
-      WEB_ORIGIN: ${WEB_ORIGIN:-http://localhost:${WEB_HOST_PORT:-3100}}
-      SOCKET_URL: ${SOCKET_URL:-http://localhost:${SOCKET_HOST_PORT:-3101}}
+      WEB_ORIGIN: ${WEB_ORIGIN:-http://localhost:${WEB_HOST_PORT:-3200}}
+      SOCKET_URL: ${SOCKET_URL:-http://localhost:${SOCKET_HOST_PORT:-3201}}
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080}
     restart: unless-stopped
     init: true
     healthcheck:
-      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3200').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
       interval: 30s
       timeout: 5s
       start_period: 30s

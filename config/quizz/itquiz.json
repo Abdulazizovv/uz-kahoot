@@ -1,0 +1,79 @@
+{
+  "subject": "IT Basics Quiz",
+  "questions": [
+    {
+      "question": "Python dasturlash tilida o'zgaruvchi (variable) nima?",
+      "answers": [
+        "Faqat son saqlaydi",
+        "Ma'lumot saqlash uchun nomlangan xotira joyi",
+        "Faqat matn saqlaydi",
+        "Funksiya turi"
+      ],
+      "solution": 1,
+      "cooldown": 5,
+      "time": 20
+    },
+    {
+      "question": "Quyidagilardan qaysi biri Python'da to‘g‘ri funksiya e’lon qilish hisoblanadi?",
+      "answers": [
+        "function myFunc():",
+        "def myFunc():",
+        "func myFunc[]",
+        "define myFunc()"
+      ],
+      "solution": 1,
+      "cooldown": 5,
+      "time": 20
+    },
+    {
+      "question": "HTTP status code 404 nimani anglatadi?",
+      "answers": [
+        "Server xatosi",
+        "Ruxsat yo'q",
+        "So'rov muvaffaqiyatli",
+        "Sahifa topilmadi"
+      ],
+      "solution": 3,
+      "cooldown": 5,
+      "time": 15
+    },
+    {
+      "question": "Frontend va Backend o'rtasida ma'lumot almashish uchun ko‘p ishlatiladigan format qaysi?",
+      "answers": [
+        "XML",
+        "TXT",
+        "JSON",
+        "HTML"
+      ],
+      "image": "https://placehold.co/600x400.png",
+      "solution": 2,
+      "cooldown": 5,
+      "time": 20
+    },
+    {
+      "question": "OOP'dagi qaysi tushuncha obyektning ichki ma'lumotlarini yashirishga xizmat qiladi?",
+      "answers": [
+        "Inheritance",
+        "Encapsulation",
+        "Polymorphism",
+        "Abstraction"
+      ],
+      "solution": 1,
+      "cooldown": 5,
+      "time": 25
+    },
+    {
+      "question": "Ma'lumotlar bazasida PRIMARY KEY vazifasi nima?",
+      "answers": [
+        "Ma'lumotlarni o‘chirish",
+        "Jadvalni bog‘lash",
+        "Har bir yozuvni unikal aniqlash",
+        "Tezkor qidiruv"
+      ],
+      "image": "https://placehold.co/600x400.png",
+      "solution": 2,
+      "cooldown": 5,
+      "time": 20
+    }
+  ]
+}

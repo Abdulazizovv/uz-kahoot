@@ -18,7 +18,7 @@ export default function StudentAchievementsPage() {
               "Turli kategoriyalardagi yutuqlar va medallar",
               "Progressiv yutuqlar tizimi (bronza, kumush, oltin)",
               "Test o'yinlarida g'oliblik yutuqlari",
-              "Laboratoriyalarni o'z vaqtida tugatish yutuqlari",
+              "IT postlarni o'z vaqtida o'qish yutuqlari",
               "Izchillik va faollik yutuqlari",
               "Maxsus hodisa yutuqlari (Challenge events)",
               "Yutuqlar tarixi va sanasi",

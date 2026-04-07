@@ -1,6 +1,7 @@
 "use client"
 
 import { useStudentNav } from "@/contexts/student-nav"
+import { itPosts } from "@/lib/it-posts"
 import { useAuthStore } from "@/stores/auth"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
@@ -110,15 +111,14 @@ export default function StudentSidebar() {
         <MenuItem href="/student/dashboard" icon="📊" label="Dashboard" />
         <MenuItem
           href="/student/labs"
-          icon="⚗️"
-          label="Laboratoriyalar"
-          badge={14}
+          icon="📚"
+          label="IT postlar"
+          badge={itPosts.length}
         />
+        <MenuItem href="/student/it-posts" icon="🧭" label="IT markazi" />
         <MenuItem href="/game/join" icon="🎮" label="Testga qatnashish" />
         <MenuItem href="/student/quizzes/true-false" icon="🧩" label="True/False testlar" />
         <MenuItem href="/student/quizzes/matching" icon="🧠" label="Moslashtirish testlar" />
-        <MenuItem href="/student/attendance" icon="📅" label="Davomat" />
-        <MenuItem href="/student/results" icon="📈" label="Natijalarim" />
         <MenuItem
           href="/student/achievements"
           icon="🎓"

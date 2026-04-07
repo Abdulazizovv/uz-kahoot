@@ -1,6 +1,7 @@
 "use client"
 
 import { useTeacherNav } from "@/contexts/teacher-nav"
+import { itPosts } from "@/lib/it-posts"
 import { useAuthStore } from "@/stores/auth"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
@@ -78,7 +79,7 @@ const Sidebar = () => {
     },
     {
       id: "labs",
-      title: "Laboratoriyalar",
+      title: "IT postlar",
       href: "/teacher/labs",
       icon: (
         <svg
@@ -95,7 +96,7 @@ const Sidebar = () => {
           />
         </svg>
       ),
-      badge: "14",
+      badge: itPosts.length.toString(),
     },
     {
       id: "groups",
@@ -119,7 +120,7 @@ const Sidebar = () => {
     },
     {
       id: "materials",
-      title: "Ma'ruza matnlar",
+      title: "GitHub loyihalar",
       href: "/teacher/materials",
       icon: (
         <svg
