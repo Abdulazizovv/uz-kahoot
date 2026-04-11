@@ -1,233 +1,207 @@
 "use client"
 
+import TechBackdrop from "@/components/tech/TechBackdrop"
 import { useAuthStore } from "@/stores/auth"
-import { motion } from "motion/react"
+import { motion, useReducedMotion } from "motion/react"
 import Link from "next/link"
 
-const Hero = () => {
-  const { isAuthenticated, user } = useAuthStore()
+const codeLines = [
+  { dim: true, text: "edu-arena@it-lab:~$" },
+  { dim: false, text: "pnpm dev  # Next.js + Tailwind + Motion" },
+  { dim: true, text: "> Ready: http://localhost:3000" },
+  { dim: true, text: "" },
+  { dim: true, text: "▶ IT Post: REST API design checklist" },
+  { dim: true, text: "▶ Mini quiz: 5 savol / 2 daqiqa" },
+  { dim: true, text: "▶ Natija: progress + tavsiyalar" },
+]
 
-  const getDashboardUrl = () => {
-    if (!user) return "/auth"
-    return user.user_type === "student"
-      ? "/student/dashboard"
-      : "/teacher/dashboard"
-  }
+const Hero = () => {
+  const { isAuthenticated, user, isHydrated } = useAuthStore()
+  const reduce = useReducedMotion()
+
+  const dashboardHref =
+    user?.user_type === "teacher" ? "/teacher/dashboard" : "/student/dashboard"
 
   return (
-    <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-950 via-blue-900 to-purple-950">
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Floating Orbs */}
-        <motion.div
-          className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-blue-500/30 blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            x: [0, 50, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute top-1/4 -right-40 h-96 w-96 rounded-full bg-purple-500/30 blur-3xl"
-          animate={{
-            scale: [1, 1.3, 1],
-            x: [0, -50, 0],
-            y: [0, 50, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute -bottom-40 left-1/3 h-96 w-96 rounded-full bg-pink-500/30 blur-3xl"
-          animate={{
-            scale: [1, 1.1, 1],
-            x: [0, 30, 0],
-            y: [0, -30, 0],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
+    <section className="relative overflow-hidden pt-28 pb-20">
+      <TechBackdrop intensity="strong" />
 
-        {/* Grid Pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-      </div>
-
-      <div className="relative z-10 mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-        {/* Hero Badge */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-          className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-400/30 bg-blue-500/10 px-6 py-2 backdrop-blur-sm"
-        >
-          <span className="text-2xl">🎓</span>
-          <span className="text-sm font-semibold text-blue-300">
-            O'zbekiston Universitetlari uchun #1 Platforma
-          </span>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          className="mb-8"
-        >
-          <h1 className="mb-6 text-7xl leading-tight font-black text-white md:text-9xl">
-            <motion.span
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="inline-block"
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid items-center gap-10 lg:grid-cols-2">
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
+              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-white/80"
             >
-              Edu
-            </motion.span>
-            <motion.span
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="inline-block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
-            >
-              Arena
-            </motion.span>
-          </h1>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="mx-auto max-w-3xl text-xl leading-relaxed text-gray-300 md:text-2xl"
-          >
-            🚀 Ta'limni gamifikatsiya qiling! Interaktiv testlar, real-time
-            raqobat va zamonaviy o'qitish vositalari bilan talabalaringizni
-            ilhomlantiring.
-          </motion.p>
-        </motion.div>
+              <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_0_6px_rgba(52,211,153,0.15)]" />
+              Magistratura dissertatsiyasi: gamifikatsiya + IT kontent + mini quiz
+            </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-12 flex flex-col items-center justify-center gap-6 sm:flex-row"
-        >
-          {isAuthenticated ? (
-            <Link
-              href={getDashboardUrl()}
-              className="group relative transform rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl"
+            <motion.h1
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.75, delay: 0.1, ease: "easeOut" }}
+              className="mt-6 text-5xl font-black leading-[1.02] tracking-tight sm:text-6xl"
             >
-              <span className="relative z-10">Dashboard'ga o'tish</span>
-              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-700 to-purple-700 opacity-0 transition-opacity duration-200 group-hover:opacity-100"></div>
-            </Link>
-          ) : (
-            <Link
-              href="/auth"
-              className="group relative transform rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl"
-            >
-              <span className="relative z-10">Boshlash</span>
-              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-700 to-purple-700 opacity-0 transition-opacity duration-200 group-hover:opacity-100"></div>
-            </Link>
-          )}
-          <Link
-            href="#features"
-            className="rounded-lg border-2 border-white/30 px-8 py-4 text-lg font-semibold text-white transition-all duration-200 hover:border-white/50 hover:bg-white/10"
-          >
-            Batafsil ma'lumot
-          </Link>
-        </motion.div>
+              <span className="block text-white/90">Universitet uchun</span>
+              <span
+                className="glitch block bg-gradient-to-r from-cyan-300 via-fuchsia-300 to-emerald-200 bg-clip-text text-transparent"
+                data-text="IT ta'lim laboratoriyasi"
+              >
+                IT ta&apos;lim laboratoriyasi
+              </span>
+            </motion.h1>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3"
-        >
-          <motion.div
-            whileHover={{ scale: 1.05, y: -5 }}
-            className="group rounded-2xl border border-blue-400/20 bg-gradient-to-br from-blue-500/10 to-purple-500/10 p-8 backdrop-blur-md transition-all"
-          >
-            <div className="mb-3 text-5xl">🎮</div>
-            <div className="mb-2 text-5xl font-black text-white transition-colors group-hover:text-blue-400">
-              Live
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.18 }}
+              className="mt-5 max-w-xl text-base leading-relaxed text-white/75 sm:text-lg"
+            >
+              EduArena — real-time quizlar, chuqur IT postlar va har bir postga
+              mini-quiz bilan bilimni mustahkamlovchi platforma. Progress,
+              resurslar va roadmap orqali talaba yo&apos;lini tizimli boshqaring.
+            </motion.p>
+
+            <div className="mt-7 flex flex-wrap gap-2">
+              {[
+                "Real-time quiz",
+                "IT post + mini quiz",
+                "Roadmap + resurslar",
+                "Teacher materials (GitHub)",
+              ].map((t) => (
+                <span
+                  key={t}
+                  className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-white/70"
+                >
+                  {t}
+                </span>
+              ))}
             </div>
-            <div className="text-lg text-gray-300">Real-time Testlar</div>
-            <div className="mt-2 text-sm text-blue-300">Kahoot uslubida</div>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.05, y: -5 }}
-            className="group rounded-2xl border border-purple-400/20 bg-gradient-to-br from-purple-500/10 to-pink-500/10 p-8 backdrop-blur-md transition-all"
-          >
-            <div className="mb-3 text-5xl">💻</div>
-            <div className="mb-2 text-5xl font-black text-white transition-colors group-hover:text-purple-400">
-              14+
-            </div>
-            <div className="text-lg text-gray-300">IT postlar</div>
-            <div className="mt-2 text-sm text-purple-300">Dasturlash va IT</div>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.05, y: -5 }}
-            className="group rounded-2xl border border-pink-400/20 bg-gradient-to-br from-pink-500/10 to-orange-500/10 p-8 backdrop-blur-md transition-all"
-          >
-            <div className="mb-3 text-5xl">☁️</div>
-            <div className="mb-2 text-5xl font-black text-white transition-colors group-hover:text-pink-400">
-              24/7
-            </div>
-            <div className="text-lg text-gray-300">Cloud Access</div>
-            <div className="mt-2 text-sm text-pink-300">Har qanday joydan</div>
-          </motion.div>
-        </motion.div>
 
-        {/* Floating Icons */}
-        <div className="pointer-events-none absolute inset-0">
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.24 }}
+              className="mt-8 flex flex-col gap-3 sm:flex-row"
+            >
+              <Link
+                href={isHydrated && isAuthenticated ? dashboardHref : "/auth"}
+                className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-500 to-fuchsia-500 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:from-cyan-400 hover:to-fuchsia-400"
+              >
+                {isHydrated && isAuthenticated ? "Dashboard" : "Boshlash"}
+              </Link>
+              <a
+                href="#research"
+                className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-white/80 transition hover:bg-white/10"
+              >
+                Dissertatsiya bo&apos;limi
+              </a>
+            </motion.div>
+          </div>
+
           <motion.div
-            className="absolute top-1/4 left-10 text-6xl"
-            animate={{
-              y: [0, -20, 0],
-              rotate: [0, 10, 0],
-            }}
-            transition={{
-              duration: 5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="relative"
           >
-            📖
-          </motion.div>
-          <motion.div
-            className="absolute top-1/3 right-20 text-5xl"
-            animate={{
-              y: [0, 20, 0],
-              rotate: [0, -10, 0],
-            }}
-            transition={{
-              duration: 6,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            💻
-          </motion.div>
-          <motion.div
-            className="absolute bottom-1/4 left-1/4 text-5xl"
-            animate={{
-              y: [0, -15, 0],
-              rotate: [0, 15, 0],
-            }}
-            transition={{
-              duration: 7,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            💡
+            {/* Terminal card */}
+            <div className="glow-ring relative overflow-hidden rounded-3xl border border-white/10 bg-slate-950/55 p-6 backdrop-blur">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-amber-300/80" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-300/80" />
+                </div>
+                <div className="text-xs font-semibold text-white/55">
+                  IT lab preview
+                </div>
+              </div>
+
+              <motion.ul
+                initial="hidden"
+                animate="show"
+                variants={{
+                  hidden: {},
+                  show: { transition: { staggerChildren: 0.08, delayChildren: 0.15 } },
+                }}
+                className="mt-5 space-y-2 font-mono text-sm"
+              >
+                {codeLines.map((l, idx) => (
+                  <motion.li
+                    key={idx}
+                    variants={{
+                      hidden: { opacity: 0, y: 8 },
+                      show: { opacity: 1, y: 0 },
+                    }}
+                    className={l.dim ? "text-white/60" : "text-white/85"}
+                  >
+                    {l.text}
+                    {idx === 1 ? (
+                      <motion.span
+                        aria-hidden="true"
+                        className="ml-1 inline-block h-4 w-2 translate-y-[3px] bg-white/70"
+                        animate={reduce ? undefined : { opacity: [1, 0, 1] }}
+                        transition={{ duration: 1, repeat: Infinity }}
+                      />
+                    ) : null}
+                  </motion.li>
+                ))}
+              </motion.ul>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                {[
+                  { k: "Kontent", v: "IT postlar" },
+                  { k: "Baholash", v: "Mini quiz" },
+                  { k: "Natija", v: "Progress" },
+                ].map((x) => (
+                  <div
+                    key={x.k}
+                    className="rounded-2xl border border-white/10 bg-white/5 p-4"
+                  >
+                    <div className="text-xs font-semibold text-white/55">{x.k}</div>
+                    <div className="mt-1 text-sm font-bold text-white/90">{x.v}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="absolute inset-0 -z-10 bg-[radial-gradient(900px_circle_at_50%_20%,rgba(56,189,248,0.16),transparent_55%)]" />
+            </div>
+
+            {/* Floating chip */}
+            <motion.div
+              className="absolute -bottom-6 -left-6 hidden rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-xs font-semibold text-white/75 backdrop-blur sm:block"
+              animate={
+                reduce
+                  ? undefined
+                  : {
+                      y: [0, -10, 0],
+                      rotate: [0, -1.6, 0],
+                    }
+              }
+              transition={{ duration: 5.6, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <span className="text-white/55">Signal:</span> 0.98 ·{" "}
+              <span className="text-white/55">Latency:</span> 32ms
+            </motion.div>
+
+            <motion.div
+              className="absolute -top-6 -right-6 hidden rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-xs font-semibold text-white/75 backdrop-blur sm:block"
+              animate={
+                reduce
+                  ? undefined
+                  : {
+                      y: [0, 10, 0],
+                      rotate: [0, 1.4, 0],
+                    }
+              }
+              transition={{ duration: 6.2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <span className="text-white/55">Mode:</span> IT-POSTS · QUIZ
+            </motion.div>
           </motion.div>
         </div>
       </div>
@@ -236,3 +210,4 @@ const Hero = () => {
 }
 
 export default Hero
+

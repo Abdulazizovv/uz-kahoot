@@ -19,7 +19,7 @@ type AuthState = {
 }
 
 type AuthStore = AuthState & {
-  login: (tokens: { access: string; refresh: string }, user: User) => void
+  login: (user: User) => void
   logout: () => void
   setLoading: (loading: boolean) => void
   setError: (error: string | null) => void
@@ -45,20 +45,17 @@ export const useAuthStore = create<AuthStore>()(
       setLoading: (loading) => set({ isLoading: loading }),
       setError: (error) => set({ error }),
 
-      login: (tokens, user) => {
+      login: (user) => {
         set({
           user,
-          accessToken: tokens.access,
-          refreshToken: tokens.refresh,
+          accessToken: `local-${user.id}`,
+          refreshToken: null,
           isAuthenticated: true,
           isLoading: false,
           error: null,
         })
 
         if (typeof window !== "undefined") {
-          localStorage.setItem("access_token", tokens.access)
-          localStorage.setItem("refresh_token", tokens.refresh)
-
           document.cookie = `auth-storage=${encodeURIComponent(
             JSON.stringify({ state: { isAuthenticated: true, user } }),
           )}; path=/; max-age=2592000; SameSite=Lax`
@@ -73,8 +70,6 @@ export const useAuthStore = create<AuthStore>()(
 
         if (typeof window !== "undefined") {
           localStorage.removeItem("auth-storage")
-          localStorage.removeItem("access_token")
-          localStorage.removeItem("refresh_token")
 
           document.cookie =
             "auth-storage=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"

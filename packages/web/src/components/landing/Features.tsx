@@ -1,231 +1,172 @@
+"use client"
+
 import { motion } from "motion/react"
 
-const features = [
+type Feature = {
+  title: string
+  desc: string
+  accent: string
+  bullets: string[]
+  icon: JSX.Element
+}
+
+const Icon = ({ children }: { children: JSX.Element }) => (
+  <div className="grid h-12 w-12 place-items-center rounded-2xl border border-white/10 bg-white/5">
+    {children}
+  </div>
+)
+
+const features: Feature[] = [
   {
-    title: "🎮 Gamifikatsiya",
-    description:
-      "Kahoot uslubidagi real-time testlar! Talabalar bir vaqtda raqobatlashadi, leaderboard'da o'z o'rinlarini ko'radilar.",
-    icon: "🏆",
-    color: "from-amber-500 via-orange-500 to-red-500",
-    benefits: ["Live quiz", "Leaderboard", "Ball tizimi", "Yutuqlar"],
-    image: "🎯",
+    title: "Real-time Quiz (Kahoot uslubi)",
+    desc: "Bir vaqtda test, leaderboard, ball tizimi va qiziqarli raqobat.",
+    accent: "from-amber-300/30 via-orange-300/10 to-transparent",
+    bullets: ["Live savollar", "Leaderboard", "Ball + timer", "Natijalar"],
+    icon: (
+      <svg viewBox="0 0 24 24" className="h-6 w-6 text-amber-200">
+        <path
+          fill="currentColor"
+          d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 5v5.1l3.4 2.1-.8 1.3L11 13V7Z"
+        />
+      </svg>
+    ),
   },
   {
-    title: "💻 IT Postlar",
-    description:
-      "Dasturlash, backend, DevOps va xavfsizlik bo'yicha qisqa, amaliy postlar. Kod parchalari va checklistlar bilan.",
-    icon: "📚",
-    color: "from-cyan-500 via-blue-500 to-indigo-500",
-    benefits: [
-      "Qisqa qo'llanmalar",
-      "Kod misollar",
-      "Checklistlar",
-      "Amaliy vazifalar",
-    ],
-    image: "🧑‍💻",
+    title: "IT Postlar Kutubxonasi",
+    desc: "Backend, frontend, DevOps va xavfsizlik bo'yicha chuqur, amaliy postlar.",
+    accent: "from-cyan-300/30 via-sky-300/10 to-transparent",
+    bullets: ["Kod misollar", "Checklist", "Best practice", "Amaliy task"],
+    icon: (
+      <svg viewBox="0 0 24 24" className="h-6 w-6 text-cyan-200">
+        <path
+          fill="currentColor"
+          d="M4 5a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v14a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3Zm3-1a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1Z"
+        />
+      </svg>
+    ),
   },
   {
-    title: "📊 Analytics Dashboard",
-    description:
-      "O'quvchilar progressini chuqur tahlil qiling. Kuchli va zaif tomonlarni aniqlang, individual yondashuv qo'llang.",
-    icon: "📈",
-    color: "from-emerald-500 via-teal-500 to-cyan-500",
-    benefits: [
-      "Progress tracking",
-      "Tahlil va hisobotlar",
-      "Individual statistika",
-      "Export PDF",
-    ],
-    image: "📉",
+    title: "Har Bir Postga Mini Quiz",
+    desc: "Post mazmuni darhol tekshiriladi: qisqa savollar, tez feedback va progress.",
+    accent: "from-fuchsia-300/30 via-purple-300/10 to-transparent",
+    bullets: ["5-10 savol", "2-5 daqiqa", "Feedback", "Progress bar"],
+    icon: (
+      <svg viewBox="0 0 24 24" className="h-6 w-6 text-fuchsia-200">
+        <path
+          fill="currentColor"
+          d="M7 2h10a3 3 0 0 1 3 3v14a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3Zm0 2a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1Zm2 4h6v2H9Zm0 4h6v2H9Zm0 4h4v2H9Z"
+        />
+      </svg>
+    ),
   },
   {
-    title: "☁️ Cloud Storage",
-    description:
-      "Barcha dars materiallari, video darslar va PDF fayllar bir joyda. Istalgan vaqt va joydan kirish imkoniyati.",
-    icon: "💾",
-    color: "from-purple-500 via-pink-500 to-rose-500",
-    benefits: [
-      "Video darslar",
-      "PDF materiallar",
-      "Rasm galereya",
-      "Cheksiz saqlash",
-    ],
-    image: "📱",
+    title: "Yo'l Xarita (Roadmap)",
+    desc: "Talaba uchun tizimli yo'nalish: mavzular ketma-ketligi va milestone'lar.",
+    accent: "from-emerald-300/30 via-teal-300/10 to-transparent",
+    bullets: ["Frontend", "Backend", "DevOps", "Security basics"],
+    icon: (
+      <svg viewBox="0 0 24 24" className="h-6 w-6 text-emerald-200">
+        <path
+          fill="currentColor"
+          d="M20 6H4V4h16Zm0 14H4v-2h16Zm-2-7a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2Z"
+        />
+      </svg>
+    ),
+  },
+  {
+    title: "Teacher Materials (GitHub)",
+    desc: "Yaxshi ochiq manbali loyihalar: link, qisqa izoh va qanday o'rganish yo'li.",
+    accent: "from-slate-200/20 via-slate-200/5 to-transparent",
+    bullets: ["Repo link", "Arxitektura izohi", "Issue/PR amaliyoti", "O'rganish rejasi"],
+    icon: (
+      <svg viewBox="0 0 24 24" className="h-6 w-6 text-slate-200">
+        <path
+          fill="currentColor"
+          d="M12 2a10 10 0 0 0-3.16 19.48c.5.09.68-.22.68-.48v-1.7c-2.77.6-3.36-1.17-3.36-1.17a2.64 2.64 0 0 0-1.1-1.46c-.9-.62.07-.6.07-.6a2.1 2.1 0 0 1 1.53 1.03a2.13 2.13 0 0 0 2.92.83a2.14 2.14 0 0 1 .63-1.34c-2.21-.25-4.54-1.11-4.54-4.93a3.86 3.86 0 0 1 1.03-2.68a3.58 3.58 0 0 1 .1-2.64s.84-.27 2.75 1.02a9.4 9.4 0 0 1 5 0c1.9-1.29 2.75-1.02 2.75-1.02a3.58 3.58 0 0 1 .1 2.64a3.86 3.86 0 0 1 1.03 2.68c0 3.83-2.33 4.68-4.55 4.93a2.4 2.4 0 0 1 .69 1.86v2.76c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"
+        />
+      </svg>
+    ),
+  },
+  {
+    title: "Analytics va Progress",
+    desc: "O'qish natijasini o'lchash: o'qilgan postlar, quiz ballari, tavsiyalar.",
+    accent: "from-indigo-300/30 via-blue-300/10 to-transparent",
+    bullets: ["Dashboard", "Progress tracking", "Zaif mavzular", "Rivojlanish"],
+    icon: (
+      <svg viewBox="0 0 24 24" className="h-6 w-6 text-indigo-200">
+        <path
+          fill="currentColor"
+          d="M4 19h16v2H4Zm2-2V3h2v14Zm5 0V8h2v9Zm5 0V5h2v12Z"
+        />
+      </svg>
+    ),
   },
 ]
 
 const Features = () => {
   return (
-    <section
-      id="features"
-      className="relative overflow-hidden bg-gradient-to-b from-gray-50 via-white to-gray-50 px-4 py-32"
-    >
-      {/* Background Decoration */}
-      <div className="pointer-events-none absolute top-0 left-0 h-full w-full overflow-hidden">
-        <div className="animate-blob absolute top-20 -left-20 h-72 w-72 rounded-full bg-blue-200 opacity-20 mix-blend-multiply blur-3xl filter"></div>
-        <div className="animate-blob animation-delay-2000 absolute top-40 -right-20 h-72 w-72 rounded-full bg-purple-200 opacity-20 mix-blend-multiply blur-3xl filter"></div>
-        <div className="animate-blob animation-delay-4000 absolute -bottom-20 left-1/2 h-72 w-72 rounded-full bg-pink-200 opacity-20 mix-blend-multiply blur-3xl filter"></div>
-      </div>
-
-      <div className="relative z-10 mx-auto max-w-7xl">
+    <section id="features" className="relative py-20">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
-          className="mb-20 text-center"
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.7 }}
           viewport={{ once: true }}
+          className="max-w-2xl"
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="mb-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 px-6 py-2 text-sm font-semibold text-blue-700"
-          >
-            ✨ Imkoniyatlar
-          </motion.div>
-          <h2 className="mb-6 text-5xl font-black text-gray-900 md:text-6xl">
-            Nima uchun{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              EduArena
-            </span>
-            ?
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-white/80">
+            Platforma imkoniyatlari
+          </div>
+          <h2 className="mt-5 text-3xl font-black tracking-tight text-white sm:text-4xl">
+            IT mavzuga mos: kontent + amaliyot + o&apos;lchov
           </h2>
-          <p className="mx-auto max-w-3xl text-xl text-gray-600">
-            Zamonaviy texnologiyalar va pedagogika metodlarini birlashtirgan
-            to'liq platformasi
+          <p className="mt-3 text-sm leading-relaxed text-white/70 sm:text-base">
+            Bu landing demo emas — magistratura dissertatsiyasi uchun konsept,
+            UI/UX va ta&apos;lim jarayonini ko&apos;rsatadigan ishlab turadigan
+            prototip.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          {features.map((feature, index) => (
+        <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {features.map((f, idx) => (
             <motion.div
-              key={feature.title}
-              className="group relative overflow-hidden rounded-3xl border-2 border-gray-200 bg-white p-8 shadow-xl transition-all duration-500 hover:border-transparent hover:shadow-2xl"
-              initial={{ opacity: 0, y: 50 }}
+              key={f.title}
+              initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: index * 0.1 }}
+              transition={{ duration: 0.6, delay: idx * 0.04 }}
               viewport={{ once: true }}
-              whileHover={{ y: -10 }}
+              className="glow-ring group relative overflow-hidden rounded-3xl border border-white/10 bg-slate-950/45 p-6 backdrop-blur"
             >
-              {/* Gradient Background on Hover */}
-              <div
-                className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 transition-opacity duration-500 group-hover:opacity-5`}
-              ></div>
-
-              <div className="relative z-10">
-                {/* Icon */}
-                <motion.div
-                  className={`mb-6 inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br ${feature.color} shadow-lg`}
-                  whileHover={{ rotate: 360, scale: 1.1 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <span className="text-4xl">{feature.icon}</span>
-                </motion.div>
-
-                {/* Title */}
-                <h3 className="mb-4 text-2xl font-bold text-gray-900">
-                  {feature.title}
+              <div className={`absolute inset-0 bg-gradient-to-br ${f.accent} opacity-0 transition group-hover:opacity-100`} />
+              <div className="relative">
+                <div className="flex items-start justify-between gap-4">
+                  <Icon>{f.icon}</Icon>
+                  <div className="text-xs font-semibold text-white/45">v1</div>
+                </div>
+                <h3 className="mt-4 text-lg font-bold text-white/90">
+                  {f.title}
                 </h3>
-
-                {/* Description */}
-                <p className="mb-6 leading-relaxed text-gray-600">
-                  {feature.description}
+                <p className="mt-2 text-sm leading-relaxed text-white/70">
+                  {f.desc}
                 </p>
-
-                {/* Benefits */}
-                <div className="grid grid-cols-2 gap-3">
-                  {feature.benefits.map((benefit, idx) => (
-                    <motion.div
-                      key={idx}
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 + idx * 0.1 }}
-                      viewport={{ once: true }}
-                      className="flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700"
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {f.bullets.map((b) => (
+                    <span
+                      key={b}
+                      className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-semibold text-white/70"
                     >
-                      <span className="text-green-500">✓</span>
-                      <span>{benefit}</span>
-                    </motion.div>
+                      {b}
+                    </span>
                   ))}
                 </div>
-
-                {/* Decorative Image */}
-                <motion.div
-                  className="absolute -right-4 -bottom-4 text-8xl opacity-10"
-                  animate={{
-                    rotate: [0, 10, 0],
-                    scale: [1, 1.1, 1],
-                  }}
-                  transition={{
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                >
-                  {feature.image}
-                </motion.div>
               </div>
             </motion.div>
           ))}
         </div>
-
-        {/* CTA Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mt-20 text-center"
-        >
-          <div className="mx-auto max-w-3xl rounded-3xl border-2 border-blue-200 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-12">
-            <h3 className="mb-4 text-3xl font-bold text-gray-900">
-              Hoziroq boshlang! 🚀
-            </h3>
-            <p className="mb-8 text-lg text-gray-600">
-              Beta test bosqichida bepul foydalaning. Birinchilar qatoridan
-              bo'ling!
-            </p>
-            <motion.a
-              href="/auth"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-shadow hover:shadow-xl"
-            >
-              Bepul boshlash
-              <span>→</span>
-            </motion.a>
-          </div>
-        </motion.div>
       </div>
-
-      <style jsx>{`
-        @keyframes blob {
-          0% {
-            transform: translate(0px, 0px) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-          100% {
-            transform: translate(0px, 0px) scale(1);
-          }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-      `}</style>
     </section>
   )
 }
 
 export default Features
+

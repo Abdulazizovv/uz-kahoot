@@ -1,5 +1,6 @@
 import Toaster from "@/components/Toaster"
 import type { Metadata } from "next"
+import { JetBrains_Mono, Space_Grotesk } from "next/font/google"
 import { PropsWithChildren } from "react"
 import "./globals.css"
 
@@ -12,10 +13,22 @@ export const metadata: Metadata = {
   icons: "/icon.svg",
 }
 
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+})
+
+const jetBrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+})
+
 const RootLayout = ({ children }: PropsWithChildren) => (
   <html lang="uz" suppressHydrationWarning={true}>
-    <body className="bg-secondary font-sans antialiased">
-      <main className="text-base-[8px] flex flex-col">{children}</main>
+    <body className={`${spaceGrotesk.variable} ${jetBrainsMono.variable} bg-secondary antialiased`}>
+      <main className="flex min-h-screen flex-col text-base">{children}</main>
       <Toaster />
     </body>
   </html>

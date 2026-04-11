@@ -2,6 +2,8 @@
 
 import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
+import { getMiniQuizForPost } from "@/lib/it-post-quiz"
+import { loadMiniQuizAttempt } from "@/lib/it-post-quiz-storage"
 import { itPosts } from "@/lib/it-posts"
 
 const levelTone = (level: string) => {
@@ -40,6 +42,22 @@ export default function StudentLabsPage() {
   const [tag, setTag] = useState("Barchasi")
   const [sort, setSort] = useState("newest")
   const [page, setPage] = useState(1)
+  const [quizAttempts, setQuizAttempts] = useState<Record<number, ReturnType<typeof loadMiniQuizAttempt>>>({})
+
+  useEffect(() => {
+    const refresh = () => {
+      const map: Record<number, ReturnType<typeof loadMiniQuizAttempt>> = {}
+      for (const post of itPosts) {
+        map[post.id] = loadMiniQuizAttempt(post.id)
+      }
+      setQuizAttempts(map)
+    }
+
+    refresh()
+    const onFocus = () => refresh()
+    window.addEventListener("focus", onFocus)
+    return () => window.removeEventListener("focus", onFocus)
+  }, [])
 
   const categories = useMemo(() => {
     const unique = Array.from(new Set(itPosts.map((post) => post.category)))
@@ -173,6 +191,15 @@ export default function StudentLabsPage() {
                   {post.title}
                 </h3>
                 <p className="mt-2 text-sm text-slate-600">{post.summary}</p>
+                <p className="mt-3 text-xs font-semibold text-slate-500">
+                  {post.track} • {post.category} • {post.readTime}
+                </p>
+                {quizAttempts[post.id]?.submitted && (
+                  <p className="mt-2 text-xs font-semibold text-emerald-700">
+                    Quiz natija: {quizAttempts[post.id]?.correctCount ?? 0}/
+                    {quizAttempts[post.id]?.totalQuestions ?? getMiniQuizForPost(post.id).length}
+                  </p>
+                )}
               </div>
               <span
                 className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${levelTone(post.level)}`}
@@ -327,6 +354,30 @@ export default function StudentLabsPage() {
                   {post.title}
                 </h3>
                 <p className="mt-2 text-sm text-slate-600">{post.summary}</p>
+                <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
+                  <span className="rounded-full bg-slate-100 px-3 py-1 font-semibold text-slate-700">
+                    {post.track}
+                  </span>
+                  <span className="rounded-full bg-slate-100 px-3 py-1 font-semibold text-slate-700">
+                    {post.category}
+                  </span>
+                  <span className="rounded-full bg-slate-100 px-3 py-1 font-semibold text-slate-700">
+                    {post.codeSamples.length} code
+                  </span>
+                  <span className="rounded-full bg-slate-100 px-3 py-1 font-semibold text-slate-700">
+                    {post.exercises.length} mashq
+                  </span>
+                  <span className="rounded-full bg-slate-100 px-3 py-1 font-semibold text-slate-700">
+                    {getMiniQuizForPost(post.id).length} quiz
+                  </span>
+                  {quizAttempts[post.id] && (
+                    <span className="rounded-full bg-emerald-50 px-3 py-1 font-semibold text-emerald-700">
+                      {quizAttempts[post.id]?.submitted
+                        ? `Natija ${quizAttempts[post.id]?.correctCount ?? 0}/${quizAttempts[post.id]?.totalQuestions ?? getMiniQuizForPost(post.id).length}`
+                        : `Quiz ${Object.keys(quizAttempts[post.id]?.answers ?? {}).length}/${getMiniQuizForPost(post.id).length}`}
+                    </span>
+                  )}
+                </div>
               </div>
               <span
                 className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${levelTone(post.level)}`}

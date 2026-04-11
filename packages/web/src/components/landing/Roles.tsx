@@ -1,279 +1,156 @@
-import { motion } from "motion/react"
+"use client"
 
-const roles = [
-  {
-    title: "Talabalar uchun",
-    subtitle: "O'rganing, Raqobatlashing, G'olib Bo'ling",
-    description:
-      "Interaktiv testlar va o'yinlar orqali o'rganing. Real-time raqobat va leaderboard'da birinchi o'rinni egallang!",
-    benefits: [
-      {
-        icon: "🎮",
-        title: "Gamifikatsiya",
-        desc: "Test o'yinlarida qatnashing",
-      },
-      {
-        icon: "🏆",
-        title: "Raqobat",
-        desc: "Leaderboard'da birinchi bo'ling",
-      },
-      {
-        icon: "📚",
-        title: "IT postlar",
-        desc: "Maqolalar va qo'llanmalardan foydalaning",
-      },
-      {
-        icon: "📊",
-        title: "Progress",
-        desc: "O'z natijalaringizni kuzating",
-      },
-    ],
-    icon: "👨‍🎓",
-    gradient: "from-blue-600 via-indigo-600 to-purple-600",
-    stats: [
-      { value: "Beta", label: "Test bosqichi" },
-      { value: "Bepul", label: "Hozircha" },
-    ],
-    testimonial: {
-      text: "EduArena bilan o'qish juda qiziqarli! Test o'yinlari orqali o'rganish samarali.",
-      author: "Aziza Karimova",
-      role: "Frontend talabasi, TATU",
-    },
-  },
-  {
-    title: "O'qituvchilar uchun",
-    subtitle: "Boshqaring, Tahlil Qiling, Rivojlantiring",
-    description:
-      "Darslarni osonlik bilan boshqaring. Test yarating, o'quvchilarni kuzating va chuqur analytics bilan takomillashtiring.",
-    benefits: [
-      {
-        icon: "✏️",
-        title: "Test Yaratish",
-        desc: "Oson va tez test tuzish",
-      },
-      {
-        icon: "📈",
-        title: "Analytics",
-        desc: "Chuqur tahlil va hisobotlar",
-      },
-      {
-        icon: "👥",
-        title: "Guruh Boshqaruvi",
-        desc: "Talabalarni guruhlang",
-      },
-      {
-        icon: "🎯",
-        title: "Live Quiz",
-        desc: "Real-time test o'tkazing",
-      },
-    ],
-    icon: "👨‍🏫",
-    gradient: "from-emerald-600 via-teal-600 to-cyan-600",
-    stats: [
-      { value: "Oson", label: "Test yaratish" },
-      { value: "Tez", label: "Analytics" },
-    ],
-    testimonial: {
-      text: "Platformada test yaratish va talabalarni kuzatish juda qulay. Vaqtimni tejaydi.",
-      author: "Prof. Jahongir Usmonov",
-      role: "IT o'qituvchisi, NUUz",
-    },
-  },
-]
+import { motion } from "motion/react"
+import Link from "next/link"
 
 const Roles = () => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-gray-50 via-white to-blue-50 px-4 py-32">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-30"></div>
-
-      <div className="relative z-10 mx-auto max-w-7xl">
+    <section id="roles" className="relative py-20">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
-          className="mb-20 text-center"
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.7 }}
           viewport={{ once: true }}
+          className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="mb-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-6 py-2 text-sm font-semibold text-purple-700"
-          >
-            👥 Kimlar uchun?
-          </motion.div>
-          <h2 className="mb-6 text-5xl font-black text-gray-900 md:text-6xl">
-            Har bir foydalanuvchi uchun
-          </h2>
-          <p className="mx-auto max-w-3xl text-xl text-gray-600">
-            Talabalar va o'qituvchilar uchun maxsus imkoniyatlar
-          </p>
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-white/80">
+              Student + Teacher rollari
+            </div>
+            <h2 className="mt-5 text-3xl font-black tracking-tight text-white sm:text-4xl">
+              Har bir rol uchun aniq oqim: o&apos;rganish va nazorat
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-white/70 sm:text-base">
+              Studentlar ro&apos;yxatdan o&apos;tadi. Teacherlar oldindan
+              belgilangan. Har bir postga mini quiz qo&apos;shilgan.
+            </p>
+          </div>
+
+          <div className="flex gap-2">
+            <Link
+              href="/auth"
+              className="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white/80 transition hover:bg-white/10"
+            >
+              Kirish
+            </Link>
+            <a
+              href="#features"
+              className="rounded-2xl bg-gradient-to-r from-cyan-500 to-fuchsia-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:from-cyan-400 hover:to-fuchsia-400"
+            >
+              Imkoniyatlar
+            </a>
+          </div>
         </motion.div>
 
-        <div className="space-y-24">
-          {roles.map((role, index) => (
-            <motion.div
-              key={role.title}
-              className={`flex flex-col gap-12 lg:flex-row lg:items-center ${
-                index % 2 === 1 ? "lg:flex-row-reverse" : ""
-              }`}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              {/* Content */}
-              <div className="flex-1 space-y-8">
+        <div className="mt-10 grid gap-4 lg:grid-cols-2">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7 }}
+            viewport={{ once: true }}
+            className="glow-ring relative overflow-hidden rounded-3xl border border-white/10 bg-slate-950/45 p-7 backdrop-blur"
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(800px_circle_at_20%_20%,rgba(56,189,248,0.18),transparent_60%)]" />
+            <div className="relative">
+              <div className="flex items-start justify-between gap-4">
                 <div>
-                  <motion.div
-                    className={`mb-4 inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br ${role.gradient} shadow-2xl`}
-                    whileHover={{ rotate: 360, scale: 1.1 }}
-                    transition={{ duration: 0.6 }}
-                  >
-                    <span className="text-4xl">{role.icon}</span>
-                  </motion.div>
-                  <h3 className="mb-2 text-4xl font-black text-gray-900">
-                    {role.title}
-                  </h3>
-                  <p
-                    className={`mb-4 bg-gradient-to-r text-lg font-semibold ${role.gradient} bg-clip-text text-transparent`}
-                  >
-                    {role.subtitle}
-                  </p>
-                  <p className="text-lg leading-relaxed text-gray-600">
-                    {role.description}
-                  </p>
-                </div>
-
-                {/* Benefits Grid */}
-                <div className="grid grid-cols-2 gap-4">
-                  {role.benefits.map((benefit, idx) => (
-                    <motion.div
-                      key={idx}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: idx * 0.1 }}
-                      viewport={{ once: true }}
-                      whileHover={{ scale: 1.05 }}
-                      className="rounded-2xl border-2 border-gray-200 bg-white p-5 shadow-lg transition-all hover:border-blue-300 hover:shadow-xl"
-                    >
-                      <div className="mb-2 text-3xl">{benefit.icon}</div>
-                      <h4 className="mb-1 font-bold text-gray-900">
-                        {benefit.title}
-                      </h4>
-                      <p className="text-sm text-gray-600">{benefit.desc}</p>
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* Stats */}
-                <div className="flex gap-6">
-                  {role.stats.map((stat, idx) => (
-                    <div
-                      key={idx}
-                      className="flex-1 rounded-xl bg-gradient-to-br from-gray-50 to-white p-4 text-center shadow-md"
-                    >
-                      <div
-                        className={`bg-gradient-to-r text-3xl font-black ${role.gradient} bg-clip-text text-transparent`}
-                      >
-                        {stat.value}
-                      </div>
-                      <div className="text-sm text-gray-600">{stat.label}</div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Testimonial */}
-                <motion.div
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 }}
-                  viewport={{ once: true }}
-                  className={`rounded-2xl border-l-4 bg-gradient-to-br from-white to-gray-50 p-6 shadow-lg ${
-                    index % 2 === 0 ? "border-blue-500" : "border-emerald-500"
-                  }`}
-                >
-                  <p className="mb-4 text-gray-700 italic">
-                    "{role.testimonial.text}"
-                  </p>
-                  <div>
-                    <div className="font-bold text-gray-900">
-                      {role.testimonial.author}
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      {role.testimonial.role}
-                    </div>
+                  <div className="text-xs font-semibold text-white/55">
+                    STUDENT
                   </div>
-                </motion.div>
+                  <div className="mt-1 text-2xl font-black text-white/90">
+                    O&apos;rganish oqimi
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 font-mono text-xs text-white/75">
+                  read → quiz → progress
+                </div>
               </div>
 
-              {/* Visual/Image Placeholder */}
-              <motion.div
-                className="flex-1"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
-              >
-                <div
-                  className={`relative overflow-hidden rounded-3xl bg-gradient-to-br ${role.gradient} p-12 shadow-2xl`}
-                >
-                  {/* Mockup Content */}
-                  <div className="relative z-10 space-y-6">
-                    <div className="rounded-2xl bg-white/20 p-6 backdrop-blur-sm">
-                      <div className="mb-4 h-4 w-1/2 rounded bg-white/40"></div>
-                      <div className="space-y-2">
-                        <div className="h-3 w-full rounded bg-white/30"></div>
-                        <div className="h-3 w-4/5 rounded bg-white/30"></div>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="rounded-xl bg-white/20 p-4 backdrop-blur-sm">
-                        <div className="mb-2 h-3 w-3/4 rounded bg-white/40"></div>
-                        <div className="h-6 w-1/2 rounded bg-white/50"></div>
-                      </div>
-                      <div className="rounded-xl bg-white/20 p-4 backdrop-blur-sm">
-                        <div className="mb-2 h-3 w-3/4 rounded bg-white/40"></div>
-                        <div className="h-6 w-1/2 rounded bg-white/50"></div>
-                      </div>
-                    </div>
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                {[
+                  {
+                    t: "IT postlar",
+                    d: "Chuqur maqolalar: kod, checklist, amaliy fikrlar.",
+                  },
+                  {
+                    t: "Mini quiz",
+                    d: "Har post oxirida tez tekshiruv va feedback.",
+                  },
+                  {
+                    t: "Roadmap",
+                    d: "Ketma-ket mavzular va milestone bilan yo'nalish.",
+                  },
+                  {
+                    t: "Progress",
+                    d: "O'qilgan postlar va natijalar bo'yicha ko'rsatkichlar.",
+                  },
+                ].map((x) => (
+                  <div
+                    key={x.t}
+                    className="rounded-2xl border border-white/10 bg-white/5 p-5"
+                  >
+                    <div className="text-sm font-bold text-white/90">{x.t}</div>
+                    <div className="mt-1 text-sm text-white/70">{x.d}</div>
                   </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
 
-                  {/* Floating Icons */}
-                  <motion.div
-                    className="absolute top-10 right-10 text-6xl opacity-20"
-                    animate={{
-                      y: [0, -20, 0],
-                      rotate: [0, 10, 0],
-                    }}
-                    transition={{
-                      duration: 5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  >
-                    {index === 0 ? "🎓" : "📚"}
-                  </motion.div>
-                  <motion.div
-                    className="absolute bottom-10 left-10 text-5xl opacity-20"
-                    animate={{
-                      y: [0, 20, 0],
-                      rotate: [0, -10, 0],
-                    }}
-                    transition={{
-                      duration: 6,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  >
-                    {index === 0 ? "🏆" : "✍️"}
-                  </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7 }}
+            viewport={{ once: true }}
+            className="glow-ring relative overflow-hidden rounded-3xl border border-white/10 bg-slate-950/45 p-7 backdrop-blur"
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(800px_circle_at_80%_20%,rgba(168,85,247,0.18),transparent_60%)]" />
+            <div className="relative">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="text-xs font-semibold text-white/55">
+                    TEACHER
+                  </div>
+                  <div className="mt-1 text-2xl font-black text-white/90">
+                    Materiallar markazi
+                  </div>
                 </div>
-              </motion.div>
-            </motion.div>
-          ))}
+                <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 font-mono text-xs text-white/75">
+                  curate → assign → review
+                </div>
+              </div>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                {[
+                  {
+                    t: "GitHub loyihalar",
+                    d: "Sifatli repolar, link va qisqa izoh (nima o'rganiladi).",
+                  },
+                  {
+                    t: "Amaliy topshiriqlar",
+                    d: "PR/Issue amaliyoti, code review va refactor mashqlari.",
+                  },
+                  {
+                    t: "Monitoring",
+                    d: "Student progressini ko'rish va tavsiya berish oqimi.",
+                  },
+                  {
+                    t: "Standartlar",
+                    d: "Readme, commit, branch, lint, test madaniyati.",
+                  },
+                ].map((x) => (
+                  <div
+                    key={x.t}
+                    className="rounded-2xl border border-white/10 bg-white/5 p-5"
+                  >
+                    <div className="text-sm font-bold text-white/90">{x.t}</div>
+                    <div className="mt-1 text-sm text-white/70">{x.d}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -281,3 +158,4 @@ const Roles = () => {
 }
 
 export default Roles
+
