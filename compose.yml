@@ -4,14 +4,14 @@ services:
     build:
       context: .
     ports:
-      - "${WEB_HOST_PORT:-3100}:3000"
-      - "${SOCKET_HOST_PORT:-3101}:3001"
+      - "127.0.0.1:${WEB_HOST_PORT:-3100}:3000"
+      - "127.0.0.1:${SOCKET_HOST_PORT:-3101}:3001"
     volumes:
-      - ./config:/app/config # Game config/quizzes (persist on host)
+      - ./config:/app/config
     environment:
       WEB_ORIGIN: ${WEB_ORIGIN:-http://localhost:${WEB_HOST_PORT:-3100}}
       SOCKET_URL: ${SOCKET_URL:-http://localhost:${SOCKET_HOST_PORT:-3101}}
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8255}
     restart: unless-stopped
     init: true
     healthcheck:
