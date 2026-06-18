@@ -23,7 +23,8 @@ WORKDIR /app
 COPY . .
 
 # Install all dependencies (including dev) for build
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --ignore-scripts && \
+    pnpm rebuild esbuild sharp unrs-resolver
 
 # Build Next.js app with standalone output for smaller runtime image
 WORKDIR /app/packages/web
